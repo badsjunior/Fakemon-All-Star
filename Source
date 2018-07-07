@@ -1,0 +1,1115 @@
+Let's make a game!
+	name:	Fakemon All-Star v0.1 (ALPHA)
+	by:	Braz Araujo da Silva Junior
+	desc:	Bem vindo ao projeto <b>Fakemon All-Stars</b>! Agradecimentos especiais ao <b>Iddle Game Maker</b>*, por possibilitar a criação deste jogo. Ao projeto <b>Game-Icons</b>**, por possibilitar a criação dos ícones utilizados no jogo, sob a licença <b>CC BY 3.0</b>***. Foram utilizados os </></><b>Ícones</b>:</></><//>Magnifying glass, by Lorc<//>Pokecog, by Lorc<//>Treasure map, by Lorc<//>Trophy cup, by Delapouite<//>Chart, by Delapouite<//>Shining heart, by Lorc<//>Punch Blast, by Lorc<//>Checked Shield, by Lorc<//>Hypersonic bolt, by Lorc<//>Ball glow, by Lorc<//>Thunderball, by Lorc<//>Up card, by Delapouite<//>Cycle, by Lorc<//>High grass, by Delapouite</></>feitos pelos <b>Artistas</b>:</></><//>Lorc - http://lorcblog.blogspot.com<//>Delapouite - http://delapouite.com</></><//></></><//>Braz Junior - Região de <b>Pindoh</b> - https://www.facebook.com/PindohRegion/.</>______________________________________________________________</>*http://orteil.dashnet.org/igm/help.html</>**https://game-icons.net</>***https://creativecommons.org/licenses/by/3.0/</>
+	created:04/07/2018
+	updated:07/07/2018
+
+Settings
+	background:http://i.imgur.com/Dnd9gLk.png
+	spritesheet:pType, 128 by 128, https://i.imgur.com/1rvvX5Q.png
+	spritesheet:sType, 128 by 128, https://i.imgur.com/gRRkLwO.png
+	spritesheet:filter, 128 by 128, https://i.imgur.com/WUzoOZB.png
+	spritesheet:exploration, 128 by 128, https://i.imgur.com/5TDMKUS.png
+ 	spritesheet:pindohDex, 128 by 128, https://i.imgur.com/XiNyhbm.png
+	stylesheet:https://pastebin.com/zcLE68K1
+
+Layout
+*wrapper
+	contains:upperArea, lowerArea, leftArea, middleArea, rightArea
+	*upperArea
+		contains:statusDisplay
+		*statusDisplay
+			contains:tag:status
+			class:fullWidth
+	*leftArea
+		contains:logDisplay
+		*logDisplay
+			contains:Log
+			header:Log
+	*middleArea
+		contains:clickablesDisplay
+		*clickablesDisplay
+			contains:starterDisplay, activeDisplay, enemyDisplay, moveDisplay
+			*starterDisplay
+				contains:tag:starterChoice
+			*activeDisplay
+				contains:tag:active
+			*enemyDisplay
+				contains:tag:enemy
+			*moveDisplay
+				contains:tag:activeMove, tag:enemyMove
+	*rightArea
+		contains:exploreDisplay
+		*exploreDisplay
+			contains:tag:explore
+			header:Exploração
+			tooltip origin:left
+	*lowerArea
+		contains:mainMenu
+			*mainMenu
+				contains:navigationDisplay, contentDisplay
+				class:fullWidth
+				*navigationDisplay
+					contains:tag:navigationButton
+					costs:hide
+					names:hide
+				*contentDisplay
+					contains:tag:foundTab, tag:capturedTab, tag:regionTab, tag:achievTab, tag:statisticTab
+					costs:hide
+					names:hide
+
+//-----------------------------------------------UI Text------------------------------------------------------------------//
+
+Upgrades
+	*TEMPLATE
+		class:UItext
+		no tooltip
+		owned	
+	*foundText
+		name:Pokémon Avistados
+		tag:foundTab
+	*capturedText
+		name:Pokémon Capturados
+		tag:capturedTab
+	*regionText
+		name:Regiões
+		tag:regionTab
+	*achievText
+		name:Conquistas
+		tag:achievTab
+	*statisticText
+		name:Estatísticas
+		tag:statisticTab
+	*TEMPLATE
+
+//---------------------------------------------------GLOBAL---------------------------------------------------------------//
+
+Resources
+	*TEMPLATE
+		tags:status hidden
+	*global
+		name:Global Controler and Initializer
+		passive:
+			gain 1 secondPlayed
+			if (no inBattle)
+				gain min((activeMaxHP/100),(activeMaxHP-activeCurHP)) activeCurHP
+				gain 0.01 pokeball
+				gain 0.025 switch
+			end
+		end
+		on start:
+			pokeball = 5
+			switch = 1
+			gain tag:starterFound
+			show tag:foundTab
+			hide tag:capturedTab
+			hide tag:regionTab
+			hide tag:achievTab
+			hide tag:statisticTab
+			log Bem vindo! Depois que <#ffcc00><b>escolher</b></#> um dos pokémon iniciais, veja seus pokémon capturados na segunda aba do <#ff33ff><b>menu</b></#> abaixo (ícone de pokébola). <#ffcc00><b>Clique</b></#> em um de seus pokémon capturados para chamá-lo para batalhar. Isto irá gastar um ponto de <u>troca</u>. <#ffcc00><b>Selecione</b></#> uma área no <#ff33ff><b>menu de exploração</b></#> à direita para encontrar pokémon selvagens. <#ffcc00><b>Clique</b></#> em um pokémon selvagem para tentar <#ffcc00><b>capturá-lo</b></#>. Isto irá gastar uma <u>pokébola</u>. Te dei 5 <u>pokébolas</u> de presente, não as desperdice! É muito mais fácil <#ffcc00><b>capturar</b></#> um pokémon quando ele está enfraquecido. Enquanto estiver fora de batalha, seu pokémon irá regenerar pontos de <u>vida</u> e você irá conseguir mais <u>pokébolas</u> e pontos de <u>troca</u> com o tempo.
+		end
+
+		on beginturn:
+			log <#3366ff>-----------------------------------</#>
+			if ((activeSpeed+$activeMovePriority)>=(enemySpeed+$enemyMovePriority)) do activemove with this
+			do enemymove with this
+			if ((enemySpeed+$enemyMovePriority)>(activeSpeed+$activeMovePriority)) do activemove with this
+			do endturn with this
+		end
+
+		on activemove:
+	if (activeCurHP>0)
+			do getname with tag:active
+			log atacou...
+			$activeSTAB = 1
+			$activeCrit = 1
+
+			if (activePtype=$activeMovetype)
+				$activeSTAB = $activeSTAB + 0.5
+				log ... o golpe foi fortalecido pelo seu tipo principal ...
+			end
+			if (activeStype=$activeMovetype)
+				$activeSTAB = $activeSTAB + 0.5
+				log ... o golpe foi fortalecido pelo seu tipo secundário ...
+			end
+			if (chance($activeMoveCrit))
+				$activeCrit = 1.5
+				log ... e realizou um golpe crítico!
+			end
+
+			$auxMtype = $activeMovetype
+			$auxType = enemyPtype
+			if ($auxMtype=0)
+				do normaladvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do normaladvantage with this
+			else if ($auxMtype=1)
+				do fightadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do fightadvantage with this
+			else if ($auxMtype=2)
+				do flyingadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do flyingadvantage with this
+			else if ($auxMtype=3)
+				do poisonadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do poisonadvantage with this
+			else if ($auxMtype=4)
+				do groundadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do groundadvantage with this
+			else if ($auxMtype=5)
+				do rockadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do rockadvantage with this
+			else if ($auxMtype=6)
+				do bugadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do bugadvantage with this
+			else if ($auxMtype=7)
+				do ghostadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do ghostadvantage with this
+			else if ($auxMtype=8)
+				do steeladvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do steeladvantage with this
+			else if ($auxMtype=9)
+				do fireadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do fireadvantage with this
+			else if ($auxMtype=10)
+				do wateradvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do wateradvantage with this
+			else if ($auxMtype=11)
+				do grassadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do grassadvantage with this
+			else if ($auxMtype=12)
+				do electricadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do electricadvantage with this
+			else if ($auxMtype=13)
+				do psychicadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do psychicadvantage with this
+			else if ($auxMtype=14)
+				do iceadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do iceadvantage with this
+			else if ($auxMtype=15)
+				do dragonadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do dragonadvantage with this
+			else if ($auxMtype=16)
+				do darkadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do darkadvantage with this
+			else if ($auxMtype=17)
+				do fairyadvantage with this
+				$activePadvg = $auxAdvg
+				$auxType = enemyStype
+				do fairyadvantage with this
+			end
+			$activeSadvg = $auxAdvg
+
+			if ( ($activePadvg*$activeSadvg) > 1)
+				log ... foi super efetivo!
+			else if ( ($activePadvg*$activeSadvg) < 1)
+				log ... mas foi pouco efetivo!
+			end
+
+			$activeRandomVar = frandom(0.85,1)
+
+			if ($activeMoveIsSpecial=0)
+				$aA = activeAttack
+				$aD = enemyDefense
+			else if ($activeMoveIsSpecial=1)
+				$aA = activeSpAttack
+				$aD = enemySpDefense
+			end
+
+			$activeRawDamage = ((((0.4*activeLvl + 2)*$activeMovePower*($aA/$aD))/50)+2)
+			$activeDamageMods = $activePadvg*$activeSadvg*$activeRandomVar*$activeSTAB*$activeCrit
+			$activeEffectiveDamage = min(enemyCurHP,($activeRawDamage*$activeDamageMods))
+			lose round($activeEffectiveDamage) enemyCurHP
+	end
+	if (activeCurHP>0)
+			do getname with tag:enemy
+			log tomou [round($activeEffectiveDamage)] dano!
+			log <#3366ff>-----------------------------------</#>
+	end
+		end
+
+		on enemymove:
+	if (enemyCurHP>0)
+			do getname with tag:enemy
+			log atacou...
+			$enemySTAB = 1
+			$enemyPadvg = 1
+			$enemySadvg = 1
+			$enemyCrit = 1
+
+			if (enemyPtype=$enemyMovetype)
+				$enemySTAB = $enemySTAB + 0.5
+				log ... o golpe foi fortalecido pelo seu tipo principal ...
+			end
+			if (enemyStype=$enemyMovetype)
+				$enemySTAB = $enemySTAB + 0.5
+				log ... o golpe foi fortalecido pelo seu tipo secundário ...
+			end
+			if (chance($enemyMoveCrit))
+				$enemyCrit = 1.5
+				log ... e realizou um golpe crítico!
+			end
+
+			$auxMtype = $enemyMovetype
+			$auxType = activePtype
+			if ($auxMtype=0)
+				do normaladvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do normaladvantage with this
+			else if ($auxMtype=1)
+				do fightadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do fightadvantage with this
+			else if ($auxMtype=2)
+				do flyingadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do flyingadvantage with this
+			else if ($auxMtype=3)
+				do poisonadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do poisonadvantage with this
+			else if ($auxMtype=4)
+				do groundadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do groundadvantage with this
+			else if ($auxMtype=5)
+				do rockadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do rockadvantage with this
+			else if ($auxMtype=6)
+				do bugadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do bugadvantage with this
+			else if ($auxMtype=7)
+				do ghostadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do ghostadvantage with this
+			else if ($auxMtype=8)
+				do steeladvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do steeladvantage with this
+			else if ($auxMtype=9)
+				do fireadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do fireadvantage with this
+			else if ($auxMtype=10)
+				do wateradvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do wateradvantage with this
+			else if ($auxMtype=11)
+				do grassadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do grassadvantage with this
+			else if ($auxMtype=12)
+				do electricadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do electricadvantage with this
+			else if ($auxMtype=13)
+				do psychicadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do psychicadvantage with this
+			else if ($auxMtype=14)
+				do iceadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do iceadvantage with this
+			else if ($auxMtype=15)
+				do dragonadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do dragonadvantage with this
+			else if ($auxMtype=16)
+				do darkadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do darkadvantage with this
+			else if ($auxMtype=17)
+				do fairyadvantage with this
+				$enemyPadvg = $auxAdvg
+				$auxType = activeStype
+				do fairyadvantage with this
+			end
+			$enemySadvg = $auxAdvg
+
+			if ( ($enemyPadvg*$enemySadvg) > 1)
+				log ... foi super efetivo!
+			else if ( ($enemyPadvg*$enemySadvg) < 1)
+				log ... mas foi pouco efetivo!
+			end
+
+			$enemyRandomVar = frandom(0.85,1)
+
+			if ($enemyMoveIsSpecial=0)
+				$eA = enemyAttack
+				$eD = activeDefense
+			else if ($enemyMoveIsSpecial=1)
+				$eA = enemySpAttack
+				$eD = activeSpDefense
+			end
+
+			$enemyRawDamage = ((((0.4*enemyLvl + 2)*$enemyMovePower*($eA/$eD))/50)+2)
+			$enemyDamageMods = $enemyPadvg*$enemySadvg*$enemyRandomVar*$enemySTAB*$enemyCrit
+			$enemyEffectiveDamage = min(activeCurHP,($enemyRawDamage*$enemyDamageMods))
+			lose round($enemyEffectiveDamage) activeCurHP
+	end
+	if (enemyCurHP>0)
+			do getname with tag:active
+			log tomou [round($enemyEffectiveDamage)] dano.
+			log <#3366ff>-----------------------------------</#>
+	end
+		end
+
+		on activefaint:
+			do getname with tag:active
+			log está fora de batalha!
+			do return with tag:active
+		end
+		on enemyfaint:
+			do getname with tag:enemy
+			log está fora de batalha!
+			do faint with tag:enemy
+		end
+
+		on endturn:
+			if (0>=activeCurHP) do activefaint with this
+			if (0>=enemyCurHP) do enemyfaint with this
+		end
+
+		on normaladvantage:
+			$auxAdvg = 1
+			if (($auxType=5) or ($auxType=8)) $auxAdvg = 0.5
+			if ($auxType=7) $auxAdvg = 0
+		end
+		on fightadvantage:
+			$auxAdvg = 1
+			if (($auxType=0) or ($auxType=5) or ($auxType=8) or ($auxType=14) or ($auxType=16)) $auxAdvg = 2
+			if (($auxType=2) or ($auxType=3) or ($auxType=6) or ($auxType=13) or ($auxType=17)) $auxAdvg = 0.5
+			if ($auxType=7) $auxAdvg = 0
+		end
+		on flyingadvantage:
+			$auxAdvg = 1
+			if (($auxType=1) or ($auxType=6) or ($auxType=11)) $auxAdvg = 2
+			if (($auxType=5) or ($auxType=8) or ($auxType=12)) $auxAdvg = 0.5
+		end
+		on poisonadvantage:
+			$auxAdvg = 1
+			if (($auxType=11) or ($auxType=17)) $auxAdvg = 2
+			if (($auxType=3) or ($auxType=4) or ($auxType=5) or ($auxType=7)) $auxAdvg = 0.5
+			if ($auxType=8) $auxAdvg = 0
+		end
+		on groundadvantage:
+			$auxAdvg = 1
+			if (($auxType=3) or ($auxType=5) or ($auxType=8) or ($auxType=9) or ($auxType=12)) $auxAdvg = 2
+			if (($auxType=6) or ($auxType=11)) $auxAdvg = 0.5
+			if ($auxType=2) $auxAdvg = 0
+		end
+		on rockadvantage:
+			$auxAdvg = 1
+			if (($auxType=2) or ($auxType=6) or ($auxType=9) or ($auxType=14)) $auxAdvg = 2
+			if (($auxType=1) or ($auxType=4) or ($auxType=8)) $auxAdvg = 0.5
+		end
+		on bugadvantage:
+			$auxAdvg = 1
+			if (($auxType=11) or ($auxType=13) or ($auxType=16)) $auxAdvg = 2
+			if (($auxType=1) or ($auxType=2) or ($auxType=3) or ($auxType=7) or ($auxType=8) or ($auxType=9) or ($auxType=17)) $auxAdvg = 0.5
+		end
+		on ghostadvantage:
+			$auxAdvg = 1
+			if (($auxType=7) or ($auxType=13)) $auxAdvg = 2
+			if ($auxType=16) $auxAdvg = 0.5
+			if ($auxType=0) $auxAdvg = 0
+		end
+		on steeladvantage:
+			$auxAdvg = 1
+			if (($auxType=5) or ($auxType=14) or ($auxType=17)) $auxAdvg = 2
+			if (($auxType=8) or ($auxType=9) or ($auxType=10) or ($auxType=12)) $auxAdvg = 0.5
+		end
+		on fireadvantage:
+			$auxAdvg = 1
+			if (($auxType=6) or ($auxType=8) or ($auxType=11) or ($auxType=14)) $auxAdvg = 2
+			if (($auxType=5) or ($auxType=9) or ($auxType=10) or ($auxType=15)) $auxAdvg = 0.5
+		end
+		on wateradvantage:
+			$auxAdvg = 1
+			if (($auxType=4) or ($auxType=5) or ($auxType=9)) $auxAdvg = 2
+			if (($auxType=10) or ($auxType=11) or ($auxType=15)) $auxAdvg = 0.5
+		end
+		on grassadvantage:
+			$auxAdvg = 1
+			if (($auxType=4) or ($auxType=5) or ($auxType=10)) $auxAdvg = 2
+			if (($auxType=2) or ($auxType=3) or ($auxType=6) or ($auxType=8) or ($auxType=9) or ($auxType=11) or ($auxType=15)) $auxAdvg = 0.5
+		end
+		on electricadvantage:
+			$auxAdvg = 1
+			if (($auxType=2) or ($auxType=10)) $auxAdvg = 2
+			if (($auxType=11) or ($auxType=12) or ($auxType=15)) $auxAdvg = 0.5
+			if ($auxType=4) $auxAdvg = 0
+		end
+		on psychicadvantage:
+			$auxAdvg = 1
+			if (($auxType=1) or ($auxType=3)) $auxAdvg = 2
+			if (($auxType=8) or ($auxType=13)) $auxAdvg = 0.5
+			if ($auxType=0) $auxAdvg = 0
+		end
+		on iceadvantage:
+			$auxAdvg = 1
+			if (($auxType=2) or ($auxType=4) or ($auxType=11) or ($auxType=15)) $auxAdvg = 2
+			if (($auxType=8) or ($auxType=9) or ($auxType=10) or ($auxType=14)) $auxAdvg = 0.5
+		end
+		on dragonadvantage:
+			$auxAdvg = 1
+			if ($auxType=15) $auxAdvg = 2
+			if ($auxType=8) $auxAdvg = 0.5
+			if ($auxType=17) $auxAdvg = 0
+		end
+		on darkadvantage:
+			$auxAdvg = 1
+			if (($auxType=7) or ($auxType=13)) $auxAdvg = 2
+			if (($auxType=1) or ($auxType=16) or ($auxType=17)) $auxAdvg = 0.5
+		end
+		on fairyadvantage:
+			$auxAdvg = 1
+			if (($auxType=1) or ($auxType=15) or ($auxType=16)) $auxAdvg = 2
+			if (($auxType=3) or ($auxType=8) or ($auxType=9)) $auxAdvg = 0.5
+		end
+//		on advantage:
+//			$auxAdvg = 1
+//			if (($auxType=5) or ($auxType=8)) $auxAdvg = 2
+//			if (($auxType=5) or ($auxType=8)) $auxAdvg = 0.5
+//			if ($auxType=8) $auxAdvg = 0
+//		end
+			
+
+//------------------------------------------------Basic------------------------------------------------------------------//
+
+		*activeLvl
+			desc: Level do seu pokémon
+		*activePtype
+			desc: Tipo primário do seu pokémon
+		*activeStype
+			desc: Tipo secondário do seu pokémon
+		*enemyPtype
+			desc: Tipo primário do pokémon inimigo
+		*enemyStype
+			desc: Tipo secondário do pokémon inimigo
+		*enemyLvl
+			desc: Level do pokémon inimigo
+		*enemyCurHP
+			desc: HP atual do pokémon inimigo
+		*enemyMaxHP
+			desc: HP máximo do pokémon inimigo
+		*enemyAttack
+			name:Ataque
+			desc:Potencial de golpes físicos do pokémon inimigo.
+			is always: (enemyBaseAttack*enemyAttackMod)
+		*enemyDefense
+			name:Defesa
+			desc:Resistência do pokémon inimigo aos golpes físicos.
+			is always: (enemyBaseDefense*enemyDefenseMod)
+		*enemySpAttack
+			name:Ataque Especial
+			desc:Potencial de golpes especiais do pokémon inimigo.
+			is always: (enemyBaseSpAttack*enemySpAttackMod)
+		*enemySpDefense
+			name:Defesa Especial
+			desc:Resistência do pokémon inimigo aos golpes especiais.
+			is always: (enemyBaseSpDefense*enemySpDefenseMod)
+		*enemySpeed
+			name:Velocidade
+			desc:A rapidez com que o pokémon inimigo ataca, define quem ataca primeiro.
+			is always: (enemyBaseSpeed*enemySpeedMod)
+	*TEMPLATE
+		tags:status base hidden
+		on reset:
+			this = 0
+		end
+		*activeBaseAttack
+			name:Ataque (Base)
+		*activeBaseDefense
+			name:Defesa (Base)
+		*activeBaseSpAttack
+			name:Ataque Especial (Base)
+		*activeBaseSpDefense
+			name:Defesa Especial (Base)
+		*activeBaseSpeed
+			name:Velocidade (Base)
+	*TEMPLATE
+		tags:status baseEnemy hidden
+		on reset:
+			this = 0
+		end
+		*enemyBaseAttack
+			name:Ataque (Base) Inimigo
+		*enemyBaseDefense
+			name:Defesa (Base) Inimigo
+		*enemyBaseSpAttack
+			name:Ataque Especial (Base) Inimigo
+		*enemyBaseSpDefense
+			name:Defesa Especial (Base) Inimigo
+		*enemyBaseSpeed
+			name:Velocidade (Base) Inimigo
+	*TEMPLATE
+		tags:status modifier hidden
+		on reset:
+			this = 1
+		end
+		*activeAttackMod
+			name:Ataque (Modificador)
+		*activeDefenseMod
+			name:Defesa (Modificador)
+		*activeSpAttackMod
+			name:Ataque Especial (Modificador)
+		*activeSpDefenseMod
+			name:Defesa Especial (Modificador)
+		*activeSpeedMod
+			name:Velocidade (Modificador)
+	*TEMPLATE
+		tags:status modifierEnemy hidden
+		on reset:
+			this = 1
+		end
+		*enemyAttackMod
+			name:Ataque (Modificador) Inimigo
+		*enemyDefenseMod
+			name:Defesa (Modificador) Inimigo
+		*enemySpAttackMod
+			name:Ataque Especial (Modificador) Inimigo
+		*enemySpDefenseMod
+			name:Defesa Especial (Modificador) Inimigo
+		*enemySpeedMod
+			name:Velocidade (Modificador) Inimigo
+	*TEMPLATE
+		icon class:tinyIcon
+		tag:status
+		*activeCurHP
+			name:Pontos de Vida (HP)
+			text:HP: [?(0.15>=(this/activeMaxHP))|<#cc0000>|<#e6b800>][?((this/activeMaxHP)>=0.4)|<#009900>|][?((this/activeMaxHP)=1)|▓|░][?((this/activeMaxHP)>=0.95)|▓|░][?((this/activeMaxHP)>=0.9)|▓|░][?((this/activeMaxHP)>=0.85)|▓|░][?((this/activeMaxHP)>=0.8)|▓|░][?((this/activeMaxHP)>=0.75)|▓|░][?((this/activeMaxHP)>=0.7)|▓|░][?((this/activeMaxHP)>=0.65)|▓|░][?((this/activeMaxHP)>=0.6)|▓|░][?((this/activeMaxHP)>=0.55)|▓|░][?((this/activeMaxHP)>=0.5)|▓|░][?((this/activeMaxHP)>=0.45)|▓|░][?((this/activeMaxHP)>=0.4)|▓|░][?((this/activeMaxHP)>=0.35)|▓|░][?((this/activeMaxHP)>=0.3)|▓|░][?((this/activeMaxHP)>=0.25)|▓|░][?((this/activeMaxHP)>=0.2)|▓|░][?((this/activeMaxHP)>=0.15)|▓|░][?((this/activeMaxHP)>=0.1)|▓|░][?((this/activeMaxHP)>=0.05)|▓|░]</#><//><#ffffff>[this]/[activeMaxHP] ([((this/activeMaxHP)*100)]%)
+			desc:Saúde atual do seu pokémon.
+			icon:https://i.imgur.com/rz2we1C.png
+		*activeMaxHP
+			name:Vida Máxima (max HP)
+			desc:Vitalidade do seu pokémon.
+			hidden
+		*activeAttack
+			name:Ataque
+			desc:Potencial de golpes físicos do seu pokémon.
+			icon:https://i.imgur.com/5hyjXAR.png
+			is always: (activeBaseAttack*activeAttackMod)
+		*activeDefense
+			name:Defesa
+			desc:Resistência do seu pokémon aos golpes físicos.
+			icon:https://i.imgur.com/armNyK4.png
+			is always: (activeBaseDefense*activeDefenseMod)
+		*activeSpAttack
+			name:Ataque Especial
+			desc:Potencial de golpes especiais do seu pokémon.
+			icon:https://i.imgur.com/yVS3ERm.png
+			is always: (activeBaseSpAttack*activeSpAttackMod)
+		*activeSpDefense
+			name:Defesa Especial
+			desc:Resistência do seu pokémon aos golpes especiais.
+			icon:https://i.imgur.com/7mDtmKC.png
+			is always: (activeBaseSpDefense*activeSpDefenseMod)
+		*activeSpeed
+			name:Velocidade
+			desc:A rapidez com que seu pokémon ataca, define quem ataca primeiro.
+			icon:https://i.imgur.com/hRIJymf.png
+			is always: (activeBaseSpeed*activeSpeedMod)
+		*xp
+			name:XP
+			desc:Experiência dos seus pokémon.
+			icon:https://i.imgur.com/galYjk9.png
+		*switch|switches
+			name:Trocas
+			desc:Quantas vezes você pode enviar pokémon capturados para a batalha.
+			icon:https://i.imgur.com/qfiZYvt.png
+		*pokeball|pokeballs
+			name:Pokébola
+			desc:Quantas pokébolas você ainda tem para capturar pokémon selvagens.
+			icon:https://i.imgur.com/JjweQ3v.png
+	*TEMPLATE
+
+//----------------------------------------------Counters-----------------------------------------------------------------//
+
+Resources
+	*TEMPLATE
+		tag:statisticTab
+		no tooltip
+
+	*secondPlayed|secondsPlayed
+		name:Segundos Jogados
+		desc:O tempo que você gastou jogando este jogo.
+    *TEMPLATE
+
+//----------------------------------------------------UI------------------------------------------------------------------//
+
+Buttons
+	*TEMPLATE
+		icon class:tinyIcon
+		tag:navigationButton
+		on click:
+			hide tag:foundTab
+			hide tag:capturedTab
+			hide tag:regionTab
+			hide tag:achievTab
+			hide tag:statisticTab
+		end
+		no tooltip		
+	*foundBtn
+		icon:https://i.imgur.com/YhYTD35.png
+		on click:
+			anim icon blink
+			show tag:foundTab
+		end
+	*capturedBtn
+		icon:https://i.imgur.com/RQ3ob79.png
+		on click:
+			anim icon blink
+			show tag:capturedTab
+		end
+	*regionBtn
+		icon:https://i.imgur.com/f8ODEB3.png
+		on click:
+			anim icon blink
+			show tag:regionTab
+		end
+	*achievBtn
+		icon:https://i.imgur.com/qqbgVvo.png
+		on click:
+			anim icon blink
+			show tag:achievTab
+		end
+	*statisticsBtn
+		icon:https://i.imgur.com/yyYGNA9.png
+		on click:
+			anim icon blink
+			show tag:statisticTab
+		end
+
+//-------------------------------------------------Starters----------------------------------------------------------------//
+
+    *TEMPLATE
+		tag:starterChoice
+		on click:
+			hide tag:starterChoice
+		end
+    *chooseGrass
+		name:Escolher Guarimple
+		icon:pindohDex[1,0] pType[5,1] sType[5,1]
+		on click:
+			CPTguarimple = 5
+		end
+    *chooseFire
+		name:Escolher Balldillo
+		icon:pindohDex[4,0] pType[3,1] sType[2,1]
+		on click:
+			CPTballdillo = 5
+		end
+    *chooseWater
+		name:Escolher Gossipavy
+		icon:pindohDex[7,0] pType[4,1] sType[4,1]
+		on click:
+			CPTgossipavy = 5
+		end
+
+//-----------------------------------------------Exploração---------------------------------------------------------------//
+
+    *TEMPLATE
+		tag:explore
+		on click:
+			log Um pokémon selvagem apareceu na sua frente enquanto explorava [n:this]!
+			gain inBattle
+			lose tag:enemy
+			$rand = random(2)
+			if (chance(0.1%))
+				toast <#ff9900><b>LENDÁRIO!</b></#>
+				do legend with this
+			else if (chance(1%))
+				toast <#cc33ff><b>EXÓTICO!</b></#>
+				do exotic with this
+			else if (chance(10%))
+				toast <#00cccc><b>RARO!</b></#>
+				do rare with this
+			else if (chance(40%))
+				toast <#4dffa6><b>INCOMUM!</b></#>
+				do uncommon with this
+			else if ($rand=0) 
+				toast <#999999><b>COMUM!</b></#>
+				do common1 with this
+			else if ($rand=1) 
+				toast <#999999><b>COMUM!</b></#>
+				do common2 with this
+			else if ($rand=2) 
+				toast <#999999><b>COMUM!</b></#>
+				do common3 with this
+			end
+		end
+    *rota1
+		name:Rota 1
+		desc:Rota inicial de Pindoh. Com pokémon de lvl 2-6
+		icon:exploration[0,0]
+		on common1:
+			enemyLvl = (4 + random(-2,2))
+			gain ENMguarimple
+		end
+		on common2:
+			enemyLvl = (4 + random(-2,2))
+			gain ENMballdillo
+		end
+		on common3:
+			enemyLvl = (4 + random(-2,2))
+			gain ENMgossipavy
+		end
+		on uncommon:
+			enemyLvl = (6 + random(-2,2))
+			gain ENMguarimple
+		end
+		on rare:
+			enemyLvl = (6 + random(-2,2))
+			gain ENMballdillo
+		end
+		on exotic:
+			enemyLvl = (8 + random(-2,2))
+			gain ENMgossipavy
+		end
+    *TEMPLATE
+
+//-------------------------------------------------Moves-----------------------------------------------------------------//
+Upgrades
+    *TEMPLATE
+		tag:activeMove
+		hidden when 0
+		on click:
+			if (no inBattle)
+				log Você não pode usar <#ffcc00><b>[n:this]</b></#> fora de batalha!
+			else
+				clear log
+				do select with this
+				do iaplay with tag:enemy
+				do beginturn with global
+			end
+		end	
+
+    *aMOVtackle
+		name:Investida
+		on select:
+			do getname with tag:active
+			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
+			$activeMovePriority = 0
+			$activeMoveCrit = 6.25
+			$activeMoveType = 0
+			$activeMoveIsSpecial = 0
+			$activeMovePower = 40
+		end
+    *TEMPLATE
+		tags:enemyMove hidden
+    *eMOVtackle
+		name:Investida
+		on select:
+			do getname with tag:enemy
+			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
+			$enemyMovePriority = 0
+			$enemyMoveCrit = 6.25
+			$enemyMoveType = 0
+			$enemyMoveIsSpecial = 0
+			$enemyMovePower = 40
+		end
+    *TEMPLATE
+
+//---------------------------------------------Pkm Capturados------------------------------------------------------------//
+
+Buildings
+    *TEMPLATE
+        on earn:
+			anim glow
+		end
+		on click:
+			if ((no activePkm) and (switches>=1))
+				activeLvl = this
+				toast <#00cc00><b>[n:this]</b></#>, vai!
+			end
+		end
+		text:[n:this] lvl [this]
+		cost:10 xp
+		tag:capturedTab
+		hidden when 0
+	*CPTguarimple
+		name:Guarimple
+		icon:pindohDex[1,0] pType[5,1] sType[5,1]
+		on click:
+			if ((no activePkm) and (switches>=1))
+				switch = (switch-1)
+				gain ATVguarimple
+				gain activePkm
+			end
+		end
+	*CPTballdillo
+		name:Balldillo
+		icon:pindohDex[4,0] pType[3,1] sType[2,1]
+		on click:
+			if ((no activePkm) and (switches>=1))
+				switch = (switch-1)
+				gain ATVballdillo
+				gain activePkm
+			end
+		end
+	*CPTgossipavy
+		name:Gossipavy
+		icon:pindohDex[7,0] pType[4,1] sType[0,0]
+		on click:
+			if ((no activePkm) and (switches>=1))
+				switch = (switch-1)
+				gain ATVgossipavy
+				gain activePkm
+			end
+		end
+    *TEMPLATE
+
+//-----------------------------------------------Hidden------------------------------------------------------------------//
+
+Upgrades
+	*activePkm
+	*inBattle
+		on earn:
+			do reset with tag:modifier
+			do reset with tag:modifierEnemy
+		end
+
+//------------------------------------------------Inimigos----------------------------------------------------------------//
+    *TEMPLATE
+		desc:<//>HP: [enemyCurHP]/[enemyMaxHP] ([((enemyCurHP/enemyMaxHP)*100)]%) LVL: [enemyLvl]<//>[?(0.15>=(enemyCurHP/enemyMaxHP))|<#cc0000>|<#e6b800>][?((enemyCurHP/enemyMaxHP)>=0.4)|<#009900>|][?((enemyCurHP/enemyMaxHP)=1)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.95)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.9)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.85)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.8)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.75)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.7)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.65)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.6)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.55)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.5)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.45)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.4)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.35)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.3)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.25)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.2)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.15)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.1)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.05)|▓|░]</#><//>Attack: [enemyAttack]<//>Defense: [enemyDefense]<//>Special Attack: [enemySpAttack]<//>Special Defense: [enemySpDefense]<//>Speed: [enemySpeed]
+        class:bigButton hasFlares
+		no text
+		tag:enemy
+		on getname:
+			if (have this) log <#ff3300><b>[n:this]</b></#>
+		end
+		on faint:
+			if (have this)
+				$expEarned = (pow((enemyMaxHP + enemyBaseAttack + enemyBaseDefense + enemyBaseSpAttack + enemyBaseSpDefense + enemyBaseSpeed),2)/100)*pow(((2*enemyLvl)/(enemyLvl + activeLvl)),2)
+				toast <#00cc00>Vitória!</#>
+				log <#ff3300><b>[n:this]</b></#> foi derrotado, você ganhou [$expEarned] xp.
+				gain $expEarned xp
+				lose inBattle
+				do reset with tag:baseEnemy
+				enemyMaxHP = 0
+				enemyCurHP = 0
+				lose this
+			end
+		end
+		hidden when 0
+		on click:
+			if (1>pokeballs)
+				toast Você <#ff3300>não tem pokébolas</#> para capturar!
+			else if (chance((enemyMaxHP*5)/(enemyCurHP)))
+				pokeball = (pokeballs-1)
+				toast Você capturou <#00cc00>[n:this]</#> lvl [enemyLvl]!
+				do capture with this
+				lose inBattle
+				do reset with tag:baseEnemy
+				enemyMaxHP = 0
+				enemyCurHP = 0
+				lose this
+			else
+				pokeball = (pokeballs-1)
+				toast Você falhou em capturar <#ff3300>[n:this]</#> e ele fugiu da batalha!
+				lose inBattle
+				do reset with tag:baseEnemy
+				enemyMaxHP = 0
+				enemyCurHP = 0
+				lose this
+			end
+		end
+		on iaplay:
+			if (have this) do select with eMOVtackle
+		end
+	*ENMguarimple
+		name:Guarimple
+		icon:https://i.imgur.com/Kco4d9D.png
+		on earn:
+			gain FNDguarimple
+			enemyMaxHP = round(((70*frandom(0.9,1.1)*enemyLvl)/50)+enemyLvl+10)
+			enemyCurHP = enemyMaxHP
+			enemyBaseAttack = (((49*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseDefense = (((30*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpAttack = (((54*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpDefense = (((32*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpeed = (((75*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyPtype = 11
+			enemyStype = 11
+		end
+		on capture:
+			CPTguarimple = max(enemyLvl,CPTguarimple)
+		end
+	*ENMballdillo
+		name:Balldillo
+		icon:https://i.imgur.com/FNP4vop.png
+		on earn:
+			gain FNDballdillo
+			enemyMaxHP = round(((58*frandom(0.9,1.1)*enemyLvl)/50)+enemyLvl+10)
+			enemyCurHP = enemyMaxHP
+			enemyBaseAttack = (((23*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseDefense = (((81*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpAttack = (((19*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpDefense = (((84*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpeed = (((45*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyPtype = 9
+			enemyStype = 9
+		end
+		on capture:
+			CPTballdillo = max(enemyLvl,CPTballdillo)
+		end
+	*ENMgossipavy
+		name:Gossipavy
+		icon:https://i.imgur.com/xDNs4ss.png
+		on earn:
+			gain FNDgossipavy
+			enemyMaxHP = round(((76*frandom(0.9,1.1)*enemyLvl)/50)+enemyLvl+10)
+			enemyCurHP = enemyMaxHP
+			enemyBaseAttack = (((44*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseDefense = (((40*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpAttack = (((51*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpDefense = (((37*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpeed = (((63*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyPtype = 10
+			enemyStype = 10
+		end
+		on capture:
+			CPTgossipavy = max(enemyLvl,CPTgossipavy)
+		end
+//-------------------------------------------Pkm Ativos------------------------------------------------------------------//
+
+    *TEMPLATE
+        class:bigButton hasFlares
+		no text
+		tag:active
+		on click:
+			do return with this
+		end
+		on return:
+			if (have this)
+				toast <#00cc00><b>[n:this]</b></#>, já basta, volte!
+				log <#00cc00><b>[n:this]</b></#> retornou para a pokébola, mas os pokémon selvagens fugiram!
+				lose activePkm
+				lose inBattle
+				lose tag:activeMove
+				lose tag:enemy
+				do reset with tag:base
+				activeMaxHP = 0
+				activeCurHP = 0
+				lose this
+			end
+		end
+		on getname:
+			if (have this) log <#00cc00><b>[n:this]</b></#>
+		end
+		hidden when 0		
+	*ATVguarimple
+		name:Guarimple
+		icon:https://i.imgur.com/Kco4d9D.png
+		on earn:
+			activeMaxHP = round(((70*activeLvl)/50)+activeLvl+10)
+			activeCurHP = activeMaxHP
+			activeBaseAttack = (((49*activeLvl)/50)+5)
+			activeBaseDefense = (((30*activeLvl)/50)+5)
+			activeBaseSpAttack = (((54*activeLvl)/50)+5)
+			activeBaseSpDefense = (((32*activeLvl)/50)+5)
+			activeBaseSpeed = (((75*activeLvl)/50)+5)
+			activePtype = 11
+			activeStype = 11
+			gain aMOVtackle
+		end
+	*ATVballdillo
+		name:Balldillo
+		icon:https://i.imgur.com/FNP4vop.png
+		on earn:
+			activeMaxHP = round(((58*activeLvl)/50)+activeLvl+10)
+			activeCurHP = activeMaxHP
+			activeBaseAttack = (((23*activeLvl)/50)+5)
+			activeBaseDefense = (((81*activeLvl)/50)+5)
+			activeBaseSpAttack = (((19*activeLvl)/50)+5)
+			activeBaseSpDefense = (((84*activeLvl)/50)+5)
+			activeBaseSpeed = (((45*activeLvl)/50)+5)
+			activePtype = 9
+			activeStype = 9
+			gain aMOVtackle
+		end
+	*ATVgossipavy
+		name:Gossipavy
+		icon:https://i.imgur.com/xDNs4ss.png
+		on earn:
+			activeMaxHP = round(((76*activeLvl)/50)+activeLvl+10)
+			activeCurHP = activeMaxHP
+			activeBaseAttack = (((44*activeLvl)/50)+5)
+			activeBaseDefense = (((40*activeLvl)/50)+5)
+			activeBaseSpAttack = (((51*activeLvl)/50)+5)
+			activeBaseSpDefense = (((37*activeLvl)/50)+5)
+			activeBaseSpeed = (((63*activeLvl)/50)+5)
+			activePtype = 10
+			activeStype = 10
+			gain aMOVtackle
+		end
+    *TEMPLATE
+
+//----------------------------------------------Found Pkm----------------------------------------------------------------//
+
+Achievements
+	*TEMPLATE
+		tags:foundTab starterFound
+		hidden when 0
+	*FNDguarimple
+		name:Guarimple
+		icon:pindohDex[1,0]
+	*FNDballdillo
+		name:Balldillo
+		icon:pindohDex[4,0]
+	*FNDgossipavy
+		name:Gossipavy
+		icon:pindohDex[7,0]
