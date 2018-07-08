@@ -11,7 +11,7 @@ Settings
 	spritesheet:sType, 128 by 128, https://i.imgur.com/gRRkLwO.png
 	spritesheet:filter, 128 by 128, https://i.imgur.com/WUzoOZB.png
 	spritesheet:exploration, 128 by 128, https://i.imgur.com/5TDMKUS.png
- 	spritesheet:pindohDex, 128 by 128, https://i.imgur.com/XiNyhbm.png
+	spritesheet:pindohDex, 128 by 128, https://i.imgur.com/F5He5Ae.png
 	stylesheet:https://pastebin.com/zcLE68K1
 
 Layout
@@ -112,131 +112,134 @@ Resources
 
 		on beginturn:
 			log <#3366ff>-----------------------------------</#>
-			if ((activeSpeed+$activeMovePriority)>=(enemySpeed+$enemyMovePriority)) do activemove with this
-			do enemymove with this
-			if ((enemySpeed+$enemyMovePriority)>(activeSpeed+$activeMovePriority)) do activemove with this
+			$quarter=random(1,4)
+			$paralysis=0
+			$confusion=0
+			if ($quarter=1)
+				$paralysis=1
+				$confusion=1
+			end
+			$equarter=random(1,4)
+			$eparalysis=0
+			$econfusion=0
+			if ($equarter=1)
+				$eparalysis=1
+				$econfusion=1
+			end
+
+			if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus>=0)) do activemove with this
+			if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus=(-2)) and ($paralysis=0)) do activemove with this
+			if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus=(-2)) and ($paralysis=1)) do activeparalysis with this
+			if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus=(-7)) and ($confusion=0)) do activemove with this
+			if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus=(-7)) and ($confusion=1)) do activeconfusion with this
+
+			if (enemyStatus>=0) do enemymove with this
+			if ((enemyStatus=(-2)) and ($eparalysis=0)) do enemymove with this
+			if ((enemyStatus=(-2)) and ($eparalysis=1)) do enemyparalysis with this
+			if ((enemyStatus=(-7)) and ($econfusion=0)) do enemymove with this
+			if ((enemyStatus=(-7)) and ($econfusion=1)) do enemyconfusion with this
+
+			if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus>=0)) do activemove with this
+			if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus=(-2)) and ($paralysis=0)) do activemove with this
+			if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus=(-2)) and ($paralysis=1)) do activeparalysis with this
+			if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus=(-7)) and ($confusion=0)) do activemove with this
+			if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus=(-7)) and ($confusion=1)) do activeconfusion with this
+
 			do endturn with this
 		end
 
 		on activemove:
-	if (activeCurHP>0)
-			do getname with tag:active
-			log atacou...
-			$activeSTAB = 1
-			$activeCrit = 1
+			$activeAim = 1
 
-			if (activePtype=$activeMovetype)
+			if ($activeMoveAccuracy>=0)
+				$activeAim = chance(($activeMoveAccuracy*activeAccuracyMod*enemyEvasionMod)*100)
+			end
+
+			if ($activeAim = 0)
+				do getname with tag:active
+				log errou o golpe!
+				activeMovesInARow = 0
+			end
+
+			if (($activeMoveID=activeLastMove) and ($activeAim = 1))
+				activeMovesInARow = (activeMovesInARow+1)
+			end
+			if ((!($activeMoveID=activeLastMove)) and ($activeAim = 1))
+				activeMovesInARow = 1
+			end
+
+			if (($activeMoveClass>=0) and ($activeAim = 1))
+				do getname with tag:active
+				log atacou...
+				$activeSTAB = 1
+				$activeCrit = 1
+				$activeStatusMod = 1
+			end
+			if (($activeMoveClass=1) and ($activeAim = 1))
+				$activeMovePower = ($activeMovePower*(min(5,activeMovesInARow)))
+				log ... com um poder acumulado de [activeMovesInARow] golpes seguidos ...
+			end
+			if (($activeMoveClass>=2) and ($activeAim = 1))
+				$numberOfHits = random(2,$activeMoveClass)
+				log ... [$numberOfHits] vezes ...
+			end
+
+			if (($activeMoveClass>=0) and (activePtype=$activeMovetype) and ($activeAim = 1))
 				$activeSTAB = $activeSTAB + 0.5
 				log ... o golpe foi fortalecido pelo seu tipo principal ...
 			end
-			if (activeStype=$activeMovetype)
+			if (($activeMoveClass>=0) and (activeStype=$activeMovetype) and ($activeAim = 1))
 				$activeSTAB = $activeSTAB + 0.5
 				log ... o golpe foi fortalecido pelo seu tipo secundário ...
 			end
-			if (chance($activeMoveCrit))
+			if (($activeMoveClass>=0) and (chance($activeMoveCrit*pow(2,activeCriticalStage))) and ($activeAim = 1))
 				$activeCrit = 1.5
 				log ... e realizou um golpe crítico!
 			end
 
-			$auxMtype = $activeMovetype
+			$auxMtype = $activeMoveType
 			$auxType = enemyPtype
-			if ($auxMtype=0)
-				do normaladvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do normaladvantage with this
-			else if ($auxMtype=1)
-				do fightadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do fightadvantage with this
-			else if ($auxMtype=2)
-				do flyingadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do flyingadvantage with this
-			else if ($auxMtype=3)
-				do poisonadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do poisonadvantage with this
-			else if ($auxMtype=4)
-				do groundadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do groundadvantage with this
-			else if ($auxMtype=5)
-				do rockadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do rockadvantage with this
-			else if ($auxMtype=6)
-				do bugadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do bugadvantage with this
-			else if ($auxMtype=7)
-				do ghostadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do ghostadvantage with this
-			else if ($auxMtype=8)
-				do steeladvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do steeladvantage with this
-			else if ($auxMtype=9)
-				do fireadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do fireadvantage with this
-			else if ($auxMtype=10)
-				do wateradvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do wateradvantage with this
-			else if ($auxMtype=11)
-				do grassadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do grassadvantage with this
-			else if ($auxMtype=12)
-				do electricadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do electricadvantage with this
-			else if ($auxMtype=13)
-				do psychicadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do psychicadvantage with this
-			else if ($auxMtype=14)
-				do iceadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do iceadvantage with this
-			else if ($auxMtype=15)
-				do dragonadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do dragonadvantage with this
-			else if ($auxMtype=16)
-				do darkadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do darkadvantage with this
-			else if ($auxMtype=17)
-				do fairyadvantage with this
-				$activePadvg = $auxAdvg
-				$auxType = enemyStype
-				do fairyadvantage with this
-			end
-			$activeSadvg = $auxAdvg
 
-			if ( ($activePadvg*$activeSadvg) > 1)
-				log ... foi super efetivo!
-			else if ( ($activePadvg*$activeSadvg) < 1)
+			[include activeMoveTypeAdvantage %type="0"]
+			[include activeMoveTypeAdvantage %type="1"]
+			[include activeMoveTypeAdvantage %type="2"]
+			[include activeMoveTypeAdvantage %type="3"]
+			[include activeMoveTypeAdvantage %type="4"]
+			[include activeMoveTypeAdvantage %type="5"]
+			[include activeMoveTypeAdvantage %type="6"]
+			[include activeMoveTypeAdvantage %type="7"]
+			[include activeMoveTypeAdvantage %type="8"]
+			[include activeMoveTypeAdvantage %type="9"]
+			[include activeMoveTypeAdvantage %type="10"]
+			[include activeMoveTypeAdvantage %type="11"]
+			[include activeMoveTypeAdvantage %type="12"]
+			[include activeMoveTypeAdvantage %type="13"]
+			[include activeMoveTypeAdvantage %type="14"]
+			[include activeMoveTypeAdvantage %type="15"]
+			[include activeMoveTypeAdvantage %type="16"]
+			[include activeMoveTypeAdvantage %type="17"]
+
+			$activeSadvg = $auxAdvg
+			$activeTypeAdvg = $activePadvg*$activeSadvg
+
+			if (enemyPtype=enemyStype)
+				$activeTypeAdvg = $activePadvg
+			end
+
+			if (($activeMoveClass>=0) and ($activeTypeAdvg=4) and ($activeAim = 1))
+				log ... <#cc33ff><b>foi hiper efetivo!</b></#>
+			end
+			if (($activeMoveClass>=0) and ($activeTypeAdvg=2) and ($activeAim = 1))
+				log ... <#4dffa6><b>foi super efetivo!</b></#>
+			end
+			if (($activeMoveClass>=0) and ($activeTypeAdvg=0.5) and ($activeAim = 1))
 				log ... mas foi pouco efetivo!
+			end
+			if (($activeMoveClass>=0) and ($activeTypeAdvg=0.25) and ($activeAim = 1))
+				log ... <#999999><b>mas não foi quase nada efetivo!</b></#>
+			end
+			if (($activeMoveClass>=0) and ($activeTypeAdvg=0) and ($activeAim = 1))
+				log ... <#b30000><b>mas o golpe não afeta o adversário!</b></#>
 			end
 
 			$activeRandomVar = frandom(0.85,1)
@@ -244,167 +247,1911 @@ Resources
 			if ($activeMoveIsSpecial=0)
 				$aA = activeAttack
 				$aD = enemyDefense
-			else if ($activeMoveIsSpecial=1)
+			end
+			if ($activeMoveIsSpecial=1)
 				$aA = activeSpAttack
 				$aD = enemySpDefense
 			end
+			if (($activeMoveIsSpecial=0) and (activeStatus=3))
+				$activeStatusMod = 0.5
+			end
 
-			$activeRawDamage = ((((0.4*activeLvl + 2)*$activeMovePower*($aA/$aD))/50)+2)
-			$activeDamageMods = $activePadvg*$activeSadvg*$activeRandomVar*$activeSTAB*$activeCrit
-			$activeEffectiveDamage = min(enemyCurHP,($activeRawDamage*$activeDamageMods))
-			lose round($activeEffectiveDamage) enemyCurHP
-	end
-	if (activeCurHP>0)
-			do getname with tag:enemy
-			log tomou [round($activeEffectiveDamage)] dano!
-			log <#3366ff>-----------------------------------</#>
-	end
+			if (($activeMoveClass>=0) and ($activeAim = 1))
+				$activeRawDamage = ((((0.4*activeLvl + 2)*$activeMovePower*($aA/$aD))/50)+2)
+				$activeDamageMods = $activeTypeAdvg*$activeRandomVar*$activeSTAB*$activeCrit*$activeStatusMod
+				$activeEffectiveDamage = round(min(enemyCurHP,($activeRawDamage*$activeDamageMods)))
+				lose $activeEffectiveDamage enemyCurHP
+				do getname with tag:enemy
+				log tomou [$activeEffectiveDamage] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+
+			if ($activeMoveEffect=59)
+				$activeMoveEffect = 25 + random(0,4)
+			end
+			if ($activeMoveEffect=60)
+				$activeMoveEffect = 30 + random(0,4)
+			end
+			if ($activeMoveEffect=61)
+				$activeMoveEffect = 35 + random(0,4)
+			end
+
+			if ((($activeMoveEffect=1) or ($activeMoveEffect2=1)) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				$activeEffectiveHeal = ceil(min(($activeEffectiveDamage/2),(activeMaxHP-activeCurHP)))
+				gain $activeEffectiveHeal activeCurHP
+				do getname with tag:active
+				log drenou [$activeEffectiveHeal] pontos de vida!
+				log <#3366ff>-----------------------------------</#>
+			end
+
+			if ((($activeMoveEffect=2) or ($activeMoveEffect2=2)) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				$activeEffectiveRecoil = ceil(min(($activeEffectiveDamage/4),activeCurHP))
+				lose $activeEffectiveRecoil activeCurHP
+				do getname with tag:active
+				log também se feriu, tomando [$activeEffectiveRecoil] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if ((($activeMoveEffect=3) or ($activeMoveEffect2=3)) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				$activeEffectiveRecoil = ceil(min(($activeEffectiveDamage/3),activeCurHP))
+				lose $activeEffectiveRecoil activeCurHP
+				do getname with tag:active
+				log também se feriu, tomando [$activeEffectiveRecoil] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=4) and (chance($activeMoveFxChance)) and (enemyStatus=0) and ($activeAim = 1))
+				enemyStatus = 1
+				do getname with tag:enemy
+				log foi envenenado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=5) and (chance($activeMoveFxChance)) and (enemyStatus=0) and ($activeAim = 1))
+				enemyStatus = 2
+				do getname with tag:enemy
+				log foi intoxicado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=6) and (chance($activeMoveFxChance)) and (enemyStatus=0) and ($activeAim = 1))
+				enemyStatus = 3
+				do getname with tag:enemy
+				log está em chamas!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=7) and (chance($activeMoveFxChance)) and (enemyStatus=0) and ($activeAim = 1))
+				enemyStatus = -2
+				do getname with tag:enemy
+				log foi paralisado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=8) and (chance($activeMoveFxChance)) and (enemyStatus=0) and ($activeAim = 1))
+				enemyStatus = -3
+				do getname with tag:enemy
+				enemySleep = random(1,3)
+				log caiu no sono!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=9) and (chance($activeMoveFxChance)) and (enemyStatus=0) and ($activeAim = 1))
+				enemyStatus = -4
+				do getname with tag:enemy
+				log foi congelado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=10) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyAttackStage = max((-6),(enemyAttackStage-1))
+				do getname with tag:enemy
+				log teve seu Ataque ligeiramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=11) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyDefenseStage = max((-6),(enemyDefenseStage-1))
+				do getname with tag:enemy
+				log teve sua Defesa ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=12) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemySpAttackStage = max((-6),(enemySpAttackStage-1))
+				do getname with tag:enemy
+				log teve seu Ataque Especial ligeiramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=13) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemySpDefenseStage = max((-6),(enemySpDefenseStage-1))
+				do getname with tag:enemy
+				log teve sua Defesa Especial ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=14) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemySpeedStage = max((-6),(enemySpeedStage-1))
+				do getname with tag:enemy
+				log teve sua Velocidade ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=15) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyAttackStage = max((-6),(enemyAttackStage-2))
+				do getname with tag:enemy
+				log teve seu Ataque duramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=16) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyDefenseStage = max((-6),(enemyDefenseStage-2))
+				do getname with tag:enemy
+				log teve sua Defesa duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=17) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemySpAttackStage = max((-6),(enemySpAttackStage-2))
+				do getname with tag:enemy
+				log teve seu Ataque Especial duramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=18) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemySpDefenseStage = max((-6),(enemySpDefenseStage-2))
+				do getname with tag:enemy
+				log teve sua Defesa Especial duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=19) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemySpeedStage = max((-6),(enemySpeedStage-2))
+				do getname with tag:enemy
+				log teve sua Velocidade duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=20) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyAttackStage = max((-6),(enemyAttackStage-3))
+				do getname with tag:enemy
+				log teve seu Ataque severamente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=21) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyDefenseStage = max((-6),(enemyDefenseStage-3))
+				do getname with tag:enemy
+				log teve sua Defesa severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=22) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemySpAttackStage = max((-6),(enemySpAttackStage-3))
+				do getname with tag:enemy
+				log teve seu Ataque Especial severamente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=23) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemySpDefenseStage = max((-6),(enemySpDefenseStage-3))
+				do getname with tag:enemy
+				log teve sua Defesa Especial severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=24) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemySpeedStage = max((-6),(enemySpeedStage-3))
+				do getname with tag:enemy
+				log teve sua Velocidade severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=25) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAttackStage = min(6,(activeAttackStage+1))
+				do getname with tag:active
+				log teve seu Ataque ligeiramente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=26) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeDefenseStage = min(6,(activeDefenseStage+1))
+				do getname with tag:active
+				log teve sua Defesa ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=27) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpAttackStage = min(6,(activeSpAttackStage+1))
+				do getname with tag:active
+				log teve seu Ataque Especial ligeiramente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=28) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpDefenseStage = min(6,(activeSpDefenseStage+1))
+				do getname with tag:active
+				log teve sua Defesa Especial ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=29) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpeedStage = min(6,(activeSpeedStage+1))
+				do getname with tag:active
+				log teve sua Velocidade ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=30) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAttackStage = min(6,(activeAttackStage+2))
+				do getname with tag:active
+				log teve seu Ataque bruscamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=31) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeDefenseStage = min(6,(activeDefenseStage+2))
+				do getname with tag:active
+				log teve sua Defesa bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=32) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpAttackStage = min(6,(activeSpAttackStage+2))
+				do getname with tag:active
+				log teve seu Ataque Especial bruscamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=33) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpDefenseStage = min(6,(activeSpDefenseStage+2))
+				do getname with tag:active
+				log teve sua Defesa Especial bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=34) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpeedStage = min(6,(activeSpeedStage+2))
+				do getname with tag:active
+				log teve sua Velocidade bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=35) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAttackStage = min(6,(activeAttackStage+3))
+				do getname with tag:active
+				log teve seu Ataque drasticamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=36) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeDefenseStage = min(6,(activeDefenseStage+3))
+				do getname with tag:active
+				log teve sua Defesa drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=37) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpAttackStage = min(6,(activeSpAttackStage+3))
+				do getname with tag:active
+				log teve seu Ataque Especial drasticamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=38) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpDefenseStage = min(6,(activeSpDefenseStage+3))
+				do getname with tag:active
+				log teve sua Defesa Especial drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=39) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpeedStage = min(6,(activeSpeedStage+3))
+				do getname with tag:active
+				log teve sua Velocidade drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=40) and (chance($activeMoveFxChance)) and (enemyStatus=0) and ($activeAim = 1))
+				enemyStatus = -5
+				do getname with tag:enemy
+				log ficou hesitante!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=41) and (chance($activeMoveFxChance)) and (enemyStatus=0) and ($activeAim = 1))
+				enemyStatus = -6
+				do getname with tag:enemy
+				log foi forçado a fugir!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=42) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAttackStage = min(6,(activeAttackStage+1))
+				activeDefenseStage = min(6,(activeDefenseStage+1))
+				activeSpAttackStage = min(6,(activeSpAttackStage+1))
+				activeSpDefenseStage = min(6,(activeSpDefenseStage+1))
+				activeSpeedStage = min(6,(activeSpeedStage+1))
+				do getname with tag:active
+				log teve todos os seus status ligeiramente aumentados!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=43) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAccuracyStage = min(6,(activeAccuracyStage+1))
+				do getname with tag:active
+				log teve sua precisão ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=44) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAccuracyStage = min(6,(activeAccuracyStage+2))
+				do getname with tag:active
+				log teve sua precisão bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=45) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAccuracyStage = min(6,(activeAccuracyStage+3))
+				do getname with tag:active
+				log teve sua precisão drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=46) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyEvasionStage = max((-6),(enemyEvasionStage-1))
+				do getname with tag:enemy
+				log teve sua evasão ligeiramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=47) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyEvasionStage = max((-6),(enemyEvasionStage-2))
+				do getname with tag:enemy
+				log teve sua evasão duramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=48) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyEvasionStage = max((-6),(enemyEvasionStage-3))
+				do getname with tag:enemy
+				log teve sua evasão severamente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=49) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyAccuracyStage = max((-6),(enemyAccuracyStage-1))%
+				do getname with tag:enemy
+				log teve sua precisão ligeiramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=50) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyAccuracyStage = max((-6),(enemyAccuracyStage-2))
+				do getname with tag:enemy
+				log teve sua precisão duramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=51) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				enemyAccuracyStage = max((-6),(enemyAccuracyStage-3))
+				do getname with tag:enemy
+				log teve sua precisão severamente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=52) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeEvasionStage = min(6,(activeEvasionStage+1))
+				do getname with tag:active
+				log teve sua evasão ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=53) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeEvasionStage = min(6,(activeEvasionStage+2))
+				do getname with tag:active
+				log teve sua evasão bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=54) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeEvasionStage = min(6,(activeEvasionStage+3))
+				do getname with tag:active
+				log teve sua evasão drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=55) and (chance($activeMoveFxChance)) and (enemyStatus=0) and ($activeAim = 1))
+				enemyStatus = (-7)
+				do getname with tag:enemy
+				log ficou confuso!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=56) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeCriticalStage = min(6,(activeCriticalStage+1))
+				do getname with tag:active
+				log teve sua chance de crítico ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=57) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeCriticalStage = min(6,(activeCriticalStage+2))
+				do getname with tag:active
+				log teve sua chance de crítico bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=58) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeCriticalStage = min(6,(activeCriticalStage+3))
+				do getname with tag:active
+				log teve sua chance de crítico drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+
+			[include activeMultipleHit %hit="2"]
+			[include activeMultipleHit %hit="3"]
+			[include activeMultipleHit %hit="4"]
+			[include activeMultipleHit %hit="5"]
+
+			if (0>=enemyCurHP)
+				enemyStatus=-1
+			end
+
+			activeLastMove = $activeMoveID
 		end
 
-		on enemymove:
-	if (enemyCurHP>0)
-			do getname with tag:enemy
-			log atacou...
-			$enemySTAB = 1
-			$enemyPadvg = 1
-			$enemySadvg = 1
-			$enemyCrit = 1
+//-------------------------------------------------------------------------------------------------//
 
-			if (enemyPtype=$enemyMovetype)
+		on enemymove:
+			$enemyAim = 1
+
+			if ($enemyMoveAccuracy>=0)
+				$enemyAim = chance(($enemyMoveAccuracy*enemyAccuracyMod*enemyEvasionMod)*100)
+			end
+
+			if ($enemyAim = 0)
+				do getname with tag:enemy
+				log errou o golpe!
+				enemyMovesInARow = 0
+			end
+
+			if (($enemyMoveID=enemyLastMove) and ($enemyAim = 1))
+				enemyMovesInARow = (enemyMovesInARow+1)
+			end
+			if ((!($enemyMoveID=enemyLastMove)) and ($enemyAim = 1))
+				enemyMovesInARow = 1
+			end
+
+			if (($enemyMoveClass>=0) and ($enemyAim = 1))
+				do getname with tag:enemy
+				log atacou...
+				$enemySTAB = 1
+				$enemyCrit = 1
+				$enemyStatusMod = 1
+			end
+			if (($enemyMoveClass=1) and ($enemyAim = 1))
+				$enemyMovePower = ($enemyMovePower*(min(5,enemyMovesInARow)))
+				log ... com um poder acumulado de [enemyMovesInARow] golpes seguidos ...
+			end
+			if (($enemyMoveClass>=2) and ($enemyAim = 1))
+				$numberOfHits = random(2,$enemyMoveClass)
+				log ... [$numberOfHits] vezes ...
+			end
+
+			if (($enemyMoveClass>=0) and (enemyPtype=$enemyMovetype) and ($enemyAim = 1))
 				$enemySTAB = $enemySTAB + 0.5
 				log ... o golpe foi fortalecido pelo seu tipo principal ...
 			end
-			if (enemyStype=$enemyMovetype)
+			if (($enemyMoveClass>=0) and (enemyStype=$enemyMovetype) and ($enemyAim = 1))
 				$enemySTAB = $enemySTAB + 0.5
 				log ... o golpe foi fortalecido pelo seu tipo secundário ...
 			end
-			if (chance($enemyMoveCrit))
+			if (($enemyMoveClass>=0) and (chance($enemyMoveCrit*pow(2,enemyCriticalStage))) and ($enemyAim = 1))
 				$enemyCrit = 1.5
 				log ... e realizou um golpe crítico!
 			end
 
-			$auxMtype = $enemyMovetype
-			$auxType = activePtype
-			if ($auxMtype=0)
-				do normaladvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do normaladvantage with this
-			else if ($auxMtype=1)
-				do fightadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do fightadvantage with this
-			else if ($auxMtype=2)
-				do flyingadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do flyingadvantage with this
-			else if ($auxMtype=3)
-				do poisonadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do poisonadvantage with this
-			else if ($auxMtype=4)
-				do groundadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do groundadvantage with this
-			else if ($auxMtype=5)
-				do rockadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do rockadvantage with this
-			else if ($auxMtype=6)
-				do bugadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do bugadvantage with this
-			else if ($auxMtype=7)
-				do ghostadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do ghostadvantage with this
-			else if ($auxMtype=8)
-				do steeladvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do steeladvantage with this
-			else if ($auxMtype=9)
-				do fireadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do fireadvantage with this
-			else if ($auxMtype=10)
-				do wateradvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do wateradvantage with this
-			else if ($auxMtype=11)
-				do grassadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do grassadvantage with this
-			else if ($auxMtype=12)
-				do electricadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do electricadvantage with this
-			else if ($auxMtype=13)
-				do psychicadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do psychicadvantage with this
-			else if ($auxMtype=14)
-				do iceadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do iceadvantage with this
-			else if ($auxMtype=15)
-				do dragonadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do dragonadvantage with this
-			else if ($auxMtype=16)
-				do darkadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do darkadvantage with this
-			else if ($auxMtype=17)
-				do fairyadvantage with this
-				$enemyPadvg = $auxAdvg
-				$auxType = activeStype
-				do fairyadvantage with this
-			end
-			$enemySadvg = $auxAdvg
+			$auxMtype = $enemyMoveType
+			$auxType = enemyPtype
 
-			if ( ($enemyPadvg*$enemySadvg) > 1)
-				log ... foi super efetivo!
-			else if ( ($enemyPadvg*$enemySadvg) < 1)
+			[include enemyMoveTypeAdvantage %type="0"]
+			[include enemyMoveTypeAdvantage %type="1"]
+			[include enemyMoveTypeAdvantage %type="2"]
+			[include enemyMoveTypeAdvantage %type="3"]
+			[include enemyMoveTypeAdvantage %type="4"]
+			[include enemyMoveTypeAdvantage %type="5"]
+			[include enemyMoveTypeAdvantage %type="6"]
+			[include enemyMoveTypeAdvantage %type="7"]
+			[include enemyMoveTypeAdvantage %type="8"]
+			[include enemyMoveTypeAdvantage %type="9"]
+			[include enemyMoveTypeAdvantage %type="10"]
+			[include enemyMoveTypeAdvantage %type="11"]
+			[include enemyMoveTypeAdvantage %type="12"]
+			[include enemyMoveTypeAdvantage %type="13"]
+			[include enemyMoveTypeAdvantage %type="14"]
+			[include enemyMoveTypeAdvantage %type="15"]
+			[include enemyMoveTypeAdvantage %type="16"]
+			[include enemyMoveTypeAdvantage %type="17"]
+
+			$enemySadvg = $auxAdvg
+			$enemyTypeAdvg = $enemyPadvg*$enemySadvg
+
+			if (enemyPtype=enemyStype)
+				$enemyTypeAdvg = $enemyPadvg
+			end
+
+			if (($enemyMoveClass>=0) and ($enemyTypeAdvg=4) and ($enemyAim = 1))
+				log ... <#cc33ff><b>foi hiper efetivo!</b></#>
+			end
+			if (($enemyMoveClass>=0) and ($enemyTypeAdvg=2) and ($enemyAim = 1))
+				log ... <#4dffa6><b>foi super efetivo!</b></#>
+			end
+			if (($enemyMoveClass>=0) and ($enemyTypeAdvg=0.5) and ($enemyAim = 1))
 				log ... mas foi pouco efetivo!
+			end
+			if (($enemyMoveClass>=0) and ($enemyTypeAdvg=0.25) and ($enemyAim = 1))
+				log ... <#999999><b>mas não foi quase nada efetivo!</b></#>
+			end
+			if (($enemyMoveClass>=0) and ($enemyTypeAdvg=0) and ($enemyAim = 1))
+				log ... <#b30000><b>mas o golpe não afeta o adversário!</b></#>
 			end
 
 			$enemyRandomVar = frandom(0.85,1)
 
 			if ($enemyMoveIsSpecial=0)
-				$eA = enemyAttack
-				$eD = activeDefense
-			else if ($enemyMoveIsSpecial=1)
-				$eA = enemySpAttack
-				$eD = activeSpDefense
+				$aA = enemyAttack
+				$aD = enemyDefense
+			end
+			if ($enemyMoveIsSpecial=1)
+				$aA = enemySpAttack
+				$aD = enemySpDefense
+			end
+			if (($enemyMoveIsSpecial=0) and (enemyStatus=3))
+				$enemyStatusMod = 0.5
 			end
 
-			$enemyRawDamage = ((((0.4*enemyLvl + 2)*$enemyMovePower*($eA/$eD))/50)+2)
-			$enemyDamageMods = $enemyPadvg*$enemySadvg*$enemyRandomVar*$enemySTAB*$enemyCrit
-			$enemyEffectiveDamage = min(activeCurHP,($enemyRawDamage*$enemyDamageMods))
-			lose round($enemyEffectiveDamage) activeCurHP
-	end
-	if (enemyCurHP>0)
-			do getname with tag:active
-			log tomou [round($enemyEffectiveDamage)] dano.
-			log <#3366ff>-----------------------------------</#>
-	end
+			if (($enemyMoveClass>=0) and ($enemyAim = 1))
+				$enemyRawDamage = ((((0.4*enemyLvl + 2)*$enemyMovePower*($aA/$aD))/50)+2)
+				$enemyDamageMods = $enemyTypeAdvg*$enemyRandomVar*$enemySTAB*$enemyCrit*$enemyStatusMod
+				$enemyEffectiveDamage = round(min(enemyCurHP,($enemyRawDamage*$enemyDamageMods)))
+				lose $enemyEffectiveDamage enemyCurHP
+				do getname with tag:enemy
+				log tomou [$enemyEffectiveDamage] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+
+			if ($enemyMoveEffect=59)
+				$enemyMoveEffect = 25 + random(0,4)
+			end
+			if ($enemyMoveEffect=60)
+				$enemyMoveEffect = 30 + random(0,4)
+			end
+			if ($enemyMoveEffect=61)
+				$enemyMoveEffect = 35 + random(0,4)
+			end
+
+			if (($enemyMoveEffect=1) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				$enemyEffectiveHeal = ceil(min(($enemyEffectiveDamage/2),(enemyMaxHP-enemyCurHP)))
+				gain $enemyEffectiveHeal enemyCurHP
+				do getname with tag:enemy
+				log drenou [$enemyEffectiveHeal] pontos de vida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=2) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				$enemyEffectiveRecoil = ceil(min(($enemyEffectiveDamage/4),enemyCurHP))
+				lose $enemyEffectiveRecoil enemyCurHP
+				do getname with tag:enemy
+				log também se feriu, tomando [$enemyEffectiveRecoil] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=3) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				$enemyEffectiveRecoil = ceil(min(($enemyEffectiveDamage/3),enemyCurHP))
+				lose $enemyEffectiveRecoil enemyCurHP
+				do getname with tag:enemy
+				log também se feriu, tomando [$enemyEffectiveRecoil] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=4) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = 1
+				do getname with tag:enemy
+				log foi envenenado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=5) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = 2
+				do getname with tag:enemy
+				log foi intoxicado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=6) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = 3
+				do getname with tag:enemy
+				log está em chamas!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=7) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = -2
+				do getname with tag:enemy
+				log foi paralisado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=8) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = -3
+				do getname with tag:enemy
+				enemySleep = random(1,3)
+				log caiu no sono!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=8) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = -4
+				do getname with tag:enemy
+				log foi congelado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=10) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = max((-6),(enemyAttackStage-1))
+				do getname with tag:enemy
+				log teve seu Ataque ligeiramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=11) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = max((-6),(enemyDefenseStage-1))
+				do getname with tag:enemy
+				log teve sua Defesa ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=12) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = max((-6),(enemySpAttackStage-1))
+				do getname with tag:enemy
+				log teve seu Ataque Especial ligeiramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=13) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = max((-6),(enemySpDefenseStage-1))
+				do getname with tag:enemy
+				log teve sua Defesa Especial ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=14) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = max((-6),(enemySpeedStage-1))
+				do getname with tag:enemy
+				log teve sua Velocidade ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=15) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = max((-6),(enemyAttackStage-2))
+				do getname with tag:enemy
+				log teve seu Ataque duramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=16) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = max((-6),(enemyDefenseStage-2))
+				do getname with tag:enemy
+				log teve sua Defesa duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=17) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = max((-6),(enemySpAttackStage-2))
+				do getname with tag:enemy
+				log teve seu Ataque Especial duramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=18) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = max((-6),(enemySpDefenseStage-2))
+				do getname with tag:enemy
+				log teve sua Defesa Especial duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=19) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = max((-6),(enemySpeedStage-2))
+				do getname with tag:enemy
+				log teve sua Velocidade duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=20) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = max((-6),(enemyAttackStage-3))
+				do getname with tag:enemy
+				log teve seu Ataque severamente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=21) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = max((-6),(enemyDefenseStage-3))
+				do getname with tag:enemy
+				log teve sua Defesa severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=22) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = max((-6),(enemySpAttackStage-3))
+				do getname with tag:enemy
+				log teve seu Ataque Especial severamente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=23) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = max((-6),(enemySpDefenseStage-3))
+				do getname with tag:enemy
+				log teve sua Defesa Especial severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=24) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = max((-6),(enemySpeedStage-3))
+				do getname with tag:enemy
+				log teve sua Velocidade severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=25) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = min(6,(enemyAttackStage+1))
+				do getname with tag:enemy
+				log teve seu Ataque ligeiramente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=26) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = min(6,(enemyDefenseStage+1))
+				do getname with tag:enemy
+				log teve sua Defesa ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=27) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = min(6,(enemySpAttackStage+1))
+				do getname with tag:enemy
+				log teve seu Ataque Especial ligeiramente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=28) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = min(6,(enemySpDefenseStage+1))
+				do getname with tag:enemy
+				log teve sua Defesa Especial ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=29) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = min(6,(enemySpeedStage+1))
+				do getname with tag:enemy
+				log teve sua Velocidade ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=30) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = min(6,(enemyAttackStage+2))
+				do getname with tag:enemy
+				log teve seu Ataque bruscamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=31) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = min(6,(enemyDefenseStage+2))
+				do getname with tag:enemy
+				log teve sua Defesa bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=32) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = min(6,(enemySpAttackStage+2))
+				do getname with tag:enemy
+				log teve seu Ataque Especial bruscamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=33) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = min(6,(enemySpDefenseStage+2))
+				do getname with tag:enemy
+				log teve sua Defesa Especial bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=34) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = min(6,(enemySpeedStage+2))
+				do getname with tag:enemy
+				log teve sua Velocidade bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=35) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = min(6,(enemyAttackStage+3))
+				do getname with tag:enemy
+				log teve seu Ataque drasticamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=36) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = min(6,(enemyDefenseStage+3))
+				do getname with tag:enemy
+				log teve sua Defesa drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=37) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = min(6,(enemySpAttackStage+3))
+				do getname with tag:enemy
+				log teve seu Ataque Especial drasticamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=38) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = min(6,(enemySpDefenseStage+3))
+				do getname with tag:enemy
+				log teve sua Defesa Especial drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=39) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = min(6,(enemySpeedStage+3))
+				do getname with tag:enemy
+				log teve sua Velocidade drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=40) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = -5
+				do getname with tag:enemy
+				log ficou hesitante!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=41) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = -6
+				do getname with tag:enemy
+				log foi forçado a fugir!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=42) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = min(6,(enemyAttackStage+1))
+				enemyDefenseStage = min(6,(enemyDefenseStage+1))
+				enemySpAttackStage = min(6,(enemySpAttackStage+1))
+				enemySpDefenseStage = min(6,(enemySpDefenseStage+1))
+				enemySpeedStage = min(6,(enemySpeedStage+1))
+				do getname with tag:enemy
+				log teve todos os seus status ligeiramente aumentados!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=43) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAccuracyStage = min(6,(enemyAccuracyStage+1))
+				do getname with tag:enemy
+				log teve sua precisão ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=44) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAccuracyStage = min(6,(enemyAccuracyStage+2))
+				do getname with tag:enemy
+				log teve sua precisão bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=45) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAccuracyStage = min(6,(enemyAccuracyStage+3))
+				do getname with tag:enemy
+				log teve sua precisão drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=46) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				activeEvasionStage = max((-6),(activeEvasionStage-1))
+				do getname with tag:active
+				log teve sua evasão ligeiramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=47) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				activeEvasionStage = max((-6),(activeEvasionStage-2))
+				do getname with tag:active
+				log teve sua evasão duramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=48) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				activeEvasionStage = max((-6),(activeEvasionStage-3))
+				do getname with tag:active
+				log teve sua evasão severamente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=49) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				activeAccuracyStage = max((-6),(activeAccuracyStage-1))%
+				do getname with tag:active
+				log teve sua precisão ligeiramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=50) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				activeAccuracyStage = max((-6),(activeAccuracyStage-2))
+				do getname with tag:active
+				log teve sua precisão bruscamente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=51) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				activeAccuracyStage = max((-6),(activeAccuracyStage-3))
+				do getname with tag:active
+				log teve sua precisão drasticamente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=52) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyEvasionStage = min(6,(enemyEvasionStage+1))
+				do getname with tag:enemy
+				log teve sua evasão ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=53) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyEvasionStage = min(6,(enemyEvasionStage+2))
+				do getname with tag:enemy
+				log teve sua evasão duramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=54) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyEvasionStage = min(6,(enemyEvasionStage+3))
+				do getname with tag:enemy
+				log teve sua evasão severamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=55) and (chance($enemyMoveFxChance)) and (activeStatus=0) and ($enemyAim = 1))
+				activeStatus = (-7)
+				do getname with tag:active
+				log ficou confuso!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=56) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyCriticalStage = min(6,(enemyCriticalStage+1))
+				do getname with tag:enemy
+				log teve sua chance de crítico ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=57) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyCriticalStage = min(6,(enemyCriticalStage+2))
+				do getname with tag:enemy
+				log teve sua chance de crítico bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=58) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyCriticalStage = min(6,(enemyCriticalStage+3))
+				do getname with tag:enemy
+				log teve sua chance de crítico drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+
+			[include enemyMultipleHit %hit="2"]
+			[include enemyMultipleHit %hit="3"]
+			[include enemyMultipleHit %hit="4"]
+			[include enemyMultipleHit %hit="5"]
+
+			if (0>=enemyCurHP)
+				enemyStatus=-1
+			end
+
+			enemyLastMove = $enemyMoveID
 		end
+
+//-------------------------------------------------------------------------------------------------//
+
+		on activeconfusion:
+			activeStatus = 0
+			$activeAim = 1
+
+			if ($activeMoveAccuracy>=0)
+				$activeAim = chance(($activeMoveAccuracy*activeAccuracyMod*activeEvasionMod)*100)
+			end
+
+			if ($activeAim = 0)
+				do getname with tag:active
+				log errou o golpe contra si!
+				activeMovesInARow = 0
+			end
+
+			if (($activeMoveID=activeLastMove) and ($activeAim = 1))
+				activeMovesInARow = (activeMovesInARow+1)
+			end
+			if ((!($activeMoveID=activeLastMove)) and ($activeAim = 1))
+				activeMovesInARow = 1
+			end
+
+			if (($activeMoveClass>=0) and ($activeAim = 1))
+				do getname with tag:active
+				log se atacou...
+				$activeSTAB = 1
+				$activeCrit = 1
+				$activeStatusMod = 1
+			end
+			if (($activeMoveClass=1) and ($activeAim = 1))
+				$activeMovePower = ($activeMovePower*(min(5,activeMovesInARow)))
+				log ... com um poder acumulado de [activeMovesInARow] golpes seguidos ...
+			end
+			if (($activeMoveClass>=2) and ($activeAim = 1))
+				$numberOfHits = random(2,$activeMoveClass)
+				log ... [$numberOfHits] vezes ...
+			end
+
+			if (($activeMoveClass>=0) and (activePtype=$activeMovetype) and ($activeAim = 1))
+				$activeSTAB = $activeSTAB + 0.5
+				log ... o golpe foi fortalecido pelo seu tipo principal ...
+			end
+			if (($activeMoveClass>=0) and (activeStype=$activeMovetype) and ($activeAim = 1))
+				$activeSTAB = $activeSTAB + 0.5
+				log ... o golpe foi fortalecido pelo seu tipo secundário ...
+			end
+			if (($activeMoveClass>=0) and (chance($activeMoveCrit*pow(2,activeCriticalStage))) and ($activeAim = 1))
+				$activeCrit = 1.5
+				log ... e realizou um golpe crítico!
+			end
+
+			$auxMtype = $activeMoveType
+			$auxType = activePtype
+
+			[include activeMoveTypeAdvantage %type="0"]
+			[include activeMoveTypeAdvantage %type="1"]
+			[include activeMoveTypeAdvantage %type="2"]
+			[include activeMoveTypeAdvantage %type="3"]
+			[include activeMoveTypeAdvantage %type="4"]
+			[include activeMoveTypeAdvantage %type="5"]
+			[include activeMoveTypeAdvantage %type="6"]
+			[include activeMoveTypeAdvantage %type="7"]
+			[include activeMoveTypeAdvantage %type="8"]
+			[include activeMoveTypeAdvantage %type="9"]
+			[include activeMoveTypeAdvantage %type="10"]
+			[include activeMoveTypeAdvantage %type="11"]
+			[include activeMoveTypeAdvantage %type="12"]
+			[include activeMoveTypeAdvantage %type="13"]
+			[include activeMoveTypeAdvantage %type="14"]
+			[include activeMoveTypeAdvantage %type="15"]
+			[include activeMoveTypeAdvantage %type="16"]
+			[include activeMoveTypeAdvantage %type="17"]
+
+			$activeSadvg = $auxAdvg
+			$activeTypeAdvg = $activePadvg*$activeSadvg
+
+			if (activePtype=activeStype)
+				$activeTypeAdvg = $activePadvg
+			end
+
+			if (($activeMoveClass>=0) and ($activeTypeAdvg=4) and ($activeAim = 1))
+				log ... <#cc33ff><b>foi hiper efetivo!</b></#>
+			end
+			if (($activeMoveClass>=0) and ($activeTypeAdvg=2) and ($activeAim = 1))
+				log ... <#4dffa6><b>foi super efetivo!</b></#>
+			end
+			if (($activeMoveClass>=0) and ($activeTypeAdvg=0.5) and ($activeAim = 1))
+				log ... mas foi pouco efetivo!
+			end
+			if (($activeMoveClass>=0) and ($activeTypeAdvg=0.25) and ($activeAim = 1))
+				log ... <#999999><b>mas não foi quase nada efetivo!</b></#>
+			end
+			if (($activeMoveClass>=0) and ($activeTypeAdvg=0) and ($activeAim = 1))
+				log ... <#b30000><b>mas o golpe não afeta o adversário!</b></#>
+			end
+
+			$activeRandomVar = frandom(0.85,1)
+
+			if ($activeMoveIsSpecial=0)
+				$aA = activeAttack
+				$aD = activeDefense
+			end
+			if ($activeMoveIsSpecial=1)
+				$aA = activeSpAttack
+				$aD = activeSpDefense
+			end
+			if (($activeMoveIsSpecial=0) and (activeStatus=3))
+				$activeStatusMod = 0.5
+			end
+
+			if (($activeMoveClass>=0) and ($activeAim = 1))
+				$activeRawDamage = ((((0.4*activeLvl + 2)*$activeMovePower*($aA/$aD))/50)+2)
+				$activeDamageMods = $activeTypeAdvg*$activeRandomVar*$activeSTAB*$activeCrit*$activeStatusMod
+				$activeEffectiveDamage = round(min(activeCurHP,($activeRawDamage*$activeDamageMods)))
+				lose $activeEffectiveDamage activeCurHP
+				do getname with tag:active
+				log tomou [$activeEffectiveDamage] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+
+			if ($activeMoveEffect=59)
+				$activeMoveEffect = 25 + random(0,4)
+			end
+			if ($activeMoveEffect=60)
+				$activeMoveEffect = 30 + random(0,4)
+			end
+			if ($activeMoveEffect=61)
+				$activeMoveEffect = 35 + random(0,4)
+			end
+
+			if (($activeMoveEffect=1) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				$activeEffectiveHeal = ceil(min(($activeEffectiveDamage/2),(activeMaxHP-activeCurHP)))
+				gain $activeEffectiveHeal activeCurHP
+				do getname with tag:active
+				log drenou [$activeEffectiveHeal] pontos de vida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=2) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				$activeEffectiveRecoil = ceil(min(($activeEffectiveDamage/4),activeCurHP))
+				lose $activeEffectiveRecoil activeCurHP
+				do getname with tag:active
+				log também se feriu, tomando [$activeEffectiveRecoil] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=3) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				$activeEffectiveRecoil = ceil(min(($activeEffectiveDamage/3),activeCurHP))
+				lose $activeEffectiveRecoil activeCurHP
+				do getname with tag:active
+				log também se feriu, tomando [$activeEffectiveRecoil] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=4) and (chance($activeMoveFxChance)) and (activeStatus=0) and ($activeAim = 1))
+				activeStatus = 1
+				do getname with tag:active
+				log foi envenenado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=5) and (chance($activeMoveFxChance)) and (activeStatus=0) and ($activeAim = 1))
+				activeStatus = 2
+				do getname with tag:active
+				log foi intoxicado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=6) and (chance($activeMoveFxChance)) and (activeStatus=0) and ($activeAim = 1))
+				activeStatus = 3
+				do getname with tag:active
+				log está em chamas!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=7) and (chance($activeMoveFxChance)) and (activeStatus=0) and ($activeAim = 1))
+				activeStatus = -2
+				do getname with tag:active
+				log foi paralisado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=8) and (chance($activeMoveFxChance)) and (activeStatus=0) and ($activeAim = 1))
+				activeStatus = -3
+				do getname with tag:active
+				activeSleep = random(1,3)
+				log caiu no sono!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=8) and (chance($activeMoveFxChance)) and (activeStatus=0) and ($activeAim = 1))
+				activeStatus = -4
+				do getname with tag:active
+				log foi congelado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=10) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAttackStage = max((-6),(activeAttackStage-1))
+				do getname with tag:active
+				log teve seu Ataque ligeiramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=11) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeDefenseStage = max((-6),(activeDefenseStage-1))
+				do getname with tag:active
+				log teve sua Defesa ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=12) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpAttackStage = max((-6),(activeSpAttackStage-1))
+				do getname with tag:active
+				log teve seu Ataque Especial ligeiramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=13) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpDefenseStage = max((-6),(activeSpDefenseStage-1))
+				do getname with tag:active
+				log teve sua Defesa Especial ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=14) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpeedStage = max((-6),(activeSpeedStage-1))
+				do getname with tag:active
+				log teve sua Velocidade ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=15) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAttackStage = max((-6),(activeAttackStage-2))
+				do getname with tag:active
+				log teve seu Ataque duramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=16) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeDefenseStage = max((-6),(activeDefenseStage-2))
+				do getname with tag:active
+				log teve sua Defesa duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=17) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpAttackStage = max((-6),(activeSpAttackStage-2))
+				do getname with tag:active
+				log teve seu Ataque Especial duramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=18) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpDefenseStage = max((-6),(activeSpDefenseStage-2))
+				do getname with tag:active
+				log teve sua Defesa Especial duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=19) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpeedStage = max((-6),(activeSpeedStage-2))
+				do getname with tag:active
+				log teve sua Velocidade duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=20) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAttackStage = max((-6),(activeAttackStage-3))
+				do getname with tag:active
+				log teve seu Ataque severamente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=21) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeDefenseStage = max((-6),(activeDefenseStage-3))
+				do getname with tag:active
+				log teve sua Defesa severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=22) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpAttackStage = max((-6),(activeSpAttackStage-3))
+				do getname with tag:active
+				log teve seu Ataque Especial severamente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=23) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpDefenseStage = max((-6),(activeSpDefenseStage-3))
+				do getname with tag:active
+				log teve sua Defesa Especial severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=24) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpeedStage = max((-6),(activeSpeedStage-3))
+				do getname with tag:active
+				log teve sua Velocidade severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=25) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAttackStage = min(6,(activeAttackStage+1))
+				do getname with tag:active
+				log teve seu Ataque ligeiramente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=26) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeDefenseStage = min(6,(activeDefenseStage+1))
+				do getname with tag:active
+				log teve sua Defesa ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=27) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpAttackStage = min(6,(activeSpAttackStage+1))
+				do getname with tag:active
+				log teve seu Ataque Especial ligeiramente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=28) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpDefenseStage = min(6,(activeSpDefenseStage+1))
+				do getname with tag:active
+				log teve sua Defesa Especial ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=29) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpeedStage = min(6,(activeSpeedStage+1))
+				do getname with tag:active
+				log teve sua Velocidade ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=30) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAttackStage = min(6,(activeAttackStage+2))
+				do getname with tag:active
+				log teve seu Ataque bruscamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=31) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeDefenseStage = min(6,(activeDefenseStage+2))
+				do getname with tag:active
+				log teve sua Defesa bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=32) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpAttackStage = min(6,(activeSpAttackStage+2))
+				do getname with tag:active
+				log teve seu Ataque Especial bruscamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=33) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpDefenseStage = min(6,(activeSpDefenseStage+2))
+				do getname with tag:active
+				log teve sua Defesa Especial bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=34) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpeedStage = min(6,(activeSpeedStage+2))
+				do getname with tag:active
+				log teve sua Velocidade bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=35) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAttackStage = min(6,(activeAttackStage+3))
+				do getname with tag:active
+				log teve seu Ataque drasticamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=36) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeDefenseStage = min(6,(activeDefenseStage+3))
+				do getname with tag:active
+				log teve sua Defesa drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=37) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpAttackStage = min(6,(activeSpAttackStage+3))
+				do getname with tag:active
+				log teve seu Ataque Especial drasticamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=38) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpDefenseStage = min(6,(activeSpDefenseStage+3))
+				do getname with tag:active
+				log teve sua Defesa Especial drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=39) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeSpeedStage = min(6,(activeSpeedStage+3))
+				do getname with tag:active
+				log teve sua Velocidade drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=40) and (chance($activeMoveFxChance)) and (activeStatus=0) and ($activeAim = 1))
+				activeStatus = -5
+				do getname with tag:active
+				log ficou hesitante!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=41) and (chance($activeMoveFxChance)) and (activeStatus=0) and ($activeAim = 1))
+				activeStatus = -6
+				do getname with tag:active
+				log foi forçado a fugir!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=42) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAttackStage = min(6,(activeAttackStage+1))
+				activeDefenseStage = min(6,(activeDefenseStage+1))
+				activeSpAttackStage = min(6,(activeSpAttackStage+1))
+				activeSpDefenseStage = min(6,(activeSpDefenseStage+1))
+				activeSpeedStage = min(6,(activeSpeedStage+1))
+				do getname with tag:active
+				log teve todos os seus status ligeiramente aumentados!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=43) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAccuracyStage = min(6,(activeAccuracyStage+1))
+				do getname with tag:active
+				log teve sua precisão ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=44) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAccuracyStage = min(6,(activeAccuracyStage+2))
+				do getname with tag:active
+				log teve sua precisão bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=45) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAccuracyStage = min(6,(activeAccuracyStage+3))
+				do getname with tag:active
+				log teve sua precisão drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=46) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeEvasionStage = max((-6),(activeEvasionStage-1))
+				do getname with tag:active
+				log teve sua evasão ligeiramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=47) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeEvasionStage = max((-6),(activeEvasionStage-2))
+				do getname with tag:active
+				log teve sua evasão duramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=48) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeEvasionStage = max((-6),(activeEvasionStage-3))
+				do getname with tag:active
+				log teve sua evasão severamente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=49) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAccuracyStage = max((-6),(activeAccuracyStage-1))%
+				do getname with tag:active
+				log teve sua precisão ligeiramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=50) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAccuracyStage = max((-6),(activeAccuracyStage-2))
+				do getname with tag:active
+				log teve sua precisão bruscamente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=51) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeAccuracyStage = max((-6),(activeAccuracyStage-3))
+				do getname with tag:active
+				log teve sua precisão drasticamente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=52) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeEvasionStage = min(6,(activeEvasionStage+1))
+				do getname with tag:active
+				log teve sua evasão ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=53) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeEvasionStage = min(6,(activeEvasionStage+2))
+				do getname with tag:active
+				log teve sua evasão duramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=54) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeEvasionStage = min(6,(activeEvasionStage+3))
+				do getname with tag:active
+				log teve sua evasão severamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=55) and (chance($activeMoveFxChance)) and (activeStatus=0) and ($activeAim = 1))
+				activeStatus = (-7)
+				do getname with tag:active
+				log ficou confuso!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=56) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeCriticalStage = min(6,(activeCriticalStage+1))
+				do getname with tag:active
+				log teve sua chance de crítico ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=57) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeCriticalStage = min(6,(activeCriticalStage+2))
+				do getname with tag:active
+				log teve sua chance de crítico bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($activeMoveEffect=58) and (chance($activeMoveFxChance)) and ($activeAim = 1))
+				activeCriticalStage = min(6,(activeCriticalStage+3))
+				do getname with tag:active
+				log teve sua chance de crítico drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+
+			[include activeConfusedMultHit %hit="2"]
+			[include activeConfusedMultHit %hit="3"]
+			[include activeConfusedMultHit %hit="4"]
+			[include activeConfusedMultHit %hit="5"]
+
+			if (0>=activeCurHP)
+				activeStatus=-1
+			end
+
+			do getname with tag:active
+			log não está mais confuso.
+
+			activeLastMove = $activeMoveID
+		end
+
+//-------------------------------------------------------------------------------------------------//
+
+		on enemyconfusion:
+			enemyStatus = 0
+			$enemyAim = 1
+
+			if ($enemyMoveAccuracy>=0)
+				$enemyAim = chance(($enemyMoveAccuracy*enemyAccuracyMod*enemyEvasionMod)*100)
+			end
+
+			if ($enemyAim = 0)
+				do getname with tag:enemy
+				log errou o golpe contra si!
+				enemyMovesInARow = 0
+			end
+
+			if (($enemyMoveID=enemyLastMove) and ($enemyAim = 1))
+				enemyMovesInARow = (enemyMovesInARow+1)
+			end
+			if ((!($enemyMoveID=enemyLastMove)) and ($enemyAim = 1))
+				enemyMovesInARow = 1
+			end
+
+			if (($enemyMoveClass>=0) and ($enemyAim = 1))
+				do getname with tag:enemy
+				log se atacou ...
+				$enemySTAB = 1
+				$enemyCrit = 1
+				$enemyStatusMod = 1
+			end
+			if (($enemyMoveClass=1) and ($enemyAim = 1))
+				$enemyMovePower = ($enemyMovePower*(min(5,enemyMovesInARow)))
+				log ... com um poder acumulado de [enemyMovesInARow] golpes seguidos ...
+			end
+			if (($enemyMoveClass>=2) and ($enemyAim = 1))
+				$numberOfHits = random(2,$enemyMoveClass)
+				log ... [$numberOfHits] vezes ...
+			end
+
+			if (($enemyMoveClass>=0) and (enemyPtype=$enemyMovetype) and ($enemyAim = 1))
+				$enemySTAB = $enemySTAB + 0.5
+				log ... o golpe foi fortalecido pelo seu tipo principal ...
+			end
+			if (($enemyMoveClass>=0) and (enemyStype=$enemyMovetype) and ($enemyAim = 1))
+				$enemySTAB = $enemySTAB + 0.5
+				log ... o golpe foi fortalecido pelo seu tipo secundário ...
+			end
+			if (($enemyMoveClass>=0) and (chance($enemyMoveCrit*pow(2,enemyCriticalStage))) and ($enemyAim = 1))
+				$enemyCrit = 1.5
+				log ... e realizou um golpe crítico!
+			end
+
+			$auxMtype = $enemyMoveType
+			$auxType = enemyPtype
+
+			[include enemyMoveTypeAdvantage %type="0"]
+			[include enemyMoveTypeAdvantage %type="1"]
+			[include enemyMoveTypeAdvantage %type="2"]
+			[include enemyMoveTypeAdvantage %type="3"]
+			[include enemyMoveTypeAdvantage %type="4"]
+			[include enemyMoveTypeAdvantage %type="5"]
+			[include enemyMoveTypeAdvantage %type="6"]
+			[include enemyMoveTypeAdvantage %type="7"]
+			[include enemyMoveTypeAdvantage %type="8"]
+			[include enemyMoveTypeAdvantage %type="9"]
+			[include enemyMoveTypeAdvantage %type="10"]
+			[include enemyMoveTypeAdvantage %type="11"]
+			[include enemyMoveTypeAdvantage %type="12"]
+			[include enemyMoveTypeAdvantage %type="13"]
+			[include enemyMoveTypeAdvantage %type="14"]
+			[include enemyMoveTypeAdvantage %type="15"]
+			[include enemyMoveTypeAdvantage %type="16"]
+			[include enemyMoveTypeAdvantage %type="17"]
+
+			$enemySadvg = $auxAdvg
+			$enemyTypeAdvg = $enemyPadvg*$enemySadvg
+
+			if (enemyPtype=enemyStype)
+				$enemyTypeAdvg = $enemyPadvg
+			end
+
+			if (($enemyMoveClass>=0) and ($enemyTypeAdvg=4) and ($enemyAim = 1))
+				log ... <#cc33ff><b>foi hiper efetivo!</b></#>
+			end
+			if (($enemyMoveClass>=0) and ($enemyTypeAdvg=2) and ($enemyAim = 1))
+				log ... <#4dffa6><b>foi super efetivo!</b></#>
+			end
+			if (($enemyMoveClass>=0) and ($enemyTypeAdvg=0.5) and ($enemyAim = 1))
+				log ... mas foi pouco efetivo!
+			end
+			if (($enemyMoveClass>=0) and ($enemyTypeAdvg=0.25) and ($enemyAim = 1))
+				log ... <#999999><b>mas não foi quase nada efetivo!</b></#>
+			end
+			if (($enemyMoveClass>=0) and ($enemyTypeAdvg=0) and ($enemyAim = 1))
+				log ... <#b30000><b>mas o golpe não afeta o adversário!</b></#>
+			end
+
+			$enemyRandomVar = frandom(0.85,1)
+
+			if ($enemyMoveIsSpecial=0)
+				$aA = enemyAttack
+				$aD = enemyDefense
+			end
+			if ($enemyMoveIsSpecial=1)
+				$aA = enemySpAttack
+				$aD = enemySpDefense
+			end
+			if (($enemyMoveIsSpecial=0) and (enemyStatus=3))
+				$enemyStatusMod = 0.5
+			end
+
+			if (($enemyMoveClass>=0) and ($enemyAim = 1))
+				$enemyRawDamage = ((((0.4*enemyLvl + 2)*$enemyMovePower*($aA/$aD))/50)+2)
+				$enemyDamageMods = $enemyTypeAdvg*$enemyRandomVar*$enemySTAB*$enemyCrit*$enemyStatusMod
+				$enemyEffectiveDamage = round(min(enemyCurHP,($enemyRawDamage*$enemyDamageMods)))
+				lose $enemyEffectiveDamage enemyCurHP
+				do getname with tag:enemy
+				log tomou [$enemyEffectiveDamage] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+
+			if ($enemyMoveEffect=59)
+				$enemyMoveEffect = 25 + random(0,4)
+			end
+			if ($enemyMoveEffect=60)
+				$enemyMoveEffect = 30 + random(0,4)
+			end
+			if ($enemyMoveEffect=61)
+				$enemyMoveEffect = 35 + random(0,4)
+			end
+
+			if (($enemyMoveEffect=1) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				$enemyEffectiveHeal = ceil(min(($enemyEffectiveDamage/2),(enemyMaxHP-enemyCurHP)))
+				gain $enemyEffectiveHeal enemyCurHP
+				do getname with tag:enemy
+				log drenou [$enemyEffectiveHeal] pontos de vida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=2) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				$enemyEffectiveRecoil = ceil(min(($enemyEffectiveDamage/4),enemyCurHP))
+				lose $enemyEffectiveRecoil enemyCurHP
+				do getname with tag:enemy
+				log também se feriu, tomando [$enemyEffectiveRecoil] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=3) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				$enemyEffectiveRecoil = ceil(min(($enemyEffectiveDamage/3),enemyCurHP))
+				lose $enemyEffectiveRecoil enemyCurHP
+				do getname with tag:enemy
+				log também se feriu, tomando [$enemyEffectiveRecoil] dano!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=4) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = 1
+				do getname with tag:enemy
+				log foi envenenado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=5) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = 2
+				do getname with tag:enemy
+				log foi intoxicado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=6) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = 3
+				do getname with tag:enemy
+				log está em chamas!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=7) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = -2
+				do getname with tag:enemy
+				log foi paralisado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=8) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = -3
+				do getname with tag:enemy
+				enemySleep = random(1,3)
+				log caiu no sono!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=8) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = -4
+				do getname with tag:enemy
+				log foi congelado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=10) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = max((-6),(enemyAttackStage-1))
+				do getname with tag:enemy
+				log teve seu Ataque ligeiramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=11) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = max((-6),(enemyDefenseStage-1))
+				do getname with tag:enemy
+				log teve sua Defesa ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=12) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = max((-6),(enemySpAttackStage-1))
+				do getname with tag:enemy
+				log teve seu Ataque Especial ligeiramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=13) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = max((-6),(enemySpDefenseStage-1))
+				do getname with tag:enemy
+				log teve sua Defesa Especial ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=14) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = max((-6),(enemySpeedStage-1))
+				do getname with tag:enemy
+				log teve sua Velocidade ligeiramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=15) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = max((-6),(enemyAttackStage-2))
+				do getname with tag:enemy
+				log teve seu Ataque duramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=16) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = max((-6),(enemyDefenseStage-2))
+				do getname with tag:enemy
+				log teve sua Defesa duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=17) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = max((-6),(enemySpAttackStage-2))
+				do getname with tag:enemy
+				log teve seu Ataque Especial duramente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=18) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = max((-6),(enemySpDefenseStage-2))
+				do getname with tag:enemy
+				log teve sua Defesa Especial duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=19) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = max((-6),(enemySpeedStage-2))
+				do getname with tag:enemy
+				log teve sua Velocidade duramente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=20) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = max((-6),(enemyAttackStage-3))
+				do getname with tag:enemy
+				log teve seu Ataque severamente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=21) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = max((-6),(enemyDefenseStage-3))
+				do getname with tag:enemy
+				log teve sua Defesa severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=22) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = max((-6),(enemySpAttackStage-3))
+				do getname with tag:enemy
+				log teve seu Ataque Especial severamente reduzido!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=23) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = max((-6),(enemySpDefenseStage-3))
+				do getname with tag:enemy
+				log teve sua Defesa Especial severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=24) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = max((-6),(enemySpeedStage-3))
+				do getname with tag:enemy
+				log teve sua Velocidade severamente reduzida!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=25) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = min(6,(enemyAttackStage+1))
+				do getname with tag:enemy
+				log teve seu Ataque ligeiramente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=26) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = min(6,(enemyDefenseStage+1))
+				do getname with tag:enemy
+				log teve sua Defesa ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=27) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = min(6,(enemySpAttackStage+1))
+				do getname with tag:enemy
+				log teve seu Ataque Especial ligeiramente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=28) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = min(6,(enemySpDefenseStage+1))
+				do getname with tag:enemy
+				log teve sua Defesa Especial ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=29) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = min(6,(enemySpeedStage+1))
+				do getname with tag:enemy
+				log teve sua Velocidade ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=30) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = min(6,(enemyAttackStage+2))
+				do getname with tag:enemy
+				log teve seu Ataque bruscamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=31) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = min(6,(enemyDefenseStage+2))
+				do getname with tag:enemy
+				log teve sua Defesa bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=32) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = min(6,(enemySpAttackStage+2))
+				do getname with tag:enemy
+				log teve seu Ataque Especial bruscamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=33) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = min(6,(enemySpDefenseStage+2))
+				do getname with tag:enemy
+				log teve sua Defesa Especial bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=34) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = min(6,(enemySpeedStage+2))
+				do getname with tag:enemy
+				log teve sua Velocidade bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=35) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = min(6,(enemyAttackStage+3))
+				do getname with tag:enemy
+				log teve seu Ataque drasticamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=36) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyDefenseStage = min(6,(enemyDefenseStage+3))
+				do getname with tag:enemy
+				log teve sua Defesa drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=37) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpAttackStage = min(6,(enemySpAttackStage+3))
+				do getname with tag:enemy
+				log teve seu Ataque Especial drasticamente aumentado!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=38) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpDefenseStage = min(6,(enemySpDefenseStage+3))
+				do getname with tag:enemy
+				log teve sua Defesa Especial drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=39) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemySpeedStage = min(6,(enemySpeedStage+3))
+				do getname with tag:enemy
+				log teve sua Velocidade drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=40) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = -5
+				do getname with tag:enemy
+				log ficou hesitante!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=41) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = -6
+				do getname with tag:enemy
+				log foi forçado a fugir!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=42) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAttackStage = min(6,(enemyAttackStage+1))
+				enemyDefenseStage = min(6,(enemyDefenseStage+1))
+				enemySpAttackStage = min(6,(enemySpAttackStage+1))
+				enemySpDefenseStage = min(6,(enemySpDefenseStage+1))
+				enemySpeedStage = min(6,(enemySpeedStage+1))
+				do getname with tag:enemy
+				log teve todos os seus status ligeiramente aumentados!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=43) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAccuracyStage = min(6,(enemyAccuracyStage+1))
+				do getname with tag:enemy
+				log teve sua precisão ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=44) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAccuracyStage = min(6,(enemyAccuracyStage+2))
+				do getname with tag:enemy
+				log teve sua precisão bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=45) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAccuracyStage = min(6,(enemyAccuracyStage+3))
+				do getname with tag:enemy
+				log teve sua precisão drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=46) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyEvasionStage = max((-6),(enemyEvasionStage-1))
+				do getname with tag:enemy
+				log teve sua evasão ligeiramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=47) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyEvasionStage = max((-6),(enemyEvasionStage-2))
+				do getname with tag:enemy
+				log teve sua evasão duramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=48) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyEvasionStage = max((-6),(enemyEvasionStage-3))
+				do getname with tag:enemy
+				log teve sua evasão severamente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=49) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAccuracyStage = max((-6),(enemyAccuracyStage-1))%
+				do getname with tag:enemy
+				log teve sua precisão ligeiramente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=50) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAccuracyStage = max((-6),(enemyAccuracyStage-2))
+				do getname with tag:enemy
+				log teve sua precisão bruscamente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=51) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyAccuracyStage = max((-6),(enemyAccuracyStage-3))
+				do getname with tag:enemy
+				log teve sua precisão drasticamente diminuída!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=52) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyEvasionStage = min(6,(enemyEvasionStage+1))
+				do getname with tag:enemy
+				log teve sua evasão ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=53) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyEvasionStage = min(6,(enemyEvasionStage+2))
+				do getname with tag:enemy
+				log teve sua evasão duramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=54) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyEvasionStage = min(6,(enemyEvasionStage+3))
+				do getname with tag:enemy
+				log teve sua evasão severamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=55) and (chance($enemyMoveFxChance)) and (enemyStatus=0) and ($enemyAim = 1))
+				enemyStatus = (-7)
+				do getname with tag:enemy
+				log ficou confuso!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=56) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyCriticalStage = min(6,(enemyCriticalStage+1))
+				do getname with tag:enemy
+				log teve sua chance de crítico ligeiramente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=57) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyCriticalStage = min(6,(enemyCriticalStage+2))
+				do getname with tag:enemy
+				log teve sua chance de crítico bruscamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+			if (($enemyMoveEffect=58) and (chance($enemyMoveFxChance)) and ($enemyAim = 1))
+				enemyCriticalStage = min(6,(enemyCriticalStage+3))
+				do getname with tag:enemy
+				log teve sua chance de crítico drasticamente aumentada!
+				log <#3366ff>-----------------------------------</#>
+			end
+
+			[include enemyConfusedMultHit %hit="2"]
+			[include enemyConfusedMultHit %hit="3"]
+			[include enemyConfusedMultHit %hit="4"]
+			[include enemyConfusedMultHit %hit="5"]
+
+			if (0>=enemyCurHP)
+				enemyStatus=-1
+			end
+
+			do getname with tag:enemy
+			log não está mais confuso.
+
+			enemyLastMove = $enemyMoveID
+		end
+
+//-------------------------------------------------------------------------------------------------//
 
 		on activefaint:
 			do getname with tag:active
@@ -417,109 +2164,273 @@ Resources
 			do faint with tag:enemy
 		end
 
-		on endturn:
-			if (0>=activeCurHP) do activefaint with this
-			if (0>=enemyCurHP) do enemyfaint with this
+		on activeflee:
+			do getname with tag:active
+			log deixou a batalha!
+			do return with tag:active
+		end
+		on enemyflee:
+			do getname with tag:enemy
+			log deixou a batalha!
+			lose tag:enemy
 		end
 
-		on normaladvantage:
+		on activeflinch:
+			do getname with tag:active
+			log hesitou em atacar!
+			activeStatus = 0
+		end
+		on enemyflinch:
+			do getname with tag:enemy
+			log hesitou em atacar!
+			activeStatus = 0
+		end
+
+		on activethaw:
+			do getname with tag:active
+			log descongelou!
+			activeStatus = 0
+		end
+		on enemythaw:
+			do getname with tag:enemy
+			log descongelou!
+			activeStatus = 0
+		end
+
+		on activefreeze:
+			do getname with tag:active
+			log nem se moveu, pois ainda está dentro de uma pedra de gelo!
+			activeSleep = (activeSleep-1)
+		end
+		on enemyfreeze:
+			do getname with tag:enemy
+			log nem se moveu, pois ainda está dentro de uma pedra de gelo!
+			activeSleep = (activeSleep-1)
+		end
+
+		on activewake:
+			do getname with tag:active
+			log acordou!
+			activeStatus = 0
+		end
+		on enemywake:
+			do getname with tag:enemy
+			log acordou!
+			activeStatus = 0
+		end
+
+		on activesleep:
+			do getname with tag:active
+			log nem se moveu, pois ainda está dormindo!
+			activeSleep = (activeSleep-1)
+		end
+		on enemysleep:
+			do getname with tag:enemy
+			log nem se moveu, pois ainda está dormindo!
+			activeSleep = (activeSleep-1)
+		end
+
+		on activeparalysis:
+			do getname with tag:active
+			log não conseguiu se mover por causa da paralisia!
+		end
+		on enemyparalysis:
+			do getname with tag:enemy
+			log não conseguiu se mover por causa da paralisia!
+		end
+
+		on activepoison:
+			$activePoisonDamage = round(min((activeMaxHP/8),activeCurHP))
+			lose $activePoisonDamage activeCurHP
+			do getname with tag:active
+			log tomou [$activePoisonDamage] dano por envenenamento!
+		end
+		on enemypoison:
+			$enemyPoisonDamage = round(min((enemyMaxHP/8),enemyCurHP))
+			lose $enemyPoisonDamage enemyCurHP
+			do getname with tag:enemy
+			log tomou [$enemyPoisonDamage] dano por envenenamento!
+		end
+
+		on activebadpoison:
+			$activePoisonDamage = round(min((activeBadPoison*activeMaxHP/16),activeCurHP))
+			lose $activePoisonDamage activeCurHP
+			do getname with tag:active
+			log tomou [$activePoisonDamage] dano por intoxicação!
+		end
+		on enemybadpoison:
+			$enemyPoisonDamage = round(min((enemyBadPoison*enemyMaxHP/8),enemyCurHP))
+			lose $enemyPoisonDamage enemyCurHP
+			do getname with tag:enemy
+			log tomou [$enemyPoisonDamage] dano por intoxicação!
+		end
+
+		on activeburn:
+			$activePoisonDamage = round(min((activeMaxHP/16),activeCurHP))
+			lose $activePoisonDamage activeCurHP
+			do getname with tag:active
+			log tomou [$activePoisonDamage] dano por queimadura!
+		end
+		on enemyburn:
+			$enemyPoisonDamage = round(min((enemyMaxHP/16),enemyCurHP))
+			lose $enemyPoisonDamage enemyCurHP
+			do getname with tag:enemy
+			log tomou [$enemyPoisonDamage] dano por queimadura!
+		end
+
+		on endturn:
+			if (activeStatus=1) do activepoison with this
+			if (enemyStatus=1) do enemypoison with this
+			if (activeStatus=2) do activebadpoison with this
+			if (enemyStatus=2) do enemybadpoison with this
+			if (activeStatus=3) do activeburn with this
+			if (enemyStatus=3) do enemyburn with this
+			if ((activeStatus=(-3)) and (activeSleep>0)) do activesleep with this
+			if ((enemyStatus=(-3)) and (enemySleep>0)) do enemysleep with this
+			if ((activeStatus=(-3)) and (0>=activeSleep)) do activewake with this
+			if ((enemyStatus=(-3)) and (0>=enemySleep)) do enemywake with this
+			$fifth = random(1,5)
+			$thaw = 0
+			if ($fifth=1) $thaw=1
+			if ((activeStatus=(-4)) and ($thaw=0)) do activefreeze with this
+			if ((enemyStatus=(-4)) and ($thaw=0)) do enemyfreeze with this
+			if ((activeStatus=(-4)) and ($thaw=1)) do activethaw with this
+			if ((enemyStatus=(-4)) and ($thaw=1)) do enemythaw with this
+			if (activeStatus=(-5)) do activeflinch with this
+			if (enemyStatus=(-5)) do enemyflinch with this
+			if (activeStatus=(-6)) do activeflee with this
+			if (enemyStatus=(-6)) do enemyflee with this
+
+			[include defModByStage %stage="(-6)" %mod="0.25"]
+			[include defModByStage %stage="(-5)" %mod="0.2857"]
+			[include defModByStage %stage="(-4)" %mod="0.3333"]
+			[include defModByStage %stage="(-3)" %mod="0.4"]
+			[include defModByStage %stage="(-2)" %mod="0.5"]
+			[include defModByStage %stage="(-1)" %mod="0.6666"]
+			[include defModByStage %stage="0" %mod="1"]
+			[include defModByStage %stage="1" %mod="1.5"]
+			[include defModByStage %stage="2" %mod="2"]
+			[include defModByStage %stage="3" %mod="2.5"]
+			[include defModByStage %stage="4" %mod="3"]
+			[include defModByStage %stage="5" %mod="3.5"]
+			[include defModByStage %stage="6" %mod="4"]
+
+			[include defAcEvModByStage %stage="(-6)" %mod="0.3333"]
+			[include defAcEvModByStage %stage="(-5)" %mod="0.375"]
+			[include defAcEvModByStage %stage="(-4)" %mod="0.4286"]
+			[include defAcEvModByStage %stage="(-3)" %mod="0.5"]
+			[include defAcEvModByStage %stage="(-2)" %mod="0.6"]
+			[include defAcEvModByStage %stage="(-1)" %mod="0.75"]
+			[include defAcEvModByStage %stage="0" %mod="1"]
+			[include defAcEvModByStage %stage="1" %mod="1.3333"]
+			[include defAcEvModByStage %stage="2" %mod="1.6666"]
+			[include defAcEvModByStage %stage="3" %mod="2"]
+			[include defAcEvModByStage %stage="4" %mod="2.3333"]
+			[include defAcEvModByStage %stage="5" %mod="2.6666"]
+			[include defAcEvModByStage %stage="6" %mod="3"]
+
+			if ((activeStatus=(-1)) or (0>=round(activeCurHP))) do activefaint with this
+			if ((enemyStatus=(-1)) or (0>=round(enemyCurHP))) do enemyfaint with this
+		end
+
+		on type0advantage:
 			$auxAdvg = 1
 			if (($auxType=5) or ($auxType=8)) $auxAdvg = 0.5
 			if ($auxType=7) $auxAdvg = 0
 		end
-		on fightadvantage:
+		on type1advantage:
 			$auxAdvg = 1
 			if (($auxType=0) or ($auxType=5) or ($auxType=8) or ($auxType=14) or ($auxType=16)) $auxAdvg = 2
 			if (($auxType=2) or ($auxType=3) or ($auxType=6) or ($auxType=13) or ($auxType=17)) $auxAdvg = 0.5
 			if ($auxType=7) $auxAdvg = 0
 		end
-		on flyingadvantage:
+		on type2advantage:
 			$auxAdvg = 1
 			if (($auxType=1) or ($auxType=6) or ($auxType=11)) $auxAdvg = 2
 			if (($auxType=5) or ($auxType=8) or ($auxType=12)) $auxAdvg = 0.5
 		end
-		on poisonadvantage:
+		on type3advantage:
 			$auxAdvg = 1
 			if (($auxType=11) or ($auxType=17)) $auxAdvg = 2
 			if (($auxType=3) or ($auxType=4) or ($auxType=5) or ($auxType=7)) $auxAdvg = 0.5
 			if ($auxType=8) $auxAdvg = 0
 		end
-		on groundadvantage:
+		on type4advantage:
 			$auxAdvg = 1
 			if (($auxType=3) or ($auxType=5) or ($auxType=8) or ($auxType=9) or ($auxType=12)) $auxAdvg = 2
 			if (($auxType=6) or ($auxType=11)) $auxAdvg = 0.5
 			if ($auxType=2) $auxAdvg = 0
 		end
-		on rockadvantage:
+		on type5advantage:
 			$auxAdvg = 1
 			if (($auxType=2) or ($auxType=6) or ($auxType=9) or ($auxType=14)) $auxAdvg = 2
 			if (($auxType=1) or ($auxType=4) or ($auxType=8)) $auxAdvg = 0.5
 		end
-		on bugadvantage:
+		on type6advantage:
 			$auxAdvg = 1
 			if (($auxType=11) or ($auxType=13) or ($auxType=16)) $auxAdvg = 2
 			if (($auxType=1) or ($auxType=2) or ($auxType=3) or ($auxType=7) or ($auxType=8) or ($auxType=9) or ($auxType=17)) $auxAdvg = 0.5
 		end
-		on ghostadvantage:
+		on type7advantage:
 			$auxAdvg = 1
 			if (($auxType=7) or ($auxType=13)) $auxAdvg = 2
 			if ($auxType=16) $auxAdvg = 0.5
 			if ($auxType=0) $auxAdvg = 0
 		end
-		on steeladvantage:
+		on type8advantage:
 			$auxAdvg = 1
 			if (($auxType=5) or ($auxType=14) or ($auxType=17)) $auxAdvg = 2
 			if (($auxType=8) or ($auxType=9) or ($auxType=10) or ($auxType=12)) $auxAdvg = 0.5
 		end
-		on fireadvantage:
+		on type9advantage:
 			$auxAdvg = 1
 			if (($auxType=6) or ($auxType=8) or ($auxType=11) or ($auxType=14)) $auxAdvg = 2
 			if (($auxType=5) or ($auxType=9) or ($auxType=10) or ($auxType=15)) $auxAdvg = 0.5
 		end
-		on wateradvantage:
+		on type10advantage:
 			$auxAdvg = 1
 			if (($auxType=4) or ($auxType=5) or ($auxType=9)) $auxAdvg = 2
 			if (($auxType=10) or ($auxType=11) or ($auxType=15)) $auxAdvg = 0.5
 		end
-		on grassadvantage:
+		on type11advantage:
 			$auxAdvg = 1
 			if (($auxType=4) or ($auxType=5) or ($auxType=10)) $auxAdvg = 2
 			if (($auxType=2) or ($auxType=3) or ($auxType=6) or ($auxType=8) or ($auxType=9) or ($auxType=11) or ($auxType=15)) $auxAdvg = 0.5
 		end
-		on electricadvantage:
+		on type12advantage:
 			$auxAdvg = 1
 			if (($auxType=2) or ($auxType=10)) $auxAdvg = 2
 			if (($auxType=11) or ($auxType=12) or ($auxType=15)) $auxAdvg = 0.5
 			if ($auxType=4) $auxAdvg = 0
 		end
-		on psychicadvantage:
+		on type13advantage:
 			$auxAdvg = 1
 			if (($auxType=1) or ($auxType=3)) $auxAdvg = 2
 			if (($auxType=8) or ($auxType=13)) $auxAdvg = 0.5
 			if ($auxType=0) $auxAdvg = 0
 		end
-		on iceadvantage:
+		on type14advantage:
 			$auxAdvg = 1
 			if (($auxType=2) or ($auxType=4) or ($auxType=11) or ($auxType=15)) $auxAdvg = 2
 			if (($auxType=8) or ($auxType=9) or ($auxType=10) or ($auxType=14)) $auxAdvg = 0.5
 		end
-		on dragonadvantage:
+		on type15advantage:
 			$auxAdvg = 1
 			if ($auxType=15) $auxAdvg = 2
 			if ($auxType=8) $auxAdvg = 0.5
 			if ($auxType=17) $auxAdvg = 0
 		end
-		on darkadvantage:
+		on type16advantage:
 			$auxAdvg = 1
 			if (($auxType=7) or ($auxType=13)) $auxAdvg = 2
 			if (($auxType=1) or ($auxType=16) or ($auxType=17)) $auxAdvg = 0.5
 		end
-		on fairyadvantage:
+		on type17advantage:
 			$auxAdvg = 1
 			if (($auxType=1) or ($auxType=15) or ($auxType=16)) $auxAdvg = 2
 			if (($auxType=3) or ($auxType=8) or ($auxType=9)) $auxAdvg = 0.5
 		end
-//		on advantage:
+//		on type#advantage:
 //			$auxAdvg = 1
 //			if (($auxType=5) or ($auxType=8)) $auxAdvg = 2
 //			if (($auxType=5) or ($auxType=8)) $auxAdvg = 0.5
@@ -529,18 +2440,20 @@ Resources
 
 //------------------------------------------------Basic------------------------------------------------------------------//
 
+	*TEMPLATE
+		tags:status hidden
 		*activeLvl
 			desc: Level do seu pokémon
 		*activePtype
 			desc: Tipo primário do seu pokémon
 		*activeStype
-			desc: Tipo secondário do seu pokémon
+			desc: Tipo secundário do seu pokémon
+		*enemyLvl
+			desc: Level do pokémon inimigo
 		*enemyPtype
 			desc: Tipo primário do pokémon inimigo
 		*enemyStype
-			desc: Tipo secondário do pokémon inimigo
-		*enemyLvl
-			desc: Level do pokémon inimigo
+			desc: Tipo secundário do pokémon inimigo
 		*enemyCurHP
 			desc: HP atual do pokémon inimigo
 		*enemyMaxHP
@@ -610,6 +2523,42 @@ Resources
 			name:Defesa Especial (Modificador)
 		*activeSpeedMod
 			name:Velocidade (Modificador)
+		*activeAccuracyMod
+			name:Precisão (Modificador)
+		*activeEvasionMod
+			name:Evasão (Modificador)
+	*TEMPLATE
+		tags:status modifier hidden
+		can be negative
+		on reset:
+			this = 0
+		end
+		*activeStatus
+			desc:Condição do seu pokémon
+		*activeLastMove
+			desc:A última habilidade usada pelo seu pokémon
+		*activeMovesInARow
+			desc:A quantidade de vezes que seu pokémon usou a mesma habilidade consecutivamente
+		*activeBadPoison
+			desc:O número de turnos que faz que seu pokémon foi intoxicado
+		*activeSleep
+			desc:O número de turnos que falta para seu pokémon acordar
+		*activeAttackStage
+			name:Ataque (Estágio)
+		*activeDefenseStage
+			name:Defesa (Estágio)
+		*activeSpAttackStage
+			name:Ataque Especial (Estágio)
+		*activeSpDefenseStage
+			name:Defesa Especial (Estágio)
+		*activeSpeedStage
+			name:Velocidade (Estágio)
+		*activeAccuracyStage
+			name:Precisão (Estágio)
+		*activeEvasionStage
+			name:Evasão (Modificador)
+		*activeCriticalStage
+			name:Crítico (Modificador)
 	*TEMPLATE
 		tags:status modifierEnemy hidden
 		on reset:
@@ -625,6 +2574,42 @@ Resources
 			name:Defesa Especial (Modificador) Inimigo
 		*enemySpeedMod
 			name:Velocidade (Modificador) Inimigo
+		*enemyAccuracyMod
+			name:Precisão (Modificador) Inimigo
+		*enemyEvasionMod
+			name:Evasão (Modificador) Inimigo
+	*TEMPLATE
+		tags:status modifierEnemy hidden
+		can be negative
+		on reset:
+			this = 0
+		end
+		*enemyStatus
+			desc:Condição do pokémon inimigo
+		*enemyLastMove
+			desc:A última habilidade usada pelo pokémon inimigo
+		*enemyMovesInARow
+			desc:A quantidade de vezes que o pokémon inimigo usou a mesma habilidade consecutivamente
+		*enemyBadPoison
+			desc:O número de turnos que faz que o pokémon inimigo foi intoxicado
+		*enemySleep
+			desc:O número de turnos que falta para o pokémon inimigo acordar
+		*enemyAttackStage
+			name:Ataque (Estágio) Inimigo
+		*enemyDefenseStage
+			name:Defesa (Estágio) Inimigo
+		*enemySpAttackStage
+			name:Ataque Especial (Estágio) Inimigo
+		*enemySpDefenseStage
+			name:Defesa Especial (Estágio) Inimigo
+		*enemySpeedStage
+			name:Velocidade (Estágio) Inimigo
+		*enemyAccuracyStage
+			name:Precisão (Estágio) Inimigo
+		*enemyEvasionStage
+			name:Evasão (Estágio) Inimigo
+		*enemyCriticalStage
+			name:Crítico (Estágio) Inimigo
 	*TEMPLATE
 		icon class:tinyIcon
 		tag:status
@@ -744,19 +2729,19 @@ Buttons
 		name:Escolher Guarimple
 		icon:pindohDex[1,0] pType[5,1] sType[5,1]
 		on click:
-			CPTguarimple = 5
+			CPT1from0var0 = 5
 		end
     *chooseFire
 		name:Escolher Balldillo
-		icon:pindohDex[4,0] pType[3,1] sType[2,1]
+		icon:pindohDex[4,0] pType[3,1] sType[3,1]
 		on click:
-			CPTballdillo = 5
+			CPT4from0var0 = 5
 		end
     *chooseWater
 		name:Escolher Gossipavy
 		icon:pindohDex[7,0] pType[4,1] sType[4,1]
 		on click:
-			CPTgossipavy = 5
+			CPT7from0var0 = 5
 		end
 
 //-----------------------------------------------Exploração---------------------------------------------------------------//
@@ -765,8 +2750,8 @@ Buttons
 		tag:explore
 		on click:
 			log Um pokémon selvagem apareceu na sua frente enquanto explorava [n:this]!
-			gain inBattle
 			lose tag:enemy
+			if (have activePkm) gain inBattle
 			$rand = random(2)
 			if (chance(0.1%))
 				toast <#ff9900><b>LENDÁRIO!</b></#>
@@ -791,34 +2776,8 @@ Buttons
 				do common3 with this
 			end
 		end
-    *rota1
-		name:Rota 1
-		desc:Rota inicial de Pindoh. Com pokémon de lvl 2-6
-		icon:exploration[0,0]
-		on common1:
-			enemyLvl = (4 + random(-2,2))
-			gain ENMguarimple
-		end
-		on common2:
-			enemyLvl = (4 + random(-2,2))
-			gain ENMballdillo
-		end
-		on common3:
-			enemyLvl = (4 + random(-2,2))
-			gain ENMgossipavy
-		end
-		on uncommon:
-			enemyLvl = (6 + random(-2,2))
-			gain ENMguarimple
-		end
-		on rare:
-			enemyLvl = (6 + random(-2,2))
-			gain ENMballdillo
-		end
-		on exotic:
-			enemyLvl = (8 + random(-2,2))
-			gain ENMgossipavy
-		end
+
+	[include placeNoIcon %id="0" %region="0" %name="Rota 1" %desc="Rota Inicial de Pindoh!" %common1Lvl="3" %common1Range="1" %common1PkmNum="10" %common1PkmVar="0" %common2Lvl="4" %common2Range="1" %common2PkmNum="10" %common2PkmVar="0" %common3Lvl="2" %common3Range="0" %common3PkmNum="10" %common3PkmVar="0" %uncommonLvl="5" %uncommonRange="1" %uncommonPkmNum="10" %uncommonPkmVar="0" %rareLvl="7" %rareRange="2" %rarePkmNum="10" %rarePkmVar="0" %exoticLvl="8" %exoticRange="3" %exoticPkmNum="10" %exoticPkmVar="0" %legendLvl="20" %legendRange="5" %legendPkmNum="10" %legendPkmVar="0"]
     *TEMPLATE
 
 //-------------------------------------------------Moves-----------------------------------------------------------------//
@@ -835,32 +2794,66 @@ Upgrades
 				do iaplay with tag:enemy
 				do beginturn with global
 			end
-		end	
+		end
 
-    *aMOVtackle
-		name:Investida
-		on select:
-			do getname with tag:active
-			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
-			$activeMovePriority = 0
-			$activeMoveCrit = 6.25
-			$activeMoveType = 0
-			$activeMoveIsSpecial = 0
-			$activeMovePower = 40
-		end
+	[include move %id="0" %key="tackle" %name="Investida" %priority="0" %crit="6.25" %type="0" %isSpecial="0" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="1" %key="machPunch" %name="Soco Rápido" %priority="1" %crit="6.25" %type="1" %isSpecial="0" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="2" %key="peck" %name="Bicada" %priority="0" %crit="6.25" %type="2" %isSpecial="0" %power="35" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="3" %key="poisonSting" %name="Picada Venenosa" %priority="0" %crit="6.25" %type="3" %isSpecial="0" %power="15" %class="0" %effect="4" %fxChance="30" %accuracy="100"]
+	[include move %id="4" %key="bulldoze" %name="Tremor" %priority="0" %crit="6.25" %type="4" %isSpecial="0" %power="60" %class="0" %effect="14" %fxChance="100" %accuracy="100"]
+	[include move %id="5" %key="rollout" %name="Rolagem" %priority="0" %crit="6.25" %type="5" %isSpecial="0" %power="30" %class="1" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="6" %key="bugBite" %name="Mordida de Inseto" %priority="0" %crit="6.25" %type="6" %isSpecial="0" %power="60" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="7" %key="astonish" %name="Assustar" %priority="0" %crit="6.25" %type="7" %isSpecial="0" %power="30" %class="0" %effect="40" %fxChance="30" %accuracy="100"]
+	[include move %id="8" %key="metalClaw" %name="Garra de Metal" %priority="0" %crit="6.25" %type="8" %isSpecial="0" %power="50" %class="0" %effect="25" %fxChance="10" %accuracy="100"]
+	[include move %id="9" %key="flameCharge" %name="Carga de Chamas" %priority="0" %crit="6.25" %type="9" %isSpecial="0" %power="50" %class="0" %effect="29" %fxChance="100" %accuracy="100"]
+	[include move %id="10" %key="aquaJet" %name="Aqua Jato" %priority="1" %crit="6.25" %type="10" %isSpecial="0" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="11" %key="vineWhip" %name="Chicote de Vinha" %priority="0" %crit="6.25" %type="11" %isSpecial="0" %power="45" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="12" %key="nuzzle" %name="Chamego" %priority="0" %crit="6.25" %type="12" %isSpecial="0" %power="20" %class="0" %effect="7" %fxChance="100" %accuracy="100"]
+	[include move %id="13" %key="heartStamp" %name="Selo de Coração" %priority="0" %crit="6.25" %type="13" %isSpecial="0" %power="60" %class="0" %effect="40" %fxChance="30" %accuracy="100"]
+	[include move %id="14" %key="iceball" %name="Bola de Neve" %priority="0" %crit="6.25" %type="14" %isSpecial="0" %power="30" %class="1" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="15" %key="dragonTail" %name="Cauda do Dragão" %priority="0" %crit="6.25" %type="15" %isSpecial="0" %power="60" %class="0" %effect="41" %fxChance="100" %accuracy="100"]
+	[include move %id="16" %key="bite" %name="Mordida" %priority="0" %crit="6.25" %type="16" %isSpecial="0" %power="60" %class="0" %effect="40" %fxChance="30" %accuracy="100"]
+	[include move %id="17" %key="drainingKiss" %name="Beijo Drenante" %priority="0" %crit="6.25" %type="17" %isSpecial="0" %power="50" %class="0" %effect="1" %fxChance="100" %accuracy="100"]
+	[include move %id="18" %key="echoedVoice" %name="Voz Ecoante" %priority="0" %crit="6.25" %type="0" %isSpecial="1" %power="40" %class="1" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="19" %key="vacuumWave" %name="Onda de Vácuo" %priority="1" %crit="6.25" %type="1" %isSpecial="1" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="20" %key="gust" %name="Ventania" %priority="0" %crit="6.25" %type="2" %isSpecial="1" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="21" %key="smog" %name="Poluição" %priority="0" %crit="6.25" %type="3" %isSpecial="1" %power="30" %class="0" %effect="4" %fxChance="40" %accuracy="100"]
+	[include move %id="22" %key="mudShot" %name="Tiro de Lama" %priority="0" %crit="6.25" %type="4" %isSpecial="1" %power="55" %class="0" %effect="14" %fxChance="100" %accuracy="100"]
+	[include move %id="23" %key="ancientPower" %name="Poder Ancestral" %priority="0" %crit="6.25" %type="5" %isSpecial="1" %power="60" %class="1" %effect="42" %fxChance="10" %accuracy="100"]
+	[include move %id="24" %key="struggleBug" %name="Ira de Inseto" %priority="0" %crit="6.25" %type="6" %isSpecial="1" %power="50" %class="0" %effect="12" %fxChance="100" %accuracy="100"]
+	[include move %id="25" %key="ominousWind" %name="Vento Nefasto" %priority="0" %crit="6.25" %type="7" %isSpecial="1" %power="60" %class="0" %effect="42" %fxChance="10" %accuracy="100"]
+	[include move %id="26" %key="flashCannon" %name="Canhão de Luz" %priority="0" %crit="6.25" %type="8" %isSpecial="1" %power="80" %class="0" %effect="13" %fxChance="10" %accuracy="100"]
+	[include move %id="27" %key="ember" %name="Brasas" %priority="0" %crit="6.25" %type="9" %isSpecial="1" %power="40" %class="0" %effect="6" %fxChance="10" %accuracy="100"]
+	[include move %id="28" %key="bubble" %name="Bolhas" %priority="1" %crit="6.25" %type="10" %isSpecial="1" %power="40" %class="0" %effect="14" %fxChance="10" %accuracy="100"]
+	[include move %id="29" %key="absorb" %name="Absorção" %priority="0" %crit="6.25" %type="11" %isSpecial="1" %power="20" %class="0" %effect="1" %fxChance="100" %accuracy="100"]
+	[include move %id="30" %key="thundershock" %name="Choque do Trovão" %priority="0" %crit="6.25" %type="12" %isSpecial="1" %power="40" %class="0" %effect="7" %fxChance="10" %accuracy="100"]
+	[include move %id="31" %key="extrasensory" %name="Extrasensorial" %priority="0" %crit="6.25" %type="13" %isSpecial="1" %power="80" %class="0" %effect="40" %fxChance="10" %accuracy="100"]
+	[include move %id="32" %key="powderSnow" %name="Pó de Neve" %priority="0" %crit="6.25" %type="14" %isSpecial="1" %power="40" %class="0" %effect="9" %fxChance="10" %accuracy="100"]
+	[include move %id="33" %key="twister" %name="Ciclone" %priority="0" %crit="6.25" %type="15" %isSpecial="1" %power="40" %class="0" %effect="40" %fxChance="20" %accuracy="100"]
+	[include move %id="34" %key="snarl" %name="Rosnado" %priority="0" %crit="6.25" %type="16" %isSpecial="1" %power="55" %class="0" %effect="12" %fxChance="100" %accuracy="100"]
+	[include move %id="35" %key="fairyWind" %name="Vento de Fada" %priority="0" %crit="6.25" %type="17" %isSpecial="1" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="36" %key="acupressure" %name="Acupuntura" %priority="0" %crit="0" %type="0" %isSpecial="0" %power="0" %class="0" %effect="0" %fxChance="60" %accuracy="100"]
+	/*[include move %id="37" %key="vacuumWave" %name="Onda de Vácuo" %priority="1" %crit="6.25" %type="1" %isSpecial="1" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="38" %key="gust" %name="Ventania" %priority="0" %crit="6.25" %type="2" %isSpecial="1" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="39" %key="smog" %name="Poluição" %priority="0" %crit="6.25" %type="3" %isSpecial="1" %power="30" %class="0" %effect="4" %fxChance="40" %accuracy="100"]
+	[include move %id="40" %key="mudShot" %name="Tiro de Lama" %priority="0" %crit="6.25" %type="4" %isSpecial="1" %power="55" %class="0" %effect="14" %fxChance="100" %accuracy="100"]
+	[include move %id="41" %key="ancientPower" %name="Poder Ancestral" %priority="0" %crit="6.25" %type="5" %isSpecial="1" %power="60" %class="1" %effect="42" %fxChance="10" %accuracy="100"]
+	[include move %id="42" %key="struggleBug" %name="Ira de Inseto" %priority="0" %crit="6.25" %type="6" %isSpecial="1" %power="50" %class="0" %effect="12" %fxChance="100" %accuracy="100"]
+	[include move %id="43" %key="ominousWind" %name="Vento Nefasto" %priority="0" %crit="6.25" %type="7" %isSpecial="1" %power="60" %class="0" %effect="42" %fxChance="10" %accuracy="100"]
+	[include move %id="44" %key="flashCannon" %name="Canhão de Luz" %priority="0" %crit="6.25" %type="8" %isSpecial="1" %power="80" %class="0" %effect="13" %fxChance="10" %accuracy="100"]
+	[include move %id="45" %key="ember" %name="Brasas" %priority="0" %crit="6.25" %type="9" %isSpecial="1" %power="40" %class="0" %effect="6" %fxChance="10" %accuracy="100"]
+	[include move %id="46" %key="bubble" %name="Bolhas" %priority="1" %crit="6.25" %type="10" %isSpecial="1" %power="40" %class="0" %effect="14" %fxChance="10" %accuracy="100"]
+	[include move %id="47" %key="absorb" %name="Absorção" %priority="0" %crit="6.25" %type="11" %isSpecial="1" %power="20" %class="0" %effect="1" %fxChance="100" %accuracy="100"]
+	[include move %id="48" %key="thundershock" %name="Choque do Trovão" %priority="0" %crit="6.25" %type="12" %isSpecial="1" %power="40" %class="0" %effect="7" %fxChance="10" %accuracy="100"]
+	[include move %id="49" %key="extrasensory" %name="Extrasensorial" %priority="0" %crit="6.25" %type="13" %isSpecial="1" %power="80" %class="0" %effect="40" %fxChance="10" %accuracy="100"]
+	[include move %id="50" %key="powderSnow" %name="Pó de Neve" %priority="0" %crit="6.25" %type="14" %isSpecial="1" %power="40" %class="0" %effect="9" %fxChance="10" %accuracy="100"]
+	[include move %id="51" %key="twister" %name="Ciclone" %priority="0" %crit="6.25" %type="15" %isSpecial="1" %power="40" %class="0" %effect="40" %fxChance="20" %accuracy="100"]
+	[include move %id="52" %key="snarl" %name="Rosnado" %priority="0" %crit="6.25" %type="16" %isSpecial="1" %power="55" %class="0" %effect="12" %fxChance="100" %accuracy="100"]
+	[include move %id="53" %key="fairyWind" %name="Vento de Fada" %priority="0" %crit="6.25" %type="17" %isSpecial="1" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]*/
+
     *TEMPLATE
-		tags:enemyMove hidden
-    *eMOVtackle
-		name:Investida
-		on select:
-			do getname with tag:enemy
-			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
-			$enemyMovePriority = 0
-			$enemyMoveCrit = 6.25
-			$enemyMoveType = 0
-			$enemyMoveIsSpecial = 0
-			$enemyMovePower = 40
-		end
+    *aMOVnone
+    *eMOVnone
     *TEMPLATE
 
 //---------------------------------------------Pkm Capturados------------------------------------------------------------//
@@ -870,165 +2863,176 @@ Buildings
         on earn:
 			anim glow
 		end
-		on click:
-			if ((no activePkm) and (switches>=1))
-				activeLvl = this
-				toast <#00cc00><b>[n:this]</b></#>, vai!
-			end
-		end
 		text:[n:this] lvl [this]
 		cost:10 xp
 		tag:capturedTab
 		hidden when 0
-	*CPTguarimple
-		name:Guarimple
+
+	[include capturedNoIcon %name="Guarimple" %number="1" %region="0" %variation="0" %evoLvl="0" %evoNumber="1"]
 		icon:pindohDex[1,0] pType[5,1] sType[5,1]
-		on click:
-			if ((no activePkm) and (switches>=1))
-				switch = (switch-1)
-				gain ATVguarimple
-				gain activePkm
-			end
-		end
-	*CPTballdillo
-		name:Balldillo
-		icon:pindohDex[4,0] pType[3,1] sType[2,1]
-		on click:
-			if ((no activePkm) and (switches>=1))
-				switch = (switch-1)
-				gain ATVballdillo
-				gain activePkm
-			end
-		end
-	*CPTgossipavy
-		name:Gossipavy
-		icon:pindohDex[7,0] pType[4,1] sType[0,0]
-		on click:
-			if ((no activePkm) and (switches>=1))
-				switch = (switch-1)
-				gain ATVgossipavy
-				gain activePkm
-			end
-		end
+
+	[include capturedNoIcon %name="Balldillo" %number="4" %region="0" %variation="0" %evoLvl="0" %evoNumber="1"]
+		icon:pindohDex[4,0] pType[3,1] sType[3,1]
+
+	[include capturedNoIcon %name="Gossipavy" %number="7" %region="0" %variation="0" %evoLvl="0" %evoNumber="1"]
+		icon:pindohDex[7,0] pType[4,1] sType[4,1]
+
+	[include capturedNoIcon %name="Dengorm" %number="10" %region="0" %variation="0" %evoLvl="7" %evoNumber="11"]
+		icon:pindohDex[0,1] pType[0,1] sType[4,1]
+
+	[include capturedNoIcon %name="Chikukoon" %number="11" %region="0" %variation="0" %evoLvl="10" %evoNumber="12"]
+		icon:pindohDex[1,1] pType[0,1] sType[4,1]
+
+	[include capturedNoIcon %name="Aedarrier" %number="12" %region="0" %variation="0" %evoLvl="0" %evoNumber="1"]
+		icon:pindohDex[2,1] pType[0,1] sType[4,2]
+
     *TEMPLATE
 
 //-----------------------------------------------Hidden------------------------------------------------------------------//
 
 Upgrades
 	*activePkm
+	*enemyPkm
 	*inBattle
-		on earn:
-			do reset with tag:modifier
-			do reset with tag:modifierEnemy
-		end
 
-//------------------------------------------------Inimigos----------------------------------------------------------------//
+//----------------------------------------------Battlers----------------------------------------------------------------//
     *TEMPLATE
-		desc:<//>HP: [enemyCurHP]/[enemyMaxHP] ([((enemyCurHP/enemyMaxHP)*100)]%) LVL: [enemyLvl]<//>[?(0.15>=(enemyCurHP/enemyMaxHP))|<#cc0000>|<#e6b800>][?((enemyCurHP/enemyMaxHP)>=0.4)|<#009900>|][?((enemyCurHP/enemyMaxHP)=1)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.95)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.9)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.85)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.8)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.75)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.7)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.65)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.6)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.55)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.5)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.45)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.4)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.35)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.3)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.25)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.2)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.15)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.1)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.05)|▓|░]</#><//>Attack: [enemyAttack]<//>Defense: [enemyDefense]<//>Special Attack: [enemySpAttack]<//>Special Defense: [enemySpDefense]<//>Speed: [enemySpeed]
         class:bigButton hasFlares
 		no text
-		tag:enemy
-		on getname:
-			if (have this) log <#ff3300><b>[n:this]</b></#>
-		end
-		on faint:
-			if (have this)
-				$expEarned = (pow((enemyMaxHP + enemyBaseAttack + enemyBaseDefense + enemyBaseSpAttack + enemyBaseSpDefense + enemyBaseSpeed),2)/100)*pow(((2*enemyLvl)/(enemyLvl + activeLvl)),2)
-				toast <#00cc00>Vitória!</#>
-				log <#ff3300><b>[n:this]</b></#> foi derrotado, você ganhou [$expEarned] xp.
-				gain $expEarned xp
-				lose inBattle
-				do reset with tag:baseEnemy
-				enemyMaxHP = 0
-				enemyCurHP = 0
-				lose this
-			end
-		end
 		hidden when 0
-		on click:
-			if (1>pokeballs)
-				toast Você <#ff3300>não tem pokébolas</#> para capturar!
-			else if (chance((enemyMaxHP*5)/(enemyCurHP)))
-				pokeball = (pokeballs-1)
-				toast Você capturou <#00cc00>[n:this]</#> lvl [enemyLvl]!
-				do capture with this
-				lose inBattle
-				do reset with tag:baseEnemy
-				enemyMaxHP = 0
-				enemyCurHP = 0
-				lose this
-			else
-				pokeball = (pokeballs-1)
-				toast Você falhou em capturar <#ff3300>[n:this]</#> e ele fugiu da batalha!
-				lose inBattle
-				do reset with tag:baseEnemy
-				enemyMaxHP = 0
-				enemyCurHP = 0
-				lose this
-			end
-		end
-		on iaplay:
-			if (have this) do select with eMOVtackle
-		end
-	*ENMguarimple
-		name:Guarimple
-		icon:https://i.imgur.com/Kco4d9D.png
-		on earn:
-			gain FNDguarimple
-			enemyMaxHP = round(((70*frandom(0.9,1.1)*enemyLvl)/50)+enemyLvl+10)
-			enemyCurHP = enemyMaxHP
-			enemyBaseAttack = (((49*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseDefense = (((30*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseSpAttack = (((54*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseSpDefense = (((32*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseSpeed = (((75*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyPtype = 11
-			enemyStype = 11
-		end
-		on capture:
-			CPTguarimple = max(enemyLvl,CPTguarimple)
-		end
-	*ENMballdillo
-		name:Balldillo
-		icon:https://i.imgur.com/FNP4vop.png
-		on earn:
-			gain FNDballdillo
-			enemyMaxHP = round(((58*frandom(0.9,1.1)*enemyLvl)/50)+enemyLvl+10)
-			enemyCurHP = enemyMaxHP
-			enemyBaseAttack = (((23*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseDefense = (((81*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseSpAttack = (((19*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseSpDefense = (((84*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseSpeed = (((45*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyPtype = 9
-			enemyStype = 9
-		end
-		on capture:
-			CPTballdillo = max(enemyLvl,CPTballdillo)
-		end
-	*ENMgossipavy
-		name:Gossipavy
-		icon:https://i.imgur.com/xDNs4ss.png
-		on earn:
-			gain FNDgossipavy
-			enemyMaxHP = round(((76*frandom(0.9,1.1)*enemyLvl)/50)+enemyLvl+10)
-			enemyCurHP = enemyMaxHP
-			enemyBaseAttack = (((44*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseDefense = (((40*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseSpAttack = (((51*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseSpDefense = (((37*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyBaseSpeed = (((63*frandom(0.9,1.1)*enemyLvl)/50)+5)
-			enemyPtype = 10
-			enemyStype = 10
-		end
-		on capture:
-			CPTgossipavy = max(enemyLvl,CPTgossipavy)
-		end
-//-------------------------------------------Pkm Ativos------------------------------------------------------------------//
 
+	[include battler %number="1" %region="0" %variation="0" %name="Guarimple" %sprite="https://i.imgur.com/Kco4d9D.png" %baseHP="70" %baseAtk="49" %baseDfs="30" %baseSpAtk="54" %baseSpDfs="32" %baseSpeed="75" %pType="11" %sType="11" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle"]
+
+	[include battler %number="4" %region="0" %variation="0" %name="Balldillo" %sprite="https://i.imgur.com/FNP4vop.png" %baseHP="58" %baseAtk="23" %baseDfs="81" %baseSpAtk="19" %baseSpDfs="84" %baseSpeed="45" %pType="9" %sType="9" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle"]
+
+	[include battler %number="7" %region="0" %variation="0" %name="Gossipavy" %sprite="https://i.imgur.com/xDNs4ss.png" %baseHP="76" %baseAtk="44" %baseDfs="40" %baseSpAtk="51" %baseSpDfs="37" %baseSpeed="63" %pType="10" %sType="10" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle"]
+
+	[include battler %number="10" %region="0" %variation="0" %name="Dengorm" %sprite="https://i.imgur.com/9Ehfwgo.png" %baseHP="23" %baseAtk="57" %baseDfs="27" %baseSpAtk="32" %baseSpDfs="27" %baseSpeed="19" %pType="6" %sType="10" %move1="vineWhip" %move2="vineWhip" %move3="vineWhip" %move4="vineWhip"]
+
+	[include battler %number="11" %region="0" %variation="0" %name="Chikukoon" %sprite="https://i.imgur.com/YvnsJ8L.png" %baseHP="25" %baseAtk="25" %baseDfs="49" %baseSpAtk="22" %baseSpDfs="50" %baseSpeed="19" %pType="6" %sType="10" %move1="tackle" %move2="tackle" %move3="vineWhip" %move4="vineWhip"]
+
+	[include battler %number="12" %region="0" %variation="0" %name="Aedarrier" %sprite="https://i.imgur.com/jFPFWeG.png" %baseHP="148" %baseAtk="147" %baseDfs="37" %baseSpAtk="32" %baseSpDfs="37" %baseSpeed="79" %pType="6" %sType="16" %move1="tackle" %move2="tackle" %move3="vineWhip" %move4="vineWhip"]
     *TEMPLATE
-        class:bigButton hasFlares
-		no text
+
+//----------------------------------------------Found Pkm----------------------------------------------------------------//
+
+Achievements
+	*TEMPLATE
+		tag:foundTab
+		hidden when 0
+//	*FND[number]from[region]var[variation]
+	*FND1from0var0
+		name:Guarimple
+		tags:foundTab starterFound
+		desc:Inicial de <b>Pindoh</b>.
+		icon:pindohDex[1,0]
+	*FND4from0var0
+		name:Balldillo
+		tags:foundTab starterFound
+		desc:Inicial de <b>Pindoh</b>.
+		icon:pindohDex[4,0]
+	*FND7from0var0
+		name:Gossipavy
+		tags:foundTab starterFound
+		desc:Inicial de <b>Pindoh</b>.
+		icon:pindohDex[7,0]
+	*FND10from0var0
+		name:Dengorm
+		desc:Encontrado na <b>Rota 1</b> de <b>Pindoh</b>.
+		icon:pindohDex[0,1]
+	*FND11from0var0
+		name:Chikukoon
+		desc:Encontrado na <b>Rota 1</b> de <b>Pindoh</b>. Evolução de <b>[n:FND10from0var0]</b>.
+		icon:pindohDex[1,1]
+	*FND12from0var0
+		name:Aedarrier
+		desc:Encontrado na <b>Rota 1</b> de <b>Pindoh</b>. Evolução de <b>[n:FND11from0var0]</b>.
+		icon:pindohDex[2,1]
+//	*FND[number]from[region]var[variation]
+	*TEMPLATE
+
+//----------------------------------------------Includes----------------------------------------------------------------//
+
+Includes
+*include move %id %key %priority %name %crit %type %isSpecial %power %class %effect %fxChance %accuracy
+	*aMOV[%key]
+		name:[%name]
+		on select:
+			do getname with tag:active
+			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
+			$activeMoveID = [%id]
+			$activeMovePriority = [%priority]
+			$activeMoveCrit = [%crit]
+			$activeMoveType = [%type]
+			$activeMoveIsSpecial = [%isSpecial]
+			$activeMovePower = [%power]
+			$activeMoveClass = [%class]
+			$activeMoveEffect = [%effect]
+			$activeMoveFxChance = [%fxChance]
+			$activeMoveAccuracy = [%accuracy]
+		end
+	*eMOV[%key]
+		name:[%name]
+		tags:enemyMove hidden
+		on select:
+			do getname with tag:enemy
+			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
+			$enemyMoveID = [%id]
+			$enemyMovePriority = [%priority]
+			$enemyMoveCrit = [%crit]
+			$enemyMoveType = [%type]
+			$enemyMoveIsSpecial = [%isSpecial]
+			$enemyMovePower = [%power]
+			$enemyMoveClass = [%class]
+			$enemyMoveEffect = [%effect]
+			$enemyMoveFxChance = [%fxChance]
+			$enemyMoveAccuracy = [%accuracy]
+		end
+
+*include extraFxMove %id %key %priority %name %crit %type %isSpecial %power %class %effect %fxChance %effect2 %fxChance2 %accuracy
+	*aMOV[%key]
+		name:[%name]
+		on select:
+			do getname with tag:active
+			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
+			$activeMoveID = [%id]
+			$activeMovePriority = [%priority]
+			$activeMoveCrit = [%crit]
+			$activeMoveType = [%type]
+			$activeMoveIsSpecial = [%isSpecial]
+			$activeMovePower = [%power]
+			$activeMoveClass = [%class]
+			$activeMoveEffect = [%effect]
+			$activeMoveFxChance = [%fxChance]
+			$activeMoveEffect2 = [%effect2]
+			$activeMoveFxChance2 = [%fxChance2]
+			$activeMoveAccuracy = [%accuracy]
+		end
+	*eMOV[%key]
+		name:[%name]
+		tags:enemyMove hidden
+		on select:
+			do getname with tag:enemy
+			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
+			$enemyMoveID = [%id]
+			$enemyMovePriority = [%priority]
+			$enemyMoveCrit = [%crit]
+			$enemyMoveType = [%type]
+			$enemyMoveIsSpecial = [%isSpecial]
+			$enemyMovePower = [%power]
+			$enemyMoveClass = [%class]
+			$enemyMoveEffect = [%effect]
+			$enemyMoveFxChance = [%fxChance]
+			$enemyMoveEffect2 = [%effect2]
+			$enemyMoveFxChance2 = [%fxChance2]
+			$enemyMoveAccuracy = [%accuracy]
+		end
+
+*include battler %number %region %variation %name %sprite %baseHP %baseAtk %baseDfs %baseSpAtk %baseSpDfs %baseSpeed %pType %sType %move1 %move2 %move3 %move4
+	*ATV[%number]from[%region]var[%variation]
+		name:[%name]
+		icon:[%sprite]
+		no tooltip
 		tag:active
 		on click:
 			do return with this
@@ -1037,79 +3041,302 @@ Upgrades
 			if (have this)
 				toast <#00cc00><b>[n:this]</b></#>, já basta, volte!
 				log <#00cc00><b>[n:this]</b></#> retornou para a pokébola, mas os pokémon selvagens fugiram!
-				lose activePkm
-				lose inBattle
-				lose tag:activeMove
-				lose tag:enemy
-				do reset with tag:base
-				activeMaxHP = 0
-				activeCurHP = 0
 				lose this
 			end
+		end
+		on earn:
+			gain activePkm
+			activeCurHP = round(activeCurHP)
+			do reset with tag:modifier
+			if (have enemyPkm) gain inBattle
+			activeMaxHP = round((([%baseHP]*activeLvl)/50)+activeLvl+10)
+			activeCurHP = activeMaxHP
+			activeBaseAttack = ((([%baseAtk]*activeLvl)/50)+5)
+			activeBaseDefense = ((([%baseDfs]*activeLvl)/50)+5)
+			activeBaseSpAttack = ((([%baseSpAtk]*activeLvl)/50)+5)
+			activeBaseSpDefense = ((([%baseSpDfs]*activeLvl)/50)+5)
+			activeBaseSpeed = ((([%baseSpeed]*activeLvl)/50)+5)
+			activePtype = [%pType]
+			activeStype = [%sType]
+			gain aMOV[%move1]
+			gain aMOV[%move2]
+			gain aMOV[%move3]
+			gain aMOV[%move4]
+		end
+		on lose:
+			lose activePkm
+			lose tag:activeMove
+			lose tag:enemy
+			lose inBattle
+			do reset with tag:base
+			activeMaxHP = 0
+			activeCurHP = 0
 		end
 		on getname:
 			if (have this) log <#00cc00><b>[n:this]</b></#>
 		end
-		hidden when 0		
-	*ATVguarimple
-		name:Guarimple
-		icon:https://i.imgur.com/Kco4d9D.png
-		on earn:
-			activeMaxHP = round(((70*activeLvl)/50)+activeLvl+10)
-			activeCurHP = activeMaxHP
-			activeBaseAttack = (((49*activeLvl)/50)+5)
-			activeBaseDefense = (((30*activeLvl)/50)+5)
-			activeBaseSpAttack = (((54*activeLvl)/50)+5)
-			activeBaseSpDefense = (((32*activeLvl)/50)+5)
-			activeBaseSpeed = (((75*activeLvl)/50)+5)
-			activePtype = 11
-			activeStype = 11
-			gain aMOVtackle
+	*ENM[%number]from[%region]var[%variation]
+		name:[%name]
+		icon:[%sprite]
+		tag:enemy
+		desc:<//>HP: [enemyCurHP]/[enemyMaxHP] ([((enemyCurHP/enemyMaxHP)*100)]%) LVL: [enemyLvl]<//>[?(0.15>=(enemyCurHP/enemyMaxHP))|<#cc0000>|<#e6b800>][?((enemyCurHP/enemyMaxHP)>=0.4)|<#009900>|][?((enemyCurHP/enemyMaxHP)=1)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.95)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.9)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.85)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.8)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.75)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.7)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.65)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.6)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.55)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.5)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.45)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.4)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.35)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.3)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.25)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.2)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.15)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.1)|▓|░][?((enemyCurHP/enemyMaxHP)>=0.05)|▓|░]</#><//>Attack: [enemyAttack]<//>Defense: [enemyDefense]<//>Special Attack: [enemySpAttack]<//>Special Defense: [enemySpDefense]<//>Speed: [enemySpeed]
+		on click:
+			if (1>pokeballs)
+				toast Você <#ff3300>não tem pokébolas</#> para capturar!
+			else if (chance((enemyMaxHP*5)/(enemyCurHP)))
+				pokeball = (pokeballs-1)
+				toast Você capturou <#00cc00>[n:this]</#> lvl [enemyLvl]!
+				do capture with this
+				lose this
+			else
+				pokeball = (pokeballs-1)
+				toast Você falhou em capturar <#ff3300>[n:this]</#> e ele fugiu da batalha!
+				lose this
+			end
 		end
-	*ATVballdillo
-		name:Balldillo
-		icon:https://i.imgur.com/FNP4vop.png
 		on earn:
-			activeMaxHP = round(((58*activeLvl)/50)+activeLvl+10)
-			activeCurHP = activeMaxHP
-			activeBaseAttack = (((23*activeLvl)/50)+5)
-			activeBaseDefense = (((81*activeLvl)/50)+5)
-			activeBaseSpAttack = (((19*activeLvl)/50)+5)
-			activeBaseSpDefense = (((84*activeLvl)/50)+5)
-			activeBaseSpeed = (((45*activeLvl)/50)+5)
-			activePtype = 9
-			activeStype = 9
-			gain aMOVtackle
+			gain enemyPkm
+			gain FND[%number]from[%region]var[%variation]
+			do reset with tag:modifierEnemy
+			enemyMaxHP = round((([%baseHP]*frandom(0.9,1.1)*enemyLvl)/50)+enemyLvl+10)
+			enemyCurHP = enemyMaxHP
+			enemyBaseAttack = ((([%baseAtk]*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseDefense = ((([%baseDfs]*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpAttack = ((([%baseSpAtk]*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpDefense = ((([%baseSpDfs]*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyBaseSpeed = ((([%baseSpeed]*frandom(0.9,1.1)*enemyLvl)/50)+5)
+			enemyPtype = [%pType]
+			enemyStype = [%sType]
 		end
-	*ATVgossipavy
-		name:Gossipavy
-		icon:https://i.imgur.com/xDNs4ss.png
-		on earn:
-			activeMaxHP = round(((76*activeLvl)/50)+activeLvl+10)
-			activeCurHP = activeMaxHP
-			activeBaseAttack = (((44*activeLvl)/50)+5)
-			activeBaseDefense = (((40*activeLvl)/50)+5)
-			activeBaseSpAttack = (((51*activeLvl)/50)+5)
-			activeBaseSpDefense = (((37*activeLvl)/50)+5)
-			activeBaseSpeed = (((63*activeLvl)/50)+5)
-			activePtype = 10
-			activeStype = 10
-			gain aMOVtackle
+		on capture:
+			CPT[%number]from[%region]var[%variation] = max(enemyLvl,CPT[%number]from[%region]var[%variation])
 		end
-    *TEMPLATE
+		on iaplay:
+			$bestMove = random(1,4)
+			if ((have this) and ($bestMove=1)) do select with eMOV[%move1]
+			else if ((have this) and ($bestMove=2)) do select with eMOV[%move2]
+			else if ((have this) and ($bestMove=3)) do select with eMOV[%move3]
+			else if ((have this) and ($bestMove=4)) do select with eMOV[%move4]
+		end
+		on faint:
+			if (have this)
+				$expEarned = (pow((enemyMaxHP + enemyBaseAttack + enemyBaseDefense + enemyBaseSpAttack + enemyBaseSpDefense + enemyBaseSpeed),2)/100)*pow(((2*enemyLvl)/(enemyLvl + activeLvl)),2)
+				toast <#00cc00>Vitória!</#>
+				log <#ff3300><b>[n:this]</b></#> foi derrotado, você ganhou [$expEarned] xp.
+				gain $expEarned xp
+				lose this
+			end
+		end
+		on lose:
+			lose enemyPkm
+			lose inBattle
+		end
+		on getname:
+			if (have this) log <#ff3300><b>[n:this]</b></#>
+		end
 
-//----------------------------------------------Found Pkm----------------------------------------------------------------//
+*include activeMoveTypeAdvantage %type
+	if ((activeCurHP>0) and ($auxMtype=[%type]))
+		do type[%type]advantage with this
+		$activePadvg = $auxAdvg
+		$auxType = enemyStype
+		do type[%type]advantage with this
+	end
 
-Achievements
-	*TEMPLATE
-		tags:foundTab starterFound
-		hidden when 0
-	*FNDguarimple
-		name:Guarimple
-		icon:pindohDex[1,0]
-	*FNDballdillo
-		name:Balldillo
-		icon:pindohDex[4,0]
-	*FNDgossipavy
-		name:Gossipavy
-		icon:pindohDex[7,0]
+*include enemyMoveTypeAdvantage %type
+	if ((enemyCurHP>0) and ($auxMtype=[%type]))
+		do type[%type]advantage with this
+		$enemyPadvg = $auxAdvg
+		$auxType = activeStype
+		do type[%type]advantage with this
+	end
+
+*include activeMultipleHit %hit
+	$activeAim = chance(($activeMoveAccuracy*activeAccuracyMod*enemyEvasionMod)*100)
+
+	if ($activeAim = 0)
+		do getname with tag:active
+		log errou o golpe!
+		activeMovesInARow = 0
+	end
+
+	if ((activeCurHP>0) and (enemyCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($activeAim = 1))
+		do getname with tag:active
+		log atacou pela [%hit]ª vez...
+		$activeCrit = 1
+		$activeRandomVar = frandom(0.85,1)
+	end
+
+	if ((activeCurHP>0) and (enemyCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and (chance($activeMoveCrit)) and ($activeAim = 1))
+		$activeCrit = 1.5
+		log ... e realizou um golpe crítico!
+	end
+
+	if ((activeCurHP>0) and (enemyCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($activeAim = 1))
+		$activeDamageMods = $activeTypeAdvg*$activeRandomVar*$activeSTAB*$activeCrit*$activeStatusMod
+		$activeEffectiveDamage = round(min(enemyCurHP,($activeRawDamage*$activeDamageMods)))
+		lose $activeEffectiveDamage enemyCurHP
+		do getname with tag:enemy
+		log tomou [$activeEffectiveDamage] dano!
+		log <#3366ff>-----------------------------------</#>
+	end
+
+*include enemyMultipleHit %hit
+	$enemyAim = chance(($enemyMoveAccuracy*enemyAccuracyMod*activeEvasionMod)*100)
+
+	if ($enemyAim = 0)
+		do getname with tag:enemy
+		log errou o golpe!
+		enemyMovesInARow = 0
+	end
+
+	if ((activeCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($enemyAim = 1))
+		do getname with tag:enemy
+		log atacou pela [%hit]ª vez...
+		$enemyCrit = 1
+		$enemyRandomVar = frandom(0.85,1)
+	end
+
+	if ((activeCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and (chance($enemyMoveCrit)) and ($enemyAim = 1))
+		$enemyCrit = 1.5
+		log ... e realizou um golpe crítico!
+	end
+
+	if ((activeCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($enemyAim = 1))
+		$enemyDamageMods = $enemyTypeAdvg*$enemyRandomVar*$enemySTAB*$enemyCrit*$enemyStatusMod
+		$enemyEffectiveDamage = round(min(activeCurHP,($enemyRawDamage*$enemyDamageMods)))
+		lose $enemyEffectiveDamage activeCurHP
+		do getname with tag:active
+		log tomou [$enemyEffectiveDamage] dano!
+		log <#3366ff>-----------------------------------</#>
+	end
+
+*include activeConfusedMultHit %hit
+	$activeAim = chance(($activeMoveAccuracy*activeAccuracyMod*activeEvasionMod)*100)
+
+	if ($activeAim = 0)
+		do getname with tag:active
+		log errou o golpe!
+		activeMovesInARow = 0
+	end
+
+	if ((activeCurHP>0) and (activeCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($activeAim = 1))
+		do getname with tag:active
+		log atacou pela [%hit]ª vez...
+		$activeCrit = 1
+		$activeRandomVar = frandom(0.85,1)
+	end
+
+	if ((activeCurHP>0) and (activeCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and (chance($activeMoveCrit)) and ($activeAim = 1))
+		$activeCrit = 1.5
+		log ... e realizou um golpe crítico!
+	end
+
+	if ((activeCurHP>0) and (activeCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($activeAim = 1))
+		$activeDamageMods = $activeTypeAdvg*$activeRandomVar*$activeSTAB*$activeCrit*$activeStatusMod
+		$activeEffectiveDamage = round(min(activeCurHP,($activeRawDamage*$activeDamageMods)))
+		lose $activeEffectiveDamage activeCurHP
+		do getname with tag:active
+		log tomou [$activeEffectiveDamage] dano!
+		log <#3366ff>-----------------------------------</#>
+	end
+
+*include enemyConfusedMultHit %hit
+	$enemyAim = chance(($enemyMoveAccuracy*enemyAccuracyMod*enemyEvasionMod)*100)
+
+	if ($enemyAim = 0)
+		do getname with tag:enemy
+		log errou o golpe!
+		enemyMovesInARow = 0
+	end
+
+	if ((enemyCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($enemyAim = 1))
+		do getname with tag:enemy
+		log atacou pela [%hit]ª vez...
+		$enemyCrit = 1
+		$enemyRandomVar = frandom(0.85,1)
+	end
+
+	if ((enemyCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and (chance($enemyMoveCrit)) and ($enemyAim = 1))
+		$enemyCrit = 1.5
+		log ... e realizou um golpe crítico!
+	end
+
+	if ((enemyCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($enemyAim = 1))
+		$enemyDamageMods = $enemyTypeAdvg*$enemyRandomVar*$enemySTAB*$enemyCrit*$enemyStatusMod
+		$enemyEffectiveDamage = round(min(enemyCurHP,($enemyRawDamage*$enemyDamageMods)))
+		lose $enemyEffectiveDamage enemyCurHP
+		do getname with tag:enemy
+		log tomou [$enemyEffectiveDamage] dano!
+		log <#3366ff>-----------------------------------</#>
+	end
+
+*include defModByStage %stage %mod
+	if (activeAttackStage=[%stage]) activeAttackMod = [%mod]
+	if (activeDefenseStage=[%stage]) activeDefenseMod = [%mod]
+	if (activeSpAttackStage=[%stage]) activeSpAttackMod = [%mod]
+	if (activeSpDefenseStage=[%stage]) activeSpDefenseMod = [%mod]
+	if (activeSpeedStage=[%stage])activeSpeedMod = [%mod]
+	if (enemyAttackStage=[%stage]) enemyAttackMod = [%mod]
+	if (enemyDefenseStage=[%stage]) enemyDefenseMod = [%mod]
+	if (enemySpAttackStage=[%stage]) enemySpAttackMod = [%mod]
+	if (enemySpDefenseStage=[%stage]) enemySpDefenseMod = [%mod]
+	if (enemySpeedStage=[%stage]) enemySpeedMod = [%mod]
+
+*include defAcEvModByStage %stage %mod
+	if (activeAccuracyStage=[%stage]) activeAccuracyMod = [%mod]
+	if (activeEvasionStage=(-[%stage])) activeEvasionMod = [%mod]
+	if (enemyAccuracyStage=[%stage]) enemyAccuracyMod = [%mod]
+	if (enemyEvasionStage=(-[%stage])) enemyEvasionMod = [%mod]
+
+*include capturedNoIcon %name %number %region %variation %evoLvl %evoNumber
+	*CPT[%number]from[%region]var[%variation]
+		name:[%name]
+		on click:
+			if (([%evoLvl]>0) and (this>=[%evoLvl]) and (CPT[%evoNumber]from[%region]var[%variation]=0))
+				toast <#00cc00><b>[n:this]</b></#> evoluiu para <#00cc00><b>[n:CPT[%evoNumber]from[%region]var[%variation]]</b></#>!
+				gain FND[%evoNumber]from[%region]var[%variation]
+				CPT[%evoNumber]from[%region]var[%variation] = this
+				this = 0
+			end
+			if ((this>0) and (no activePkm) and (switches>=1))
+				switch = (switch-1)
+				gain ATV[%number]from[%region]var[%variation]
+				activeLvl = this
+				toast <#00cc00><b>[n:this]</b></#>, vai!
+			end
+		end
+
+*include placeNoIcon %id %region %name %desc %common1Lvl %common1Range %common1PkmNum %common1PkmVar %common2Lvl %common2Range %common2PkmNum %common2PkmVar %common3Lvl %common3Range %common3PkmNum %common3PkmVar %uncommonLvl %uncommonRange %uncommonPkmNum %uncommonPkmVar %rareLvl %rareRange %rarePkmNum %rarePkmVar %exoticLvl %exoticRange %exoticPkmNum %exoticPkmVar %legendLvl %legendRange %legendPkmNum %legendPkmVar
+    *place[%id]from[%region]
+		name:[%name]
+		desc:[%desc]
+		icon:exploration[0,0]
+		on common1:
+			enemyLvl = ([%common1Lvl] + random(-[%common1Range],[%common1Range]))
+			gain ENM[%common1PkmNum]from[%region]var[%common1PkmVar]
+		end
+		on common2:
+			enemyLvl = ([%common2Lvl] + random(-[%common2Range],[%common2Range]))
+			gain ENM[%common2PkmNum]from[%region]var[%common2PkmVar]
+		end
+		on common3:
+			enemyLvl = ([%common3Lvl] + random(-[%common3Range],[%common3Range]))
+			gain ENM[%common3PkmNum]from[%region]var[%common3PkmVar]
+		end
+		on uncommon:
+			enemyLvl = ([%uncommonLvl] + random(-[%uncommonRange],[%uncommonRange]))
+			gain ENM[%uncommonPkmNum]from[%region]var[%uncommonPkmVar]
+		end
+		on rare:
+			enemyLvl = ([%rareLvl] + random(-[%rareRange],[%rareRange]))
+			gain ENM[%rarePkmNum]from[%region]var[%rarePkmVar]
+		end
+		on exotic:
+			enemyLvl = ([%exoticLvl] + random(-[%exoticRange],[%exoticRange]))
+			gain ENM[%exoticPkmNum]from[%region]var[%exoticPkmVar]
+		end
+		on legend:
+			enemyLvl = ([%legendLvl] + random(-[%legendRange],[%legendRange]))
+			gain ENM[%legendPkmNum]from[%region]var[%legendPkmVar]
+		end
