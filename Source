@@ -1,9 +1,9 @@
 Let's make a game!
 	name:	Fakemon All-Star v0.2 (ALPHA)
 	by:		Braz Araujo da Silva Junior
-	desc:	Bem vindo ao projeto <b>Fakemon All-Stars</b>! Agradecimentos especiais ao <b>Iddle Game Maker</b>*, por possibilitar a criação deste jogo. Ao projeto <b>Game-Icons</b>**, por possibilitar a criação dos ícones utilizados no jogo, sob a licença <b>CC BY 3.0</b>***. Foram utilizados os </></><b>Ícones</b>:</></><//>Magnifying glass, by Lorc<//>Pokecog, by Lorc<//>Treasure map, by Lorc<//>Trophy cup, by Delapouite<//>Chart, by Delapouite<//>Shining heart, by Lorc<//>Punch Blast, by Lorc<//>Checked Shield, by Lorc<//>Hypersonic bolt, by Lorc<//>Ball glow, by Lorc<//>Thunderball, by Lorc<//>Up card, by Delapouite<//>Cycle, by Lorc<//>High grass, by Delapouite<//>Raspberry, by Delapouite</></>feitos pelos <b>Artistas</b>:</></><//>Lorc - http://lorcblog.blogspot.com<//>Delapouite - http://delapouite.com</></><//></></><//>Braz Junior - Região de <b>Pindoh</b> - https://www.facebook.com/PindohRegion/.</>______________________________________________________________</>*http://orteil.dashnet.org/igm/help.html</>**https://game-icons.net</>***https://creativecommons.org/licenses/by/3.0/</>
+	desc:	Bem vindo ao projeto <b>Fakemon All-Stars</b>! Agradecimentos especiais ao <b>Iddle Game Maker</b>*, por possibilitar a criação deste jogo. Ao projeto <b>Game-Icons</b>**, por possibilitar a criação dos ícones utilizados no jogo, sob a licença <b>CC BY 3.0</b>***. Foram utilizados os </></><b>Ícones</b>:</></><//>Magnifying glass, by Lorc<//>Pokecog, by Lorc<//>Treasure map, by Lorc<//>Trophy cup, by Delapouite<//>Chart, by Delapouite<//>Shining heart, by Lorc<//>Punch Blast, by Lorc<//>Checked Shield, by Lorc<//>Hypersonic bolt, by Lorc<//>Ball glow, by Lorc<//>Thunderball, by Lorc<//>Up card, by Delapouite<//>Cycle, by Lorc<//>High grass, by Delapouite<//>Raspberry, by Delapouite<//>Fluffy trefoil, by Lorc<//>Stars stack by Delapouite</></>feitos pelos <b>Artistas</b>:</></><//>Lorc - http://lorcblog.blogspot.com<//>Delapouite - http://delapouite.com</></><//></></><//>Braz Junior - Região de <b>Pindoh</b> - https://www.facebook.com/PindohRegion/.</>______________________________________________________________</>*http://orteil.dashnet.org/igm/help.html</>**https://game-icons.net</>***https://creativecommons.org/licenses/by/3.0/</>
 	created:04/07/2018
-	updated:12/07/2018
+	updated:13/07/2018
 
 Settings
 	background:http://i.imgur.com/Dnd9gLk.png
@@ -885,10 +885,6 @@ Resources
 		tags:status hidden
 		*activeLvl
 			desc: Level do seu pokémon
-		*activePtype
-			desc: Tipo primário do seu pokémon
-		*activeStype
-			desc: Tipo secundário do seu pokémon
 		*enemyLvl
 			desc: Level do pokémon inimigo
 		*enemyPtype
@@ -1000,8 +996,6 @@ Resources
 			name:Evasão (Modificador)
 		*activeCriticalStage
 			name:Crítico (Modificador)
-		*activeAbility
-			name:Habilidade do seu pokémon
 	*TEMPLATE
 		tags:status modifierEnemy hidden
 		on reset:
@@ -1103,7 +1097,8 @@ Resources
 		*activeBerry
 			name:Fruto
 			text:Fruto<t>[?this=0|-|][?this=1|[n:BER1]|][?this=2|[n:BER2]|][?this=3|[n:BER3]|][?this=4|[n:BER4]|][?this=5|[n:BER5]|][?this=6|[n:BER6]|][?this=7|[n:BER7]|][?this=8|[n:BER8]|][?this=9|[n:BER9]|][?this=10|[n:BER10]|][?this=11|[n:BER11]|][?this=12|[n:BER12]|][?this=13|[n:BER13]|]</t>
-			desc:O Fruto que seu pokémon está carregando.
+			desc:O Fruto que seu pokémon está carregando [?this=1|cura paralisia.|][?this=2|cura adormecimento.|][?this=3|cura envenenamento.|][?this=4|apaga chamas.|][?this=5|cura congelamento.|][?this=6|cura confusão.|][?this=7|cura qualquer condição.|][?this=8|cura 6.25% dos pontos de vida.|][?this=9|cura 12.5% dos pontos de vida.|][?this=10|cura 25% dos pontos de vida.|][?this=11|cura 50% dos pontos de vida.|][?this=12|cura 75% dos pontos de vida.|][?this=13|cura 100% dos pontos de vida.|]
+			tags:status modifier
 			icon:https://i.imgur.com/HgalgR2.png
 			on click:
 				if (this=1) do activeeatactive with BER1
@@ -1120,6 +1115,24 @@ Resources
 				if (this=12) do activeeatactive with BER12
 				if (this=13) do activeeatactive with BER13
 			end
+		*activeAbility
+			name:Habilidade
+			text:Habilidade<t>[?this=0|-|][?this=1|Frutífero|]</t>
+			desc:A habilidade de seu pokémon[?this=1| dá 50% de chance de criar uma [n:BER8] no final de cada turno|].
+			tags:status modifier
+			icon:https://i.imgur.com/TFTnz1p.png
+		*activePtype
+			name:Tipo Primário
+			text:Tipo Prim.<t>[?this=0|Normal|][?this=1|Lutador|][?this=2|Voador|][?this=3|Veneno|][?this=4|Terra|][?this=5|Pedra|][?this=6|Inseto|][?this=7|Fantasma|][?this=8|Metal|][?this=9|Fogo|][?this=10|Água|][?this=11|Grama|][?this=12|Elétrico|][?this=13|Psíquico|][?this=14|Gelo|][?this=15|Dragão|][?this=16|Noturno|][?this=17|Fada|]</t>
+			desc:<t>[?this=0|Normal|][?this=1|Lutador|][?this=2|Voador|][?this=3|Veneno|][?this=4|Terra|][?this=5|Pedra|][?this=6|Inseto|][?this=7|Fantasma|][?this=8|Metal|][?this=9|Fogo|][?this=10|Água|][?this=11|Grama|][?this=12|Elétrico|][?this=13|Psíquico|][?this=14|Gelo|][?this=15|Dragão|][?this=16|Noturno|][?this=17|Fada|]</t></></><//>Super efetivo contra: [?this=1|Normal, Pedra, Metal, Gelo e Noturno|][?this=2|Lutador, Inseto e Grama|][?this=3|Grama e Fada|][?this=4|Veneno, Pedra, Metal, Fogo e Elétrico|][?this=5|Voador, Inseto, Fogo e Gelo|][?this=6|Grama, Psíquico e Noturno|][?this=7|Fantasma e Psíquico|][?this=8|Pedra, Gelo e Fada|][?this=9|Inseto, Metal, Grama e Gelo|][?this=10|Terra, Pedra e Fogo|][?this=11|Terra, Pedra e Água|][?this=12|Voador e Água|][?this=13|Lutador e Veneno|][?this=14|Voador, Terra, Água e Dragão|][?this=15|Dragão|][?this=16|Fantasma e Psíquico|][?this=17|Lutador, Dragão e Noturno|].</></><//>Pouco efetivo contra: [?this=0|Pedra e Metal|][?this=1|Voador, Veneno, Inseto, Psíquico e Fada|][?this=2|Pedra, Metal e Elétrico|][?this=3|Veneno, Terra, Pedra e Fantasma|][?this=4|Inseto e Grama|][?this=5|Lutador, Pedra e Metal|][?this=6|Lutador, Voador, Veneno, Fantasma, Metal, Fogo e Fada|][?this=7|Noturno|][?this=8|Metal, Fogo, Água e Elétrico|][?this=9|Pedra, Fogo, Água e Dragão|][?this=10|Água, Grama e Dragão|][?this=11|Voador, Veneno, Inseto, Metal, Fogo, Grama e Dragão|][?this=12|Grama, Elétrico e Dragão|][?this=13|Metal e Psíquico|][?this=14|Metal, Fogo, Água e Gelo|][?this=15|Metal|][?this=16|Lutador, Noturno e Fada|][?this=17|Veneno, Metal e Fogo|].</></><//>Inefetivo contra: [?this=0|Fantasma|][?this=1|Fantasma|][?this=3|Metal|][?this=4|Voador|][?this=7|Normal|][?this=12|Terra|][?this=13|Noturno|][?this=15|Fada|].</></><//>Resistente contra: [?this=1|Pedra, Inseto e Noturno|][?this=2|Lutador, Inseto e Grama|][?this=3|Lutador, Veneno, Inseto, Grama e Fada|][?this=4|Veneno e Pedra|][?this=5|Normal, Voador, Veneno e Fogo|][?this=6|Lutador, Terra e Grama|][?this=7|Veneno e Inseto|][?this=8|Normal, Voador, Pedra, Inseto, Metal, Grama, Psíquico, Gelo, Dragão e Fada|][?this=9|Inseto, Metal, Fogo, Grama, Gelo e Fada|][?this=10|Metal, Fogo, Água e Gelo|][?this=11|Terra, Água, Grama e Elétrico|][?this=12|Voador, Metal e Elétrico|][?this=13|Lutador e Psíquico|][?this=14|Gelo|][?this=15|Fogo, Água, Grama e Elétrico|][?this=16|Fantasma e Noturno|][?this=17|Lutador, Inseto e Noturno|].</></><//>Frágil contra: [?this=0|Lutador|][?this=1|Voador, Psíquico e Fada|][?this=2|Pedra, Elétrico e Gelo|][?this=3|Terra e Psíquico|][?this=4|Água, Grama e Gelo|][?this=5|Lutador, Pedra, Metal, Água e Grama|][?this=6|Voador, Pedra e Fogo|][?this=7|Fantasma e Noturno|][?this=8|Lutador, Terra e Fogo|][?this=9|Terra, Pedra e Água|][?this=10|Grama e Elétrico|][?this=11|Voador, Veneno, Inseto, Fogo e Gelo|][?this=12|Terra|][?this=13|Inseto, Fantasma e Noturno|][?this=14|Lutador, Pedra, Metal e Fogo|][?this=15|Gelo, Dragão e Fada|][?this=16|Lutador, Inseto e Fada|][?this=17|Veneno e Metal|].</></><//>Imune a: [?this=0|Fantasma|][?this=2|Terra|][?this=4|Elétrico|][?this=7|Normal e Lutador|][?this=8|Veneno|][?this=16|Psíquico|][?this=17|Dragão|].
+			tags:status modifier
+			icon:https://i.imgur.com/DoIRyae.png
+		*activeStype
+			name:Tipo Secundário
+			text:Tipo Sec.<t>[?this=0|Normal|][?this=1|Lutador|][?this=2|Voador|][?this=3|Veneno|][?this=4|Terra|][?this=5|Pedra|][?this=6|Inseto|][?this=7|Fantasma|][?this=8|Metal|][?this=9|Fogo|][?this=10|Água|][?this=11|Grama|][?this=12|Elétrico|][?this=13|Psíquico|][?this=14|Gelo|][?this=15|Dragão|][?this=16|Noturno|][?this=17|Fada|]</t>
+			desc:<t>[?this=0|Normal|][?this=1|Lutador|][?this=2|Voador|][?this=3|Veneno|][?this=4|Terra|][?this=5|Pedra|][?this=6|Inseto|][?this=7|Fantasma|][?this=8|Metal|][?this=9|Fogo|][?this=10|Água|][?this=11|Grama|][?this=12|Elétrico|][?this=13|Psíquico|][?this=14|Gelo|][?this=15|Dragão|][?this=16|Noturno|][?this=17|Fada|]</t></></><//>Super efetivo contra: [?this=1|Normal, Pedra, Metal, Gelo e Noturno|][?this=2|Lutador, Inseto e Grama|][?this=3|Grama e Fada|][?this=4|Veneno, Pedra, Metal, Fogo e Elétrico|][?this=5|Voador, Inseto, Fogo e Gelo|][?this=6|Grama, Psíquico e Noturno|][?this=7|Fantasma e Psíquico|][?this=8|Pedra, Gelo e Fada|][?this=9|Inseto, Metal, Grama e Gelo|][?this=10|Terra, Pedra e Fogo|][?this=11|Terra, Pedra e Água|][?this=12|Voador e Água|][?this=13|Lutador e Veneno|][?this=14|Voador, Terra, Água e Dragão|][?this=15|Dragão|][?this=16|Fantasma e Psíquico|][?this=17|Lutador, Dragão e Noturno|].</></><//>Pouco efetivo contra: [?this=0|Pedra e Metal|][?this=1|Voador, Veneno, Inseto, Psíquico e Fada|][?this=2|Pedra, Metal e Elétrico|][?this=3|Veneno, Terra, Pedra e Fantasma|][?this=4|Inseto e Grama|][?this=5|Lutador, Pedra e Metal|][?this=6|Lutador, Voador, Veneno, Fantasma, Metal, Fogo e Fada|][?this=7|Noturno|][?this=8|Metal, Fogo, Água e Elétrico|][?this=9|Pedra, Fogo, Água e Dragão|][?this=10|Água, Grama e Dragão|][?this=11|Voador, Veneno, Inseto, Metal, Fogo, Grama e Dragão|][?this=12|Grama, Elétrico e Dragão|][?this=13|Metal e Psíquico|][?this=14|Metal, Fogo, Água e Gelo|][?this=15|Metal|][?this=16|Lutador, Noturno e Fada|][?this=17|Veneno, Metal e Fogo|].</></><//>Inefetivo contra: [?this=0|Fantasma|][?this=1|Fantasma|][?this=3|Metal|][?this=4|Voador|][?this=7|Normal|][?this=12|Terra|][?this=13|Noturno|][?this=15|Fada|].</></><//>Resistente contra: [?this=1|Pedra, Inseto e Noturno|][?this=2|Lutador, Inseto e Grama|][?this=3|Lutador, Veneno, Inseto, Grama e Fada|][?this=4|Veneno e Pedra|][?this=5|Normal, Voador, Veneno e Fogo|][?this=6|Lutador, Terra e Grama|][?this=7|Veneno e Inseto|][?this=8|Normal, Voador, Pedra, Inseto, Metal, Grama, Psíquico, Gelo, Dragão e Fada|][?this=9|Inseto, Metal, Fogo, Grama, Gelo e Fada|][?this=10|Metal, Fogo, Água e Gelo|][?this=11|Terra, Água, Grama e Elétrico|][?this=12|Voador, Metal e Elétrico|][?this=13|Lutador e Psíquico|][?this=14|Gelo|][?this=15|Fogo, Água, Grama e Elétrico|][?this=16|Fantasma e Noturno|][?this=17|Lutador, Inseto e Noturno|].</></><//>Frágil contra: [?this=0|Lutador|][?this=1|Voador, Psíquico e Fada|][?this=2|Pedra, Elétrico e Gelo|][?this=3|Terra e Psíquico|][?this=4|Água, Grama e Gelo|][?this=5|Lutador, Pedra, Metal, Água e Grama|][?this=6|Voador, Pedra e Fogo|][?this=7|Fantasma e Noturno|][?this=8|Lutador, Terra e Fogo|][?this=9|Terra, Pedra e Água|][?this=10|Grama e Elétrico|][?this=11|Voador, Veneno, Inseto, Fogo e Gelo|][?this=12|Terra|][?this=13|Inseto, Fantasma e Noturno|][?this=14|Lutador, Pedra, Metal e Fogo|][?this=15|Gelo, Dragão e Fada|][?this=16|Lutador, Inseto e Fada|][?this=17|Veneno e Metal|].</></><//>Imune a: [?this=0|Fantasma|][?this=2|Terra|][?this=4|Elétrico|][?this=7|Normal e Lutador|][?this=8|Veneno|][?this=16|Psíquico|][?this=17|Dragão|].
+			tags:status modifier
+			icon:https://i.imgur.com/lbeRY3G.png
 		*xp
 			name:XP
 			text:Experiência<t>[this]</t>
@@ -1196,7 +1209,7 @@ Buttons
 			show tag:statisticTab
 		end
 
-//-------------------------------------------------Starters----------------------------------------------------------------//
+//--------------------------------------------SECTION:STARTERS------------------------------------------------------------//
 
     *TEMPLATE
 		tag:starterChoice
@@ -1226,7 +1239,7 @@ Buttons
 			CPT7from0var0 = 5
 		end
 
-//-----------------------------------------------Exploração---------------------------------------------------------------//
+//---------------------------------------------SECTION:EXPLORE-------------------------------------------------------------//
 
     *TEMPLATE
 		tag:explore
@@ -1262,7 +1275,7 @@ Buttons
 	[include placeNoIcon %id="0" %region="0" %name="Rota 1" %desc="Rota Inicial de Pindoh!" %common1Lvl="3" %common1Range="1" %common1PkmNum="10" %common1PkmVar="0" %common2Lvl="4" %common2Range="1" %common2PkmNum="10" %common2PkmVar="0" %common3Lvl="2" %common3Range="0" %common3PkmNum="10" %common3PkmVar="0" %uncommonLvl="5" %uncommonRange="1" %uncommonPkmNum="10" %uncommonPkmVar="0" %rareLvl="7" %rareRange="2" %rarePkmNum="10" %rarePkmVar="0" %exoticLvl="8" %exoticRange="3" %exoticPkmNum="10" %exoticPkmVar="0" %legendLvl="20" %legendRange="5" %legendPkmNum="10" %legendPkmVar="0"]
     *TEMPLATE
 
-//-----------------------------------------------Golpes-----------------------------------------------------------------//
+//-----------------------------------------------SECTION:MOVES---------------------------------------------------------------//
 Upgrades
     *TEMPLATE
 		text:<t>[n:this]</t>
@@ -1279,15 +1292,15 @@ Upgrades
 		end
 
 	[include move %id="0" %key="tackle" %name="Investida" %priority="0" %crit="6.25" %type="0" %isSpecial="0" %power="40" %class="0" %effect="0" %fxPower="0" %fxChance="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="90" %desc="Um ataque físico onde o usuário investe contra o alvo com todo seu corpo."]
-	[include move %id="1" %key="bite" %name="Mordida" %priority="0" %crit="6.25" %type="16" %isSpecial="0" %power="60" %class="0" %effect="40" %fxPower="0" %fxChance="30" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="95" %desc="Uma mordida feita com dentes afiados. Pode fazer o adversário hesitar."]
-	[include move %id="2" %key="vineWhip" %name="Chicote de Vinha" %priority="0" %crit="6.25" %type="11" %isSpecial="0" %power="45" %class="0" %effect="0" %fxPower="0" %fxChance="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="95" %desc="Um ataque onde o alvo é chicoteado com finos cipós de vinha."]
-	[include move %id="3" %key="juiceShot" %name="Tiro de Suco" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="60" %class="100" %effect="(-70)" %fxPower="0" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="1" %fxCondNum="0" %accuracy="95" %desc="O usuário espreme um fruto, lançando o suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói."]
+	[include move %id="1" %key="bite" %name="Mordida" %priority="0" %crit="6.25" %type="16" %isSpecial="0" %power="60" %class="0" %effect="3" %fxPower="-5" %fxChance="30" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="95" %desc="Uma mordida feita com dentes afiados. Pode fazer o adversário hesitar."]
+	[include move %id="2" %key="bulletSeed" %name="Metralhadora de Sementes" %priority="0" %crit="6.25" %type="11" %isSpecial="0" %power="15" %class="5" %effect="0" %fxPower="0" %fxChance="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="85" %desc="O usuário dispara uma rajada de sementes contra o adversário. O ataque pode se repetir de 2 a 5 vezes."]
+	[include move %id="3" %key="juiceShot" %name="Tiro de Suco" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="60" %class="100" %effect="(-26)" %fxPower="0" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="1" %fxCondNum="0" %accuracy="95" %desc="O usuário espreme um fruto, lançando o suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói."]
 	[include nonDamagingMove %id="4" %key="agility" %name="Agilidade" %priority="0" %type="13" %isSelf="1" %effect="19" %fxPower="2" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="100" %desc="O usuário relaxa, deixando seu corpo mais leve para se mover mais rápido."]
-	[include move %id="6" %key="crunch" %name="Mastigada" %priority="0" %crit="6.25" %type="16" %isSpecial="0" %power="80" %class="0" %effect="11" %fxPower="20" %fxChance="20" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="95" %desc="Uma mordida feita com dentes afiados. Pode fazer o adversário hesitar."]
-	[include move %id="7" %key="juiceCannon" %name="Canhão de Suco" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="120" %class="100" %effect="(-70)" %fxPower="20" %fxChance="100" %effect2="71" %fxPower2="20" %fxChance2="100" %fxCondID="1" %fxCondNum="0" %accuracy="90" %desc="Um disparo altamente pressurizado de suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói. O usuário fica fadigado depois de usar."]
-	[include move %id="2" %key="powerWhip" %name="Chicote Poderoso" %priority="0" %crit="6.25" %type="11" %isSpecial="0" %power="120" %class="0" %effect="0" %fxPower="20" %fxChance="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="85" %desc="Um ataque onde o alvo é chicoteado violentamente com cipós, tentáculos ou qualquer coisa parecida."]
-	[include move %id="7" %key="coffePump" %name="Bomba de Café" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="120" %class="100" %effect="(-70)" %fxPower="0" %fxChance="100" %effect2="6" %fxPower2="0" %fxChance2="30" %fxCondID="1" %fxCondNum="0" %accuracy="85" %desc="Um disparo de café quente contra o adversário. Só funciona se estiver carregando um fruto e o destrói. Pode deixar o adversário em chamas."]
-	[include nonDamagingMove %id="4" %key="coffeSeed" %name="Semente de Café" %priority="0" %type="11" %isSelf="0" %effect="72" %fxPower="0" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="100" %desc="O usuário relaxa, deixando seu corpo mais leve para se mover mais rápido."]
+	[include move %id="6" %key="crunch" %name="Mastigada" %priority="0" %crit="6.25" %type="16" %isSpecial="0" %power="80" %class="0" %effect="6" %fxPower="1" %fxChance="20" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="95" %desc="Uma mordida feita com dentes afiados. Pode fazer o adversário hesitar."]
+	[include move %id="7" %key="juiceCannon" %name="Canhão de Suco" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="120" %class="100" %effect="(-3)" %fxPower="-8" %fxChance="100" %effect2="-26" %fxPower2="0" %fxChance2="100" %fxCondID="1" %fxCondNum="0" %accuracy="90" %desc="Um disparo altamente pressurizado de suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói. O usuário fica fadigado depois de usar."]
+	[include move %id="8" %key="powerWhip" %name="Chicote Poderoso" %priority="0" %crit="6.25" %type="11" %isSpecial="0" %power="120" %class="0" %effect="0" %fxPower="0" %fxChance="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="85" %desc="Um ataque onde o alvo é chicoteado violentamente com cipós, tentáculos ou qualquer coisa parecida."]
+	[include move %id="9" %key="coffePump" %name="Bomba de Café" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="120" %class="100" %effect="(-26)" %fxPower="0" %fxChance="100" %effect2="3" %fxPower2="3" %fxChance2="30" %fxCondID="1" %fxCondNum="0" %accuracy="85" %desc="Um disparo de café quente contra o adversário. Só funciona se estiver carregando um fruto e o destrói. Pode deixar o adversário em chamas."]
+	[include nonDamagingMove %id="10" %key="coffeSeed" %name="Semente de Café" %priority="0" %type="11" %isSelf="0" %effect="29" %fxPower="4" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="100" %desc="Dispara uma semente de café no alvo, trocando sua habilidade para Insômnia."]
 	[include move %id="99" %key="bugBite" %name="Mordida de Inseto" %priority="0" %crit="6.25" %type="6" %isSpecial="0" %power="60" %class="0" %effect="62" %fxPower="0" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="1" %fxCondNum="0" %accuracy="100" %desc="Uma mordida contra o alvo. Se ele tiver um fruto, o usuário come este fruto."]
 
     *TEMPLATE
@@ -1295,7 +1308,7 @@ Upgrades
     *eMOVnone
     *TEMPLATE
 
-//---------------------------------------------Pkm Capturados------------------------------------------------------------//
+//---------------------------------------------SECTION:CAPTURED----------------------------------------------------------//
 
 Buildings
     *TEMPLATE
@@ -1355,40 +1368,40 @@ Upgrades
 	*enemyPkm
 	*inBattle
 
-//----------------------------------------------Battlers----------------------------------------------------------------//
+//-------------------------------------------SECTION:BATTLERS------------------------------------------------------------//
     *TEMPLATE
         class:bigButton hasFlares
 		no text
 		hidden when 0
 
-	[include battler %number="1" %region="0" %variation="0" %name="Guarimple" %sprite="https://i.imgur.com/Kco4d9D.png" %baseHP="70" %baseAtk="49" %baseDfs="30" %baseSpAtk="54" %baseSpDfs="32" %baseSpeed="75" %pType="11" %sType="11" %ability="1" %move1="tackle" %move2="vineWhip" %move3="juiceShot" %move4="agility" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceCannon" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="1" %region="0" %variation="0" %name="Guarimple" %sprite="https://i.imgur.com/Kco4d9D.png" %baseHP="70" %baseAtk="49" %baseDfs="30" %baseSpAtk="54" %baseSpDfs="32" %baseSpeed="75" %pType="11" %sType="11" %ability="1" %move1="tackle" %move2="bulletSeed" %move3="juiceShot" %move4="agility" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceCannon" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="2" %region="0" %variation="0" %name="Geeckoke" %sprite="https://i.imgur.com/bE8k0kG.png" %baseHP="90" %baseAtk="59" %baseDfs="40" %baseSpAtk="64" %baseSpDfs="42" %baseSpeed="110" %pType="11" %sType="12" %ability="1" %move1="bite" %move2="vineWhip" %move3="juiceShot" %move4="agility" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceCannon" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="2" %region="0" %variation="0" %name="Geeckoke" %sprite="https://i.imgur.com/bE8k0kG.png" %baseHP="90" %baseAtk="59" %baseDfs="40" %baseSpAtk="64" %baseSpDfs="42" %baseSpeed="110" %pType="11" %sType="12" %ability="1" %move1="bite" %move2="bulletSeed" %move3="juiceShot" %move4="agility" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceCannon" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="3" %region="0" %variation="0" %name="Coffegineer" %sprite="https://i.imgur.com/qmMts25.png" %baseHP="135" %baseAtk="69" %baseDfs="68" %baseSpAtk="74" %baseSpDfs="69" %baseSpeed="120" %pType="11" %sType="12" %ability="1" %move1="tackle" %move2="juiceShot" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="3" %region="0" %variation="0" %name="Coffegineer" %sprite="https://i.imgur.com/qmMts25.png" %baseHP="135" %baseAtk="69" %baseDfs="68" %baseSpAtk="74" %baseSpDfs="69" %baseSpeed="120" %pType="11" %sType="12" %ability="1" %move1="tackle" %move2="juiceShot" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="4" %region="0" %variation="0" %name="Balldillo" %sprite="https://i.imgur.com/FNP4vop.png" %baseHP="58" %baseAtk="23" %baseDfs="81" %baseSpAtk="19" %baseSpDfs="84" %baseSpeed="45" %pType="9" %sType="9" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="4" %region="0" %variation="0" %name="Balldillo" %sprite="https://i.imgur.com/FNP4vop.png" %baseHP="58" %baseAtk="23" %baseDfs="81" %baseSpAtk="19" %baseSpDfs="84" %baseSpeed="45" %pType="9" %sType="9" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="5" %region="0" %variation="0" %name="Bullyllo" %sprite="https://i.imgur.com/arHzR2D.png" %baseHP="68" %baseAtk="83" %baseDfs="81" %baseSpAtk="39" %baseSpDfs="84" %baseSpeed="50" %pType="9" %sType="8" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="5" %region="0" %variation="0" %name="Bullyllo" %sprite="https://i.imgur.com/arHzR2D.png" %baseHP="68" %baseAtk="83" %baseDfs="81" %baseSpAtk="39" %baseSpDfs="84" %baseSpeed="50" %pType="9" %sType="8" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="6" %region="0" %variation="0" %name="Jockadillo" %sprite="https://i.imgur.com/44OlD2e.png" %baseHP="98" %baseAtk="113" %baseDfs="111" %baseSpAtk="47" %baseSpDfs="94" %baseSpeed="72" %pType="9" %sType="8" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="6" %region="0" %variation="0" %name="Jockadillo" %sprite="https://i.imgur.com/44OlD2e.png" %baseHP="98" %baseAtk="113" %baseDfs="111" %baseSpAtk="47" %baseSpDfs="94" %baseSpeed="72" %pType="9" %sType="8" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="7" %region="0" %variation="0" %name="Gossipavy" %sprite="https://i.imgur.com/xDNs4ss.png" %baseHP="76" %baseAtk="44" %baseDfs="40" %baseSpAtk="51" %baseSpDfs="37" %baseSpeed="63" %pType="10" %sType="10" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="7" %region="0" %variation="0" %name="Gossipavy" %sprite="https://i.imgur.com/xDNs4ss.png" %baseHP="76" %baseAtk="44" %baseDfs="40" %baseSpAtk="51" %baseSpDfs="37" %baseSpeed="63" %pType="10" %sType="10" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="8" %region="0" %variation="0" %name="Capymise" %sprite="https://i.imgur.com/wdT7GJn.png" %baseHP="86" %baseAtk="59" %baseDfs="60" %baseSpAtk="71" %baseSpDfs="67" %baseSpeed="63" %pType="10" %sType="0" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="8" %region="0" %variation="0" %name="Capymise" %sprite="https://i.imgur.com/wdT7GJn.png" %baseHP="86" %baseAtk="59" %baseDfs="60" %baseSpAtk="71" %baseSpDfs="67" %baseSpeed="63" %pType="10" %sType="0" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="9" %region="0" %variation="0" %name="Tapident" %sprite="https://i.imgur.com/5swE23I.png" %baseHP="116" %baseAtk="84" %baseDfs="85" %baseSpAtk="96" %baseSpDfs="92" %baseSpeed="63" %pType="10" %sType="0" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="9" %region="0" %variation="0" %name="Tapident" %sprite="https://i.imgur.com/5swE23I.png" %baseHP="116" %baseAtk="84" %baseDfs="85" %baseSpAtk="96" %baseSpDfs="92" %baseSpeed="63" %pType="10" %sType="0" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="10" %region="0" %variation="0" %name="Dengorm" %sprite="https://i.imgur.com/9Ehfwgo.png" %baseHP="23" %baseAtk="57" %baseDfs="27" %baseSpAtk="32" %baseSpDfs="27" %baseSpeed="19" %pType="6" %sType="10" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="3" %move3lvl="5" %move4lvl="7" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="10" %region="0" %variation="0" %name="Dengorm" %sprite="https://i.imgur.com/9Ehfwgo.png" %baseHP="23" %baseAtk="57" %baseDfs="27" %baseSpAtk="32" %baseSpDfs="27" %baseSpeed="19" %pType="6" %sType="10" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="3" %move3lvl="5" %move4lvl="7" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="11" %region="0" %variation="0" %name="Chikukoon" %sprite="https://i.imgur.com/YvnsJ8L.png" %baseHP="25" %baseAtk="25" %baseDfs="49" %baseSpAtk="22" %baseSpDfs="50" %baseSpeed="19" %pType="6" %sType="10" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="11" %region="0" %variation="0" %name="Chikukoon" %sprite="https://i.imgur.com/YvnsJ8L.png" %baseHP="25" %baseAtk="25" %baseDfs="49" %baseSpAtk="22" %baseSpDfs="50" %baseSpeed="19" %pType="6" %sType="10" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="12" %region="0" %variation="0" %name="Aedarrier" %sprite="https://i.imgur.com/jFPFWeG.png" %baseHP="148" %baseAtk="147" %baseDfs="37" %baseSpAtk="32" %baseSpDfs="37" %baseSpeed="79" %pType="6" %sType="16" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="12" %region="0" %variation="0" %name="Aedarrier" %sprite="https://i.imgur.com/jFPFWeG.png" %baseHP="148" %baseAtk="147" %baseDfs="37" %baseSpAtk="32" %baseSpDfs="37" %baseSpeed="79" %pType="6" %sType="16" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="13" %region="0" %variation="0" %name="Birdeggy" %sprite="https://i.imgur.com/eRTuAex.png" %baseHP="28" %baseAtk="37" %baseDfs="37" %baseSpAtk="22" %baseSpDfs="37" %baseSpeed="39" %pType="2" %sType="0" %ability="0" %move1="tackle" %move2="bugBite" %move3="bugBite" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="13" %region="0" %variation="0" %name="Birdeggy" %sprite="https://i.imgur.com/eRTuAex.png" %baseHP="28" %baseAtk="37" %baseDfs="37" %baseSpAtk="22" %baseSpDfs="37" %baseSpeed="39" %pType="2" %sType="0" %ability="0" %move1="tackle" %move2="bugBite" %move3="bugBite" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
     *TEMPLATE
 
-//----------------------------------------------Found Pkm----------------------------------------------------------------//
+//------------------------------------------SECTION:FOUND------------------------------------------------------------//
 
 Achievements
 	*TEMPLATE
@@ -1453,7 +1466,7 @@ Achievements
 //	*FND[number]from[region]var[variation]
 	*TEMPLATE
 
-//-----------------------------------------------Berries----------------------------------------------------------------//
+//------------------------------------------SECTION:BERRIES----------------------------------------------------------//
 
 	*TEMPLATE
 		tags:enemyMove hidden
@@ -1543,7 +1556,9 @@ Achievements
 	
 	*TEMPLATE
 
-//----------------------------------------------Includes----------------------------------------------------------------//
+//------------------------------------------SECTION:INCLUDES-------------------------------------------------------//
+//									Keep it shorter than 1k lines!												   //
+//-----------------------------------------------------------------------------------------------------------------//
 
 Includes
 *include move %id %key %priority %name %crit %type %isSpecial %power %class %effect %fxPower %fxChance %effect2 %fxPower2 %fxChance2 %fxCondID %fxCondNum %accuracy %desc
@@ -1778,11 +1793,12 @@ Includes
 		do type[%type]advantage with this
 	end
 *include multipleHit %caster %target %hit
-	$[%caster]Aim = chance(($[%caster]MoveAccuracy*[%caster]AccuracyMod*[%target]EvasionMod)*100)
-	if ($[%caster]Aim = 0)
+	$[%caster]Aim = chance($[%caster]MoveAccuracy*[%caster]AccuracyMod*[%target]EvasionMod)
+	if (($[%caster]Aim=0) and ($numberOfHits>=[%hit]))
 		do getname with tag:[%caster]
-		log errou o golpe!
+		log errou o [%hit]º golpe!
 		[%caster]MovesInARow = 0
+		log <#3366ff>-----------------------------------</#>
 	end
 	if (([%caster]CurHP>0) and ([%target]CurHP>0) and ($[%caster]MoveClassM>=[%hit]) and ($numberOfHits>=[%hit]) and ($[%caster]Aim = 1))
 		do getname with tag:[%caster]
@@ -2246,6 +2262,9 @@ Includes
 	end
 	$[%caster]MoveFxChance = ($[%caster]MoveFxChance*$conditionSuccess)
 *include onMove %caster %target
+	$[%caster]STAB = 1
+	$[%caster]Crit = 1
+	$[%caster]StatusMod = 1
 	$[%caster]Aim = 1
 	if ($[%caster]MoveAccuracy>=0)
 		$[%caster]Aim = chance($[%caster]MoveAccuracy*[%caster]AccuracyMod*[%target]EvasionMod)
@@ -2253,10 +2272,17 @@ Includes
 	if (($[%caster]MoveClass>=100) or ((-100)>=$[%caster]MoveClass))
 		$[%caster]Aim = $conditionSuccess
 	end
+	if ($[%caster]MoveClassM>=2)
+		do getname with tag:[%caster]
+		$numberOfHits = random(2,$[%caster]MoveClass)
+		log ... irá atacar [$numberOfHits] vezes neste turno ...
+		log <#3366ff>-----------------------------------</#>
+	end
 	if ($[%caster]Aim = 0)
 		do getname with tag:[%caster]
-		log errou o golpe!
+		log errou o [?($[%caster]MoveClassM>=2)|1º |]golpe!
 		[%caster]MovesInARow = 0
+		log <#3366ff>-----------------------------------</#>
 	end
 	if (($[%caster]MoveID=[%caster]LastMove) and ($[%caster]Aim = 1))
 		[%caster]MovesInARow = ([%caster]MovesInARow+1)
@@ -2270,18 +2296,11 @@ Includes
 	end
 	if (($[%caster]MoveClass>=0) and ($[%caster]Aim = 1))
 		do getname with tag:[%caster]
-		log atacou ...
-		$[%caster]STAB = 1
-		$[%caster]Crit = 1
-		$[%caster]StatusMod = 1
+		log atacou [?($[%caster]MoveClassM>=2)|pela 1ª vez |]...
 	end
 	if (($[%caster]MoveClassM=1) and ($[%caster]Aim = 1))
 		$[%caster]MovePower = ($[%caster]MovePower*(min(5,[%caster]MovesInARow)))
 		log ... com um poder acumulado de [[%caster]MovesInARow] golpes seguidos ...
-	end
-	if (($[%caster]MoveClassM>=2) and ($[%caster]Aim = 1))
-		$numberOfHits = random(2,$[%caster]MoveClass)
-		log ... [$numberOfHits] vezes ...
 	end
 	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClassM=(-3))) and ([%caster]Ptype=$[%caster]Movetype) and ($[%caster]Aim = 1))
 		$[%caster]STAB = $[%caster]STAB + 0.5
