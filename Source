@@ -1,9 +1,9 @@
 Let's make a game!
-	name:	Fakemon All-Star v0.1 (ALPHA)
+	name:	Fakemon All-Star v0.2 (ALPHA)
 	by:		Braz Araujo da Silva Junior
 	desc:	Bem vindo ao projeto <b>Fakemon All-Stars</b>! Agradecimentos especiais ao <b>Iddle Game Maker</b>*, por possibilitar a criação deste jogo. Ao projeto <b>Game-Icons</b>**, por possibilitar a criação dos ícones utilizados no jogo, sob a licença <b>CC BY 3.0</b>***. Foram utilizados os </></><b>Ícones</b>:</></><//>Magnifying glass, by Lorc<//>Pokecog, by Lorc<//>Treasure map, by Lorc<//>Trophy cup, by Delapouite<//>Chart, by Delapouite<//>Shining heart, by Lorc<//>Punch Blast, by Lorc<//>Checked Shield, by Lorc<//>Hypersonic bolt, by Lorc<//>Ball glow, by Lorc<//>Thunderball, by Lorc<//>Up card, by Delapouite<//>Cycle, by Lorc<//>High grass, by Delapouite<//>Raspberry, by Delapouite</></>feitos pelos <b>Artistas</b>:</></><//>Lorc - http://lorcblog.blogspot.com<//>Delapouite - http://delapouite.com</></><//></></><//>Braz Junior - Região de <b>Pindoh</b> - https://www.facebook.com/PindohRegion/.</>______________________________________________________________</>*http://orteil.dashnet.org/igm/help.html</>**https://game-icons.net</>***https://creativecommons.org/licenses/by/3.0/</>
 	created:04/07/2018
-	updated:07/07/2018
+	updated:12/07/2018
 
 Settings
 	background:http://i.imgur.com/Dnd9gLk.png
@@ -111,7 +111,21 @@ Resources
 		end
 
 		on beginturn:
-			[include randomBasedConditions]
+			$quarter=random(1,4)
+			$paralysis=0
+			$confusion=0
+			if ($quarter=1)
+				$paralysis=1
+				$confusion=1
+			end
+			$equarter=random(1,4)
+			$eparalysis=0
+			$econfusion=0
+			if ($equarter=1)
+				$eparalysis=1
+				$econfusion=1
+			end
+			log <#3366ff>-----------------------------------</#>
 			[include checkMoveFirst]
 			[include checkMoveFirstUnderStatus %statusID="2" %statusName="paralysis"]
 			[include checkMoveFirstUnderStatus %statusID="7" %statusName="confusion"]
@@ -128,30 +142,9 @@ Resources
 		end
 
 		on activemove:
-			[include moveEffect %who="active" %number="68"]
-				[include moveSettingsCopy %caster="active" %target="enemy"]
-				[include moveEffectsCopy %caster="active" %target="enemy"]
-			[include announce %who="active" %log="copiou a habilidade do adversário!"]
-
-			[include moveEffect %who="active" %number="69"]
-				[include moveEffectsCopy %caster="active" %target="enemy"]
-			[include announce %who="active" %log="copiou os efeitos do movimento do adversário!"]
-
-			[include conditionalMoveEffect %who="active" %number="70" %condition="$enemyMoveClass>=0"]
-				[include moveSettingsCopy %caster="active" %target="enemy"]
-				[include moveEffectsCopy %caster="active" %target="enemy"]
-			[include announce %who="active" %log="copiou a habilidade do adversário!"]
-
-			[include conditionalMoveEffect %who="active" %number="71" %condition="($enemyMoveClass=(-1) or $enemyMoveClass=(-4))"]
-				[include moveSettingsCopy %caster="active" %target="enemy"]
-				[include moveEffectsCopy %caster="active" %target="enemy"]
-			[include announce %who="active" %log="copiou a habilidade do adversário!"]
-
-			[include conditionalMoveEffect %who="active" %number="72" %condition="$enemyMoveClass=(-3)"]
-				[include moveSettingsCopy %caster="active" %target="enemy"]
-				[include moveEffectsCopy %caster="active" %target="enemy"]
-			[include announce %who="active" %log="copiou a habilidade do adversário!"]
-
+			[include checkFxConditions %caster="active" %target="enemy"]
+			[include moveFullCopyEffect %caster="active" %target="enemy" %number="31"]
+			[include moveFxCopyEffect %caster="active" %target="enemy" %number="32"]
 			[include onMove %caster="active" %target="enemy"]
 			[include activeMoveTypeAdvantage %type="0"]
 			[include activeMoveTypeAdvantage %type="1"]
@@ -173,109 +166,70 @@ Resources
 			[include activeMoveTypeAdvantage %type="17"]
 			[include effectivenessVerification %caster="active" %target="enemy"]
 			[include damageCalculation %caster="active" %target="enemy"]
-
-			if ($activeMoveEffect=59)
-				$activeMoveEffect = 25 + random(0,4)
+			if (($activeMoveEffect=13) or ($activeMoveEffect=23))
+				$activeMoveEffect = $activeMoveEffect - random(1,8)
 			end
-			if ($activeMoveEffect=60)
-				$activeMoveEffect = 30 + random(0,4)
+			if (($activeMoveEffect=-13) or ($activeMoveEffect=-23))
+				$activeMoveEffect = $activeMoveEffect + random(1,8)
 			end
-			if ($activeMoveEffect=61)
-				$activeMoveEffect = 35 + random(0,4)
-			end
+			[include moveDrainEffect %caster="active" %number="1"]
+			[include moveRecoilEffect %caster="active" %number="2"]
+			[include moveStatusEffect %caster="active" %target="enemy" %number="3"]
+			[include moveHealStatusEffect %caster="active" %target="enemy" %number="4"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllDebuffEffect %caster="active" %target="enemy" %number="14"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllBuffEffect %caster="active" %target="enemy" %number="24"]
+			[include moveStageResetEffect %caster="active" %target="enemy" %number="25"]
+			[include moveLoseBerryEffect %caster="active" %target="enemy" %number="26"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27"]
+			[include moveTypeChangeEffect %caster="active" %target="enemy" %number="28"]
+			[include moveAbilityChangeEffect %caster="active" %target="enemy" %number="29"]
+			[include moveDirectDamageEffect %caster="active" %target="enemy" %number="30"]
+			[include moveHealStatusEffect %caster="active" %target="active" %number="-4"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllDebuffEffect %caster="active" %target="active" %number="-14"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllBuffEffect %caster="active" %target="active" %number="-24"]
+			[include moveStageResetEffect %caster="active" %target="active" %number="-25"]
+			[include moveLoseBerryEffect %caster="active" %target="active" %number="-26"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27"]
+			[include moveTypeChangeEffect %caster="active" %target="active" %number="-28"]
+			[include moveAbilityChangeEffect %caster="active" %target="active" %number="-29"]
+			[include moveDirectDamageEffect %caster="active" %target="active" %number="-30"]
 
-			[include moveEffect %who="active" %number="1"]
-				$activeEffectiveHeal = ceil(min(($activeEffectiveDamage/2),(activeMaxHP-activeCurHP)))
-				gain $activeEffectiveHeal activeCurHP
-			[include announce %who="active" %log="drenou [$activeEffectiveHeal] pontos de vida!"]
-
-			[include moveEffect %who="active" %number="2"]
-				$activeEffectiveRecoil = ceil(min(($activeEffectiveDamage/4),activeCurHP))
-				lose $activeEffectiveRecoil activeCurHP
-			[include announce %who="active" %log="também se feriu, tomando [$activeEffectiveRecoil] dano!"]
-
-			[include moveEffect %who="active" %number="3"]
-				$activeEffectiveRecoil = ceil(min(($activeEffectiveDamage/3),activeCurHP))
-				lose $activeEffectiveRecoil activeCurHP
-			[include announce %who="active" %log="também se feriu, tomando [$activeEffectiveRecoil] dano!"]
-
-			[include moveStatusEffect %caster="active" %target="enemy" %number="4" %status="1" %log="foi envenenado!"]
-			[include moveStatusEffect %caster="active" %target="enemy" %number="5" %status="2" %log="foi intoxicado!"]
-			[include moveStatusEffect %caster="active" %target="enemy" %number="6" %status="3" %log="está em chamas!"]
-			[include moveStatusEffect %caster="active" %target="enemy" %number="7" %status="-2" %log="foi paralisado!"]
-			if ((($activeMoveEffect=8) or ($activeMoveEffect2=8)) and (chance($activeMoveFxChance)) and ($activeAim = 1) and (enemyStatus = 0))
-				enemyStatus = -3
-				enemySleep = random(1,3)
-			[include announce %who="enemy" %log="caiu no sono!"]
-			[include moveStatusEffect %caster="active" %target="enemy" %number="9" %status="-4" %log="foi congelado!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="10" %status="Attack" %amount="1" %log="teve seu Ataque ligeiramente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="11" %status="Defense" %amount="1" %log="teve sua Defesa ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="12" %status="SpAttack" %amount="1" %log="teve seu Ataque Especial ligeiramente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="13" %status="SpDefense" %amount="1" %log="teve sua Defesa Especial ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="14" %status="Speed" %amount="1" %log="teve sua Velocidade ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="15" %status="Attack" %amount="2" %log="teve seu Ataque duramente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="16" %status="Defense" %amount="2" %log="teve sua Defesa duramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="17" %status="SpAttack" %amount="2" %log="teve seu Ataque Especial duramente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="18" %status="SpDefense" %amount="2" %log="teve sua Defesa Especial duramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="19" %status="Speed" %amount="2" %log="teve sua Velocidade duramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="20" %status="Attack" %amount="3" %log="teve seu Ataque severamente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="21" %status="Defense" %amount="3" %log="teve sua Defesa severamente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="22" %status="SpAttack" %amount="3" %log="teve seu Ataque Especial severamente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="23" %status="SpDefense" %amount="3" %log="teve sua Defesa Especial severamente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="24" %status="Speed" %amount="3" %log="teve sua Velocidade severamente reduzida!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="25" %status="Attack" %amount="1" %log="teve seu Ataque ligeiramente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="26" %status="Defense" %amount="1" %log="teve sua Defesa ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="27" %status="SpAttack" %amount="1" %log="teve seu Ataque Especial ligeiramente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="28" %status="SpDefense" %amount="1" %log="teve sua Defesa Especial ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="29" %status="Speed" %amount="1" %log="teve sua Velocidade ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="30" %status="Attack" %amount="2" %log="teve seu Ataque bruscamente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="31" %status="Defense" %amount="2" %log="teve sua Defesa bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="32" %status="SpAttack" %amount="2" %log="teve seu Ataque Especial bruscamente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="33" %status="SpDefense" %amount="2" %log="teve sua Defesa Especial bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="34" %status="Speed" %amount="2" %log="teve sua Velocidade bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="35" %status="Attack" %amount="3" %log="teve seu Ataque drasticamente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="36" %status="Defense" %amount="3" %log="teve sua Defesa drasticamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="37" %status="SpAttack" %amount="3" %log="teve seu Ataque Especial drasticamente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="38" %status="SpDefense" %amount="3" %log="teve sua Defesa Especial drasticamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="39" %status="Speed" %amount="3" %log="teve sua Velocidade drasticamente aumentada!"]
-			[include moveStatusEffect %caster="active" %target="enemy" %number="40" %status="-5" %log="ficou hesitante!"]
-			[include moveStatusEffect %caster="active" %target="enemy" %number="41" %status="-6" %log="foi forçado a fugir!"]
-			[include moveStatusEffect %caster="active" %target="active" %number="(-41)" %status="-6" %log="fugiu espontaneamente!"]
-			[include moveEffect %who="active" %number="42"]
-				activeAttackStage = min(6,(activeAttackStage+1))
-				activeDefenseStage = min(6,(activeDefenseStage+1))
-				activeSpAttackStage = min(6,(activeSpAttackStage+1))
-				activeSpDefenseStage = min(6,(activeSpDefenseStage+1))
-				activeSpeedStage = min(6,(activeSpeedStage+1))
-			[include announce %who="active" %log="teve todos os seus status ligeiramente aumentados!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="43" %status="Accuracy" %amount="1" %log="teve sua precisão ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="44" %status="Accuracy" %amount="2" %log="teve sua precisão bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="45" %status="Accuracy" %amount="3" %log="teve sua precisão drasticamente aumentada!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="46" %status="Evasion" %amount="1" %log="teve sua evasão ligeiramente diminuída!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="47" %status="Evasion" %amount="2" %log="teve sua evasão duramente diminuída!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="48" %status="Evasion" %amount="2" %log="teve sua evasão severamente diminuída!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="49" %status="Accuracy" %amount="1" %log="teve sua precisão ligeiramente diminuída!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="50" %status="Accuracy" %amount="2" %log="teve sua precisão duramente diminuída!"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="51" %status="Accuracy" %amount="2" %log="teve sua precisão severamente diminuída!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="52" %status="Evasion" %amount="1" %log="teve sua evasão ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="53" %status="Evasion" %amount="2" %log="teve sua evasão bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="54" %status="Evasion" %amount="3" %log="teve sua evasão drasticamente aumentada!"]
-			[include moveStatusEffect %caster="active" %target="enemy" %number="55" %status="-7" %log="ficou confuso!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="56" %status="Critical" %amount="1" %log="teve sua chance de crítico ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="57" %status="Critical" %amount="2" %log="teve sua chance de crítico bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="58" %status="Critical" %amount="3" %log="teve sua chance de crítico drasticamente aumentada!"]
-			[include moveEatEffect %caster="active" %target="enemy" %number="62"]
-			[include moveTypeChangeEffect %caster="active" %target="enemy" %number="63"]
-			[include moveTypeChangeEffect %caster="active" %target="active" %number="64"]
-			[include moveHealStatusEffect %caster="active" %target="active" %number="65" %log="se curou de seus status!"]
-			[include moveStageResetEffect %caster="active" %target="active" %number="66" %log="zerou todos os seus modificadores!"]
-			[include moveStageResetEffect %caster="active" %target="enemy" %number="(-66)" %log="teve todos os seus modificadores zerados!"]
-			[include moveDirectDamageEffect %caster="active" %target="enemy" %number="67"]
-
-			[include activeMultipleHit %hit="2"]
-			[include activeMultipleHit %hit="3"]
-			[include activeMultipleHit %hit="4"]
-			[include activeMultipleHit %hit="5"]
+			[include multipleHit %caster="active" %target="enemy" %hit="2"]
+			[include multipleHit %caster="active" %target="enemy" %hit="3"]
+			[include multipleHit %caster="active" %target="enemy" %hit="4"]
+			[include multipleHit %caster="active" %target="enemy" %hit="5"]
 
 			if (0>=enemyCurHP)
 				enemyStatus=-1
@@ -287,30 +241,9 @@ Resources
 //-------------------------------------------------------------------------------------------------//
 
 		on enemymove:
-			[include moveEffect %who="enemy" %number="68"]
-				[include moveSettingsCopy %caster="enemy" %target="active"]
-				[include moveEffectsCopy %caster="enemy" %target="active"]
-			[include announce %who="enemy" %log="copiou a habilidade do adversário!"]
-
-			[include moveEffect %who="enemy" %number="69"]
-				[include moveEffectsCopy %caster="enemy" %target="active"]
-			[include announce %who="enemy" %log="copiou os efeitos do movimento do adversário!"]
-
-			[include conditionalMoveEffect %who="enemy" %number="70" %condition="$activeMoveClass>=0"]
-				[include moveSettingsCopy %caster="enemy" %target="active"]
-				[include moveEffectsCopy %caster="enemy" %target="active"]
-			[include announce %who="enemy" %log="copiou a habilidade do adversário!"]
-
-			[include conditionalMoveEffect %who="enemy" %number="71" %condition="($activeMoveClass=(-1) or $activeMoveClass=(-4))"]
-				[include moveSettingsCopy %caster="enemy" %target="active"]
-				[include moveEffectsCopy %caster="enemy" %target="active"]
-			[include announce %who="enemy" %log="copiou a habilidade do adversário!"]
-
-			[include conditionalMoveEffect %who="enemy" %number="72" %condition="$activeMoveClass=(-3)"]
-				[include moveSettingsCopy %caster="enemy" %target="active"]
-				[include moveEffectsCopy %caster="enemy" %target="active"]
-			[include announce %who="enemy" %log="copiou a habilidade do adversário!"]
-
+			[include checkFxConditions %caster="enemy" %target="active"]
+			[include moveFullCopyEffect %caster="enemy" %target="active" %number="31"]
+			[include moveFxCopyEffect %caster="enemy" %target="active" %number="32"]
 			[include onMove %caster="enemy" %target="active"]
 			[include enemyMoveTypeAdvantage %type="0"]
 			[include enemyMoveTypeAdvantage %type="1"]
@@ -332,109 +265,70 @@ Resources
 			[include enemyMoveTypeAdvantage %type="17"]
 			[include effectivenessVerification %caster="enemy" %target="active"]
 			[include damageCalculation %caster="enemy" %target="active"]
-
-			if ($enemyMoveEffect=59)
-				$enemyMoveEffect = 25 + random(0,4)
+			if (($enemyMoveEffect=13) or ($enemyMoveEffect=23))
+				$enemyMoveEffect = $enemyMoveEffect - random(1,8)
 			end
-			if ($enemyMoveEffect=60)
-				$enemyMoveEffect = 30 + random(0,4)
+			if (($enemyMoveEffect=-13) or ($enemyMoveEffect=-23))
+				$enemyMoveEffect = $enemyMoveEffect + random(1,8)
 			end
-			if ($enemyMoveEffect=61)
-				$enemyMoveEffect = 35 + random(0,4)
-			end
+			[include moveDrainEffect %caster="enemy" %number="1"]
+			[include moveRecoilEffect %caster="enemy" %number="2"]
+			[include moveStatusEffect %caster="enemy" %target="active" %number="3"]
+			[include moveHealStatusEffect %caster="enemy" %target="active" %number="4"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllDebuffEffect %caster="enemy" %target="active" %number="14"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllBuffEffect %caster="enemy" %target="active" %number="24"]
+			[include moveStageResetEffect %caster="enemy" %target="active" %number="25"]
+			[include moveLoseBerryEffect %caster="enemy" %target="active" %number="26"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27"]
+			[include moveTypeChangeEffect %caster="enemy" %target="active" %number="28"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="active" %number="29"]
+			[include moveDirectDamageEffect %caster="enemy" %target="active" %number="30"]
+			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="-4"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="-14"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="-24"]
+			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="-25"]
+			[include moveLoseBerryEffect %caster="enemy" %target="enemy" %number="-26"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27"]
+			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="-28"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="-29"]
+			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="-30"]
 
-			[include moveEffect %who="enemy" %number="1"]
-				$enemyEffectiveHeal = ceil(min(($enemyEffectiveDamage/2),(enemyMaxHP-enemyCurHP)))
-				gain $enemyEffectiveHeal enemyCurHP
-			[include announce %who="enemy" %log="drenou [$enemyEffectiveHeal] pontos de vida!"]
-
-			[include moveEffect %who="enemy" %number="2"]
-				$enemyEffectiveRecoil = ceil(min(($enemyEffectiveDamage/4),enemyCurHP))
-				lose $enemyEffectiveRecoil enemyCurHP
-			[include announce %who="enemy" %log="também se feriu, tomando [$enemyEffectiveRecoil] dano!"]
-
-			[include moveEffect %who="enemy" %number="3"]
-				$enemyEffectiveRecoil = ceil(min(($enemyEffectiveDamage/3),enemyCurHP))
-				lose $enemyEffectiveRecoil enemyCurHP
-			[include announce %who="enemy" %log="também se feriu, tomando [$enemyEffectiveRecoil] dano!"]
-
-			[include moveStatusEffect %caster="enemy" %target="active" %number="4" %status="1" %log="foi envenenado!"]
-			[include moveStatusEffect %caster="enemy" %target="active" %number="5" %status="2" %log="foi intoxicado!"]
-			[include moveStatusEffect %caster="enemy" %target="active" %number="6" %status="3" %log="está em chamas!"]
-			[include moveStatusEffect %caster="enemy" %target="active" %number="7" %status="-2" %log="foi paralisado!"]
-			if ((($enemyMoveEffect=8) or ($enemyMoveEffect2=8)) and (chance($enemyMoveFxChance)) and ($enemyAim = 1) and (activeStatus = 0))
-				activeStatus = -3
-				activeSleep = random(1,3)
-			[include announce %who="active" %log="caiu no sono!"]
-			[include moveStatusEffect %caster="enemy" %target="active" %number="9" %status="-4" %log="foi congelado!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="10" %status="Attack" %amount="1" %log="teve seu Ataque ligeiramente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="11" %status="Defense" %amount="1" %log="teve sua Defesa ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="12" %status="SpAttack" %amount="1" %log="teve seu Ataque Especial ligeiramente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="13" %status="SpDefense" %amount="1" %log="teve sua Defesa Especial ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="14" %status="Speed" %amount="1" %log="teve sua Velocidade ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="15" %status="Attack" %amount="2" %log="teve seu Ataque duramente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="16" %status="Defense" %amount="2" %log="teve sua Defesa duramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="17" %status="SpAttack" %amount="2" %log="teve seu Ataque Especial duramente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="18" %status="SpDefense" %amount="2" %log="teve sua Defesa Especial duramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="19" %status="Speed" %amount="2" %log="teve sua Velocidade duramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="20" %status="Attack" %amount="3" %log="teve seu Ataque severamente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="21" %status="Defense" %amount="3" %log="teve sua Defesa severamente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="22" %status="SpAttack" %amount="3" %log="teve seu Ataque Especial severamente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="23" %status="SpDefense" %amount="3" %log="teve sua Defesa Especial severamente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="24" %status="Speed" %amount="3" %log="teve sua Velocidade severamente reduzida!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="25" %status="Attack" %amount="1" %log="teve seu Ataque ligeiramente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="26" %status="Defense" %amount="1" %log="teve sua Defesa ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="27" %status="SpAttack" %amount="1" %log="teve seu Ataque Especial ligeiramente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="28" %status="SpDefense" %amount="1" %log="teve sua Defesa Especial ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="29" %status="Speed" %amount="1" %log="teve sua Velocidade ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="30" %status="Attack" %amount="2" %log="teve seu Ataque bruscamente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="31" %status="Defense" %amount="2" %log="teve sua Defesa bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="32" %status="SpAttack" %amount="2" %log="teve seu Ataque Especial bruscamente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="33" %status="SpDefense" %amount="2" %log="teve sua Defesa Especial bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="34" %status="Speed" %amount="2" %log="teve sua Velocidade bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="35" %status="Attack" %amount="3" %log="teve seu Ataque drasticamente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="36" %status="Defense" %amount="3" %log="teve sua Defesa drasticamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="37" %status="SpAttack" %amount="3" %log="teve seu Ataque Especial drasticamente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="38" %status="SpDefense" %amount="3" %log="teve sua Defesa Especial drasticamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="39" %status="Speed" %amount="3" %log="teve sua Velocidade drasticamente aumentada!"]
-			[include moveStatusEffect %caster="enemy" %target="active" %number="40" %status="-5" %log="ficou hesitante!"]
-			[include moveStatusEffect %caster="enemy" %target="active" %number="41" %status="-6" %log="foi forçado a fugir!"]
-			[include moveStatusEffect %caster="enemy" %target="enemy" %number="(-41)" %status="-6" %log="fugiu espontaneamente!"]
-			[include moveEffect %who="enemy" %number="42"]
-				enemyAttackStage = min(6,(enemyAttackStage+1))
-				enemyDefenseStage = min(6,(enemyDefenseStage+1))
-				enemySpAttackStage = min(6,(enemySpAttackStage+1))
-				enemySpDefenseStage = min(6,(enemySpDefenseStage+1))
-				enemySpeedStage = min(6,(enemySpeedStage+1))
-			[include announce %who="enemy" %log="teve todos os seus status ligeiramente aumentados!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="43" %status="Accuracy" %amount="1" %log="teve sua precisão ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="44" %status="Accuracy" %amount="2" %log="teve sua precisão bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="45" %status="Accuracy" %amount="3" %log="teve sua precisão drasticamente aumentada!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="46" %status="Evasion" %amount="1" %log="teve sua evasão ligeiramente diminuída!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="47" %status="Evasion" %amount="2" %log="teve sua evasão duramente diminuída!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="48" %status="Evasion" %amount="2" %log="teve sua evasão severamente diminuída!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="49" %status="Accuracy" %amount="1" %log="teve sua precisão ligeiramente diminuída!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="50" %status="Accuracy" %amount="2" %log="teve sua precisão duramente diminuída!"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="51" %status="Accuracy" %amount="2" %log="teve sua precisão severamente diminuída!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="52" %status="Evasion" %amount="1" %log="teve sua evasão ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="53" %status="Evasion" %amount="2" %log="teve sua evasão bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="54" %status="Evasion" %amount="3" %log="teve sua evasão drasticamente aumentada!"]
-			[include moveStatusEffect %caster="enemy" %target="active" %number="55" %status="-7" %log="ficou confuso!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="56" %status="Critical" %amount="1" %log="teve sua chance de crítico ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="57" %status="Critical" %amount="2" %log="teve sua chance de crítico bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="58" %status="Critical" %amount="3" %log="teve sua chance de crítico drasticamente aumentada!"]
-			[include moveEatEffect %caster="enemy" %target="active" %number="62"]
-			[include moveTypeChangeEffect %caster="enemy" %target="active" %number="63"]
-			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="64"]
-			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="65" %log="se curou de seus status!"]
-			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="66" %log="zerou todos os seus modificadores!"]
-			[include moveStageResetEffect %caster="enemy" %target="active" %number="(-66)" %log="teve todos os seus modificadores zerados!"]
-			[include moveDirectDamageEffect %caster="enemy" %target="active" %number="67"]
-
-			[include enemyMultipleHit %hit="2"]
-			[include enemyMultipleHit %hit="3"]
-			[include enemyMultipleHit %hit="4"]
-			[include enemyMultipleHit %hit="5"]
+			[include multipleHit %caster="enemy" %target="active" %hit="2"]
+			[include multipleHit %caster="enemy" %target="active" %hit="3"]
+			[include multipleHit %caster="enemy" %target="active" %hit="4"]
+			[include multipleHit %caster="enemy" %target="active" %hit="5"]
 
 			if (0>=activeCurHP)
 				activeStatus=-1
@@ -451,6 +345,9 @@ Resources
 			do getname with tag:active
 			log se atacou por conta da confusão!
 
+			[include checkFxConditions %caster="active" %target="active"]
+			[include moveFullCopyEffect %caster="active" %target="active" %number="31"]
+			[include moveFxCopyEffect %caster="active" %target="active" %number="32"]
 			[include onMove %caster="active" %target="active"]
 			[include activeMoveTypeAdvantage %type="0"]
 			[include activeMoveTypeAdvantage %type="1"]
@@ -472,109 +369,70 @@ Resources
 			[include activeMoveTypeAdvantage %type="17"]
 			[include effectivenessVerification %caster="active" %target="active"]
 			[include damageCalculation %caster="active" %target="active"]
-
-			if ($activeMoveEffect=59)
-				$activeMoveEffect = 25 + random(0,4)
+			if (($activeMoveEffect=13) or ($activeMoveEffect=23))
+				$activeMoveEffect = $activeMoveEffect - random(1,8)
 			end
-			if ($activeMoveEffect=60)
-				$activeMoveEffect = 30 + random(0,4)
+			if (($activeMoveEffect=-13) or ($activeMoveEffect=-23))
+				$activeMoveEffect = $activeMoveEffect + random(1,8)
 			end
-			if ($activeMoveEffect=61)
-				$activeMoveEffect = 35 + random(0,4)
-			end
+			[include moveDrainEffect %caster="active" %number="1"]
+			[include moveRecoilEffect %caster="active" %number="2"]
+			[include moveStatusEffect %caster="active" %target="active" %number="3"]
+			[include moveHealStatusEffect %caster="active" %target="active" %number="4"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllDebuffEffect %caster="active" %target="active" %number="14"]
+			[include moveBuffEffect %caster="active" %target="active" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="active" %target="active" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="active" %target="active" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllBuffEffect %caster="active" %target="active" %number="24"]
+			[include moveStageResetEffect %caster="active" %target="active" %number="25"]
+			[include moveLoseBerryEffect %caster="active" %target="active" %number="26"]
+			[include moveEatEffect %caster="active" %target="active" %number="27"]
+			[include moveTypeChangeEffect %caster="active" %target="active" %number="28"]
+			[include moveAbilityChangeEffect %caster="active" %target="active" %number="29"]
+			[include moveDirectDamageEffect %caster="active" %target="active" %number="30"]
+			[include moveHealStatusEffect %caster="active" %target="active" %number="-4"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllDebuffEffect %caster="active" %target="active" %number="-14"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllBuffEffect %caster="active" %target="active" %number="-24"]
+			[include moveStageResetEffect %caster="active" %target="active" %number="-25"]
+			[include moveLoseBerryEffect %caster="active" %target="active" %number="-26"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27"]
+			[include moveTypeChangeEffect %caster="active" %target="active" %number="-28"]
+			[include moveAbilityChangeEffect %caster="active" %target="active" %number="-29"]
+			[include moveDirectDamageEffect %caster="active" %target="active" %number="-30"]
 
-			[include moveEffect %who="active" %number="1"]
-				$activeEffectiveHeal = ceil(min(($activeEffectiveDamage/2),(activeMaxHP-activeCurHP)))
-				gain $activeEffectiveHeal activeCurHP
-			[include announce %who="active" %log="drenou [$activeEffectiveHeal] pontos de vida!"]
-
-			[include moveEffect %who="active" %number="2"]
-				$activeEffectiveRecoil = ceil(min(($activeEffectiveDamage/4),activeCurHP))
-				lose $activeEffectiveRecoil activeCurHP
-			[include announce %who="active" %log="também se feriu, tomando [$activeEffectiveRecoil] dano!"]
-
-			[include moveEffect %who="active" %number="3"]
-				$activeEffectiveRecoil = ceil(min(($activeEffectiveDamage/3),activeCurHP))
-				lose $activeEffectiveRecoil activeCurHP
-			[include announce %who="active" %log="também se feriu, tomando [$activeEffectiveRecoil] dano!"]
-
-			[include moveStatusEffect %caster="active" %target="active" %number="4" %status="1" %log="foi envenenado!"]
-			[include moveStatusEffect %caster="active" %target="active" %number="5" %status="2" %log="foi intoxicado!"]
-			[include moveStatusEffect %caster="active" %target="active" %number="6" %status="3" %log="está em chamas!"]
-			[include moveStatusEffect %caster="active" %target="active" %number="7" %status="-2" %log="foi paralisado!"]
-			if ((($activeMoveEffect=8) or ($activeMoveEffect2=8)) and (chance($activeMoveFxChance)) and ($activeAim = 1) and (activeStatus = 0))
-				activeStatus = -3
-				activeSleep = random(1,3)
-			[include announce %who="active" %log="caiu no sono!"]
-			[include moveStatusEffect %caster="active" %target="active" %number="9" %status="-4" %log="foi congelado!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="10" %status="Attack" %amount="1" %log="teve seu Ataque ligeiramente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="11" %status="Defense" %amount="1" %log="teve sua Defesa ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="12" %status="SpAttack" %amount="1" %log="teve seu Ataque Especial ligeiramente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="13" %status="SpDefense" %amount="1" %log="teve sua Defesa Especial ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="14" %status="Speed" %amount="1" %log="teve sua Velocidade ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="15" %status="Attack" %amount="2" %log="teve seu Ataque duramente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="16" %status="Defense" %amount="2" %log="teve sua Defesa duramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="17" %status="SpAttack" %amount="2" %log="teve seu Ataque Especial duramente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="18" %status="SpDefense" %amount="2" %log="teve sua Defesa Especial duramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="19" %status="Speed" %amount="2" %log="teve sua Velocidade duramente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="20" %status="Attack" %amount="3" %log="teve seu Ataque severamente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="21" %status="Defense" %amount="3" %log="teve sua Defesa severamente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="22" %status="SpAttack" %amount="3" %log="teve seu Ataque Especial severamente reduzido!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="23" %status="SpDefense" %amount="3" %log="teve sua Defesa Especial severamente reduzida!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="24" %status="Speed" %amount="3" %log="teve sua Velocidade severamente reduzida!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="25" %status="Attack" %amount="1" %log="teve seu Ataque ligeiramente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="26" %status="Defense" %amount="1" %log="teve sua Defesa ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="27" %status="SpAttack" %amount="1" %log="teve seu Ataque Especial ligeiramente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="28" %status="SpDefense" %amount="1" %log="teve sua Defesa Especial ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="29" %status="Speed" %amount="1" %log="teve sua Velocidade ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="30" %status="Attack" %amount="2" %log="teve seu Ataque bruscamente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="31" %status="Defense" %amount="2" %log="teve sua Defesa bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="32" %status="SpAttack" %amount="2" %log="teve seu Ataque Especial bruscamente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="33" %status="SpDefense" %amount="2" %log="teve sua Defesa Especial bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="34" %status="Speed" %amount="2" %log="teve sua Velocidade bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="35" %status="Attack" %amount="3" %log="teve seu Ataque drasticamente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="36" %status="Defense" %amount="3" %log="teve sua Defesa drasticamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="37" %status="SpAttack" %amount="3" %log="teve seu Ataque Especial drasticamente aumentado!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="38" %status="SpDefense" %amount="3" %log="teve sua Defesa Especial drasticamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="39" %status="Speed" %amount="3" %log="teve sua Velocidade drasticamente aumentada!"]
-			[include moveStatusEffect %caster="active" %target="active" %number="40" %status="-5" %log="ficou hesitante!"]
-			[include moveStatusEffect %caster="active" %target="active" %number="41" %status="-6" %log="foi forçado a fugir!"]
-			[include moveStatusEffect %caster="active" %target="active" %number="(-41)" %status="-6" %log="fugiu espontaneamente!"]
-			[include moveEffect %who="active" %number="42"]
-				activeAttackStage = min(6,(activeAttackStage+1))
-				activeDefenseStage = min(6,(activeDefenseStage+1))
-				activeSpAttackStage = min(6,(activeSpAttackStage+1))
-				activeSpDefenseStage = min(6,(activeSpDefenseStage+1))
-				activeSpeedStage = min(6,(activeSpeedStage+1))
-			[include announce %who="active" %log="teve todos os seus status ligeiramente aumentados!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="43" %status="Accuracy" %amount="1" %log="teve sua precisão ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="44" %status="Accuracy" %amount="2" %log="teve sua precisão bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="45" %status="Accuracy" %amount="3" %log="teve sua precisão drasticamente aumentada!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="46" %status="Evasion" %amount="1" %log="teve sua evasão ligeiramente diminuída!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="47" %status="Evasion" %amount="2" %log="teve sua evasão duramente diminuída!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="48" %status="Evasion" %amount="2" %log="teve sua evasão severamente diminuída!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="49" %status="Accuracy" %amount="1" %log="teve sua precisão ligeiramente diminuída!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="50" %status="Accuracy" %amount="2" %log="teve sua precisão duramente diminuída!"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="51" %status="Accuracy" %amount="2" %log="teve sua precisão severamente diminuída!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="52" %status="Evasion" %amount="1" %log="teve sua evasão ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="53" %status="Evasion" %amount="2" %log="teve sua evasão bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="54" %status="Evasion" %amount="3" %log="teve sua evasão drasticamente aumentada!"]
-			[include moveStatusEffect %caster="active" %target="active" %number="55" %status="-7" %log="ficou confuso!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="56" %status="Critical" %amount="1" %log="teve sua chance de crítico ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="57" %status="Critical" %amount="2" %log="teve sua chance de crítico bruscamente aumentada!"]
-			[include moveBuffEffect %caster="active" %target="active" %number="58" %status="Critical" %amount="3" %log="teve sua chance de crítico drasticamente aumentada!"]
-			[include moveEatEffect %caster="active" %target="active" %number="62"]
-			[include moveTypeChangeEffect %caster="active" %target="active" %number="63"]
-			[include moveTypeChangeEffect %caster="active" %target="active" %number="64"]
-			[include moveHealStatusEffect %caster="active" %target="active" %number="65" %log="se curou de seus status!"]
-			[include moveStageResetEffect %caster="active" %target="active" %number="66" %log="zerou todos os seus modificadores!"]
-			[include moveStageResetEffect %caster="active" %target="active" %number="(-66)" %log="teve todos os seus modificadores zerados!"]
-			[include moveDirectDamageEffect %caster="active" %target="active" %number="67"]
-
-			[include activeMultipleHit %hit="2"]
-			[include activeMultipleHit %hit="3"]
-			[include activeMultipleHit %hit="4"]
-			[include activeMultipleHit %hit="5"]
+			[include multipleHit %caster="active" %target="active" %hit="2"]
+			[include multipleHit %caster="active" %target="active" %hit="3"]
+			[include multipleHit %caster="active" %target="active" %hit="4"]
+			[include multipleHit %caster="active" %target="active" %hit="5"]
 
 			if (0>=activeCurHP)
 				activeStatus=-1
@@ -594,6 +452,9 @@ Resources
 			do getname with tag:enemy
 			log se atacou por conta da confusão!
 
+			[include checkFxConditions %caster="enemy" %target="enemy"]
+			[include moveFullCopyEffect %caster="enemy" %target="enemy" %number="31"]
+			[include moveFxCopyEffect %caster="enemy" %target="enemy" %number="32"]
 			[include onMove %caster="enemy" %target="enemy"]
 			[include enemyMoveTypeAdvantage %type="0"]
 			[include enemyMoveTypeAdvantage %type="1"]
@@ -615,109 +476,70 @@ Resources
 			[include enemyMoveTypeAdvantage %type="17"]
 			[include effectivenessVerification %caster="enemy" %target="enemy"]
 			[include damageCalculation %caster="enemy" %target="enemy"]
-
-			if ($enemyMoveEffect=59)
-				$enemyMoveEffect = 25 + random(0,4)
+			if (($enemyMoveEffect=13) or ($enemyMoveEffect=23))
+				$enemyMoveEffect = $enemyMoveEffect - random(1,8)
 			end
-			if ($enemyMoveEffect=60)
-				$enemyMoveEffect = 30 + random(0,4)
+			if (($enemyMoveEffect=-13) or ($enemyMoveEffect=-23))
+				$enemyMoveEffect = $enemyMoveEffect + random(1,8)
 			end
-			if ($enemyMoveEffect=61)
-				$enemyMoveEffect = 35 + random(0,4)
-			end
+			[include moveDrainEffect %caster="enemy" %number="1"]
+			[include moveRecoilEffect %caster="enemy" %number="2"]
+			[include moveStatusEffect %caster="enemy" %target="enemy" %number="3"]
+			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="4"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="14"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="24"]
+			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="25"]
+			[include moveLoseBerryEffect %caster="enemy" %target="enemy" %number="26"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27"]
+			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="28"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="29"]
+			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="30"]
+			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="-4"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="-14"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
+			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="-24"]
+			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="-25"]
+			[include moveLoseBerryEffect %caster="enemy" %target="enemy" %number="-26"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27"]
+			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="-28"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="-29"]
+			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="-30"]
 
-			[include moveEffect %who="enemy" %number="1"]
-				$enemyEffectiveHeal = ceil(min(($enemyEffectiveDamage/2),(enemyMaxHP-enemyCurHP)))
-				gain $enemyEffectiveHeal enemyCurHP
-			[include announce %who="enemy" %log="drenou [$enemyEffectiveHeal] pontos de vida!"]
-
-			[include moveEffect %who="enemy" %number="2"]
-				$enemyEffectiveRecoil = ceil(min(($enemyEffectiveDamage/4),enemyCurHP))
-				lose $enemyEffectiveRecoil enemyCurHP
-			[include announce %who="enemy" %log="também se feriu, tomando [$enemyEffectiveRecoil] dano!"]
-
-			[include moveEffect %who="enemy" %number="3"]
-				$enemyEffectiveRecoil = ceil(min(($enemyEffectiveDamage/3),enemyCurHP))
-				lose $enemyEffectiveRecoil enemyCurHP
-			[include announce %who="enemy" %log="também se feriu, tomando [$enemyEffectiveRecoil] dano!"]
-
-			[include moveStatusEffect %caster="enemy" %target="enemy" %number="4" %status="1" %log="foi envenenado!"]
-			[include moveStatusEffect %caster="enemy" %target="enemy" %number="5" %status="2" %log="foi intoxicado!"]
-			[include moveStatusEffect %caster="enemy" %target="enemy" %number="6" %status="3" %log="está em chamas!"]
-			[include moveStatusEffect %caster="enemy" %target="enemy" %number="7" %status="-2" %log="foi paralisado!"]
-			if ((($enemyMoveEffect=8) or ($enemyMoveEffect2=8)) and (chance($enemyMoveFxChance)) and ($enemyAim = 1) and (enemyStatus = 0))
-				enemyStatus = -3
-				enemySleep = random(1,3)
-			[include announce %who="enemy" %log="caiu no sono!"]
-			[include moveStatusEffect %caster="enemy" %target="enemy" %number="9" %status="-4" %log="foi congelado!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="10" %status="Attack" %amount="1" %log="teve seu Ataque ligeiramente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="11" %status="Defense" %amount="1" %log="teve sua Defesa ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="12" %status="SpAttack" %amount="1" %log="teve seu Ataque Especial ligeiramente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="13" %status="SpDefense" %amount="1" %log="teve sua Defesa Especial ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="14" %status="Speed" %amount="1" %log="teve sua Velocidade ligeiramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="15" %status="Attack" %amount="2" %log="teve seu Ataque duramente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="16" %status="Defense" %amount="2" %log="teve sua Defesa duramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="17" %status="SpAttack" %amount="2" %log="teve seu Ataque Especial duramente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="18" %status="SpDefense" %amount="2" %log="teve sua Defesa Especial duramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="19" %status="Speed" %amount="2" %log="teve sua Velocidade duramente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="20" %status="Attack" %amount="3" %log="teve seu Ataque severamente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="21" %status="Defense" %amount="3" %log="teve sua Defesa severamente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="22" %status="SpAttack" %amount="3" %log="teve seu Ataque Especial severamente reduzido!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="23" %status="SpDefense" %amount="3" %log="teve sua Defesa Especial severamente reduzida!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="24" %status="Speed" %amount="3" %log="teve sua Velocidade severamente reduzida!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="25" %status="Attack" %amount="1" %log="teve seu Ataque ligeiramente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="26" %status="Defense" %amount="1" %log="teve sua Defesa ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="27" %status="SpAttack" %amount="1" %log="teve seu Ataque Especial ligeiramente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="28" %status="SpDefense" %amount="1" %log="teve sua Defesa Especial ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="29" %status="Speed" %amount="1" %log="teve sua Velocidade ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="30" %status="Attack" %amount="2" %log="teve seu Ataque bruscamente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="31" %status="Defense" %amount="2" %log="teve sua Defesa bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="32" %status="SpAttack" %amount="2" %log="teve seu Ataque Especial bruscamente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="33" %status="SpDefense" %amount="2" %log="teve sua Defesa Especial bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="34" %status="Speed" %amount="2" %log="teve sua Velocidade bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="35" %status="Attack" %amount="3" %log="teve seu Ataque drasticamente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="36" %status="Defense" %amount="3" %log="teve sua Defesa drasticamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="37" %status="SpAttack" %amount="3" %log="teve seu Ataque Especial drasticamente aumentado!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="38" %status="SpDefense" %amount="3" %log="teve sua Defesa Especial drasticamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="39" %status="Speed" %amount="3" %log="teve sua Velocidade drasticamente aumentada!"]
-			[include moveStatusEffect %caster="enemy" %target="enemy" %number="40" %status="-5" %log="ficou hesitante!"]
-			[include moveStatusEffect %caster="enemy" %target="enemy" %number="41" %status="-6" %log="foi forçado a fugir!"]
-			[include moveStatusEffect %caster="enemy" %target="enemy" %number="(-41)" %status="-6" %log="fugiu espontaneamente!"]
-			[include moveEffect %who="enemy" %number="42"]
-				enemyAttackStage = min(6,(enemyAttackStage+1))
-				enemyDefenseStage = min(6,(enemyDefenseStage+1))
-				enemySpAttackStage = min(6,(enemySpAttackStage+1))
-				enemySpDefenseStage = min(6,(enemySpDefenseStage+1))
-				enemySpeedStage = min(6,(enemySpeedStage+1))
-			[include announce %who="enemy" %log="teve todos os seus status ligeiramente aumentados!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="43" %status="Accuracy" %amount="1" %log="teve sua precisão ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="44" %status="Accuracy" %amount="2" %log="teve sua precisão bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="45" %status="Accuracy" %amount="3" %log="teve sua precisão drasticamente aumentada!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="46" %status="Evasion" %amount="1" %log="teve sua evasão ligeiramente diminuída!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="47" %status="Evasion" %amount="2" %log="teve sua evasão duramente diminuída!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="48" %status="Evasion" %amount="2" %log="teve sua evasão severamente diminuída!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="49" %status="Accuracy" %amount="1" %log="teve sua precisão ligeiramente diminuída!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="50" %status="Accuracy" %amount="2" %log="teve sua precisão duramente diminuída!"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="51" %status="Accuracy" %amount="2" %log="teve sua precisão severamente diminuída!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="52" %status="Evasion" %amount="1" %log="teve sua evasão ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="53" %status="Evasion" %amount="2" %log="teve sua evasão bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="54" %status="Evasion" %amount="3" %log="teve sua evasão drasticamente aumentada!"]
-			[include moveStatusEffect %caster="enemy" %target="enemy" %number="55" %status="-7" %log="ficou confuso!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="56" %status="Critical" %amount="1" %log="teve sua chance de crítico ligeiramente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="57" %status="Critical" %amount="2" %log="teve sua chance de crítico bruscamente aumentada!"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="58" %status="Critical" %amount="3" %log="teve sua chance de crítico drasticamente aumentada!"]
-			[include moveEatEffect %caster="enemy" %target="enemy" %number="62"]
-			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="63"]
-			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="64"]
-			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="65" %log="se curou de seus status!"]
-			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="66" %log="zerou todos os seus modificadores!"]
-			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="(-66)" %log="teve todos os seus modificadores zerados!"]
-			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="67"]
-
-			[include enemyMultipleHit %hit="2"]
-			[include enemyMultipleHit %hit="3"]
-			[include enemyMultipleHit %hit="4"]
-			[include enemyMultipleHit %hit="5"]
+			[include multipleHit %caster="enemy" %target="enemy" %hit="2"]
+			[include multipleHit %caster="enemy" %target="enemy" %hit="3"]
+			[include multipleHit %caster="enemy" %target="enemy" %hit="4"]
+			[include multipleHit %caster="enemy" %target="enemy" %hit="5"]
 
 			if (0>=enemyCurHP)
 				enemyStatus=-1
@@ -740,6 +562,28 @@ Resources
 			do getname with tag:enemy
 			log está fora de batalha!
 			do faint with tag:enemy
+		end
+
+		on activeready:
+			do getname with tag:active
+			log usou este turno para se recuperar do esforço e agora está pronto para voltar para o combate!
+			activeStatus = 0
+		end
+		on enemyready:
+			do getname with tag:enemy
+			log usou este turno para se recuperar do esforço e agora está pronto para voltar para o combate!
+			activeStatus = 0
+		end
+
+		on activefatigue:
+			do getname with tag:active
+			log está se recuperando do esforço que fez no último golpe!
+			activeStatusTimer = (activeStatusTimer-1)
+		end
+		on enemyfatigue:
+			do getname with tag:enemy
+			log está se recuperando do esforço que fez no último golpe!
+			activeStatusTimer = (activeStatusTimer-1)
 		end
 
 		on activeflee:
@@ -777,13 +621,11 @@ Resources
 
 		on activefreeze:
 			do getname with tag:active
-			log nem se moveu, pois ainda está dentro de uma pedra de gelo!
-			activeSleep = (activeSleep-1)
+			log está dentro de uma pedra de gelo!
 		end
 		on enemyfreeze:
 			do getname with tag:enemy
-			log nem se moveu, pois ainda está dentro de uma pedra de gelo!
-			activeSleep = (activeSleep-1)
+			log está dentro de uma pedra de gelo!
 		end
 
 		on activewake:
@@ -799,13 +641,13 @@ Resources
 
 		on activesleep:
 			do getname with tag:active
-			log nem se moveu, pois ainda está dormindo!
-			activeSleep = (activeSleep-1)
+			log está dormindo!
+			activeStatusTimer = (activeStatusTimer-1)
 		end
 		on enemysleep:
 			do getname with tag:enemy
-			log nem se moveu, pois ainda está dormindo!
-			activeSleep = (activeSleep-1)
+			log está dormindo!
+			activeStatusTimer = (activeStatusTimer-1)
 		end
 
 		on activeparalysis:
@@ -863,10 +705,14 @@ Resources
 			if (enemyStatus=2) do enemybadpoison with this
 			if (activeStatus=3) do activeburn with this
 			if (enemyStatus=3) do enemyburn with this
-			if ((activeStatus=(-3)) and (activeSleep>0)) do activesleep with this
-			if ((enemyStatus=(-3)) and (enemySleep>0)) do enemysleep with this
-			if ((activeStatus=(-3)) and (0>=activeSleep)) do activewake with this
-			if ((enemyStatus=(-3)) and (0>=enemySleep)) do enemywake with this
+			if ((activeStatus=(-3)) and (0>=activeStatusTimer)) do activewake with this
+			if ((enemyStatus=(-3)) and (0>=enemyStatusTimer)) do enemywake with this
+			if ((activeStatus=(-3)) and (activeStatusTimer>0)) do activesleep with this
+			if ((enemyStatus=(-3)) and (enemyStatusTimer>0)) do enemysleep with this
+			if ((activeStatus=(-8)) and (0>=activeStatusTimer)) do activeready with this
+			if ((enemyStatus=(-8)) and (0>=enemyStatusTimer)) do enemyready with this
+			if ((activeStatus=(-8)) and (activeStatusTimer>0)) do activefatigue with this
+			if ((enemyStatus=(-8)) and (enemyStatusTimer>0)) do enemyfatigue with this
 			$fifth = random(1,5)
 			$thaw = 0
 			if ($fifth=1) $thaw=1
@@ -914,12 +760,15 @@ Resources
 			if ((enemyBerry=5) and (enemyStatus=(-4))) do enemyeat with BER5
 			if ((enemyBerry=6) and (enemyStatus=(-7))) do enemyeat with BER6
 			if ((enemyBerry=7) and (!((enemyStatus=(-1)) or (enemyStatus=0)))) do enemyeat with BER7
-			if ((enemyBerry=8) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER8
-			if ((enemyBerry=9) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER9
-			if ((enemyBerry=10) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER10
-			if ((enemyBerry=11) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER11
-			if ((enemyBerry=12) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER12
-			if ((enemyBerry=13) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER13
+			if ((enemyBerry=8) and (!(enemyStatus=(-1))) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER8
+			if ((enemyBerry=9) and (!(enemyStatus=(-1))) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER9
+			if ((enemyBerry=10) and (!(enemyStatus=(-1))) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER10
+			if ((enemyBerry=11) and (!(enemyStatus=(-1))) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER11
+			if ((enemyBerry=12) and (!(enemyStatus=(-1))) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER12
+			if ((enemyBerry=13) and (!(enemyStatus=(-1))) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER13
+
+			[include triggerPeriodicAbilities %caster="active" %target="enemy"]
+			[include triggerPeriodicAbilities %caster="enemy" %target="active"]
 
 			if ((activeStatus=(-1)) or (0>=round(activeCurHP))) do activefaint with this
 			if ((enemyStatus=(-1)) or (0>=round(enemyCurHP))) do enemyfaint with this
@@ -1128,13 +977,13 @@ Resources
 		*activeStatus
 			desc:Condição do seu pokémon
 		*activeLastMove
-			desc:A última habilidade usada pelo seu pokémon
+			desc:O último golpe usado pelo seu pokémon
 		*activeMovesInARow
-			desc:A quantidade de vezes que seu pokémon usou a mesma habilidade consecutivamente
+			desc:A quantidade de vezes que seu pokémon usou o mesmo golpe consecutivamente
 		*activeBadPoison
 			desc:O número de turnos que faz que seu pokémon foi intoxicado
-		*activeSleep
-			desc:O número de turnos que falta para seu pokémon acordar
+		*activeStatusTimer
+			desc:O número de turnos que falta para seu pokémon se livrar do status atual
 		*activeAttackStage
 			name:Ataque (Estágio)
 		*activeDefenseStage
@@ -1151,6 +1000,8 @@ Resources
 			name:Evasão (Modificador)
 		*activeCriticalStage
 			name:Crítico (Modificador)
+		*activeAbility
+			name:Habilidade do seu pokémon
 	*TEMPLATE
 		tags:status modifierEnemy hidden
 		on reset:
@@ -1179,13 +1030,13 @@ Resources
 		*enemyStatus
 			desc:Condição do pokémon inimigo
 		*enemyLastMove
-			desc:A última habilidade usada pelo pokémon inimigo
+			desc:O último golpe usado pelo pokémon inimigo
 		*enemyMovesInARow
-			desc:A quantidade de vezes que o pokémon inimigo usou a mesma habilidade consecutivamente
+			desc:A quantidade de vezes que o pokémon inimigo usou o mesmo golpe consecutivamente
 		*enemyBadPoison
 			desc:O número de turnos que faz que o pokémon inimigo foi intoxicado
-		*enemySleep
-			desc:O número de turnos que falta para o pokémon inimigo acordar
+		*enemyStatusTimer
+			desc:O número de turnos que falta para o pokémon inimigo se livrar do status atual
 		*enemyAttackStage
 			name:Ataque (Estágio) Inimigo
 		*enemyDefenseStage
@@ -1204,6 +1055,8 @@ Resources
 			name:Crítico (Estágio) Inimigo
 		*enemyBerry
 			name:Fruto do inimigo
+		*enemyAbility
+			name:Habilidade do inimigo
 	*TEMPLATE
 		icon class:tinyIcon
 		tag:status
@@ -1253,19 +1106,19 @@ Resources
 			desc:O Fruto que seu pokémon está carregando.
 			icon:https://i.imgur.com/HgalgR2.png
 			on click:
-				if (this=1) do activeeat with BER1
-				if (this=2) do activeeat with BER2
-				if (this=3) do activeeat with BER3
-				if (this=4) do activeeat with BER4
-				if (this=5) do activeeat with BER5
-				if (this=6) do activeeat with BER6
-				if (this=7) do activeeat with BER7
-				if (this=8) do activeeat with BER8
-				if (this=9) do activeeat with BER9
-				if (this=10) do activeeat with BER10
-				if (this=11) do activeeat with BER11
-				if (this=12) do activeeat with BER12
-				if (this=13) do activeeat with BER13
+				if (this=1) do activeeatactive with BER1
+				if (this=2) do activeeatactive with BER2
+				if (this=3) do activeeatactive with BER3
+				if (this=4) do activeeatactive with BER4
+				if (this=5) do activeeatactive with BER5
+				if (this=6) do activeeatactive with BER6
+				if (this=7) do activeeatactive with BER7
+				if (this=8) do activeeatactive with BER8
+				if (this=9) do activeeatactive with BER9
+				if (this=10) do activeeatactive with BER10
+				if (this=11) do activeeatactive with BER11
+				if (this=12) do activeeatactive with BER12
+				if (this=13) do activeeatactive with BER13
 			end
 		*xp
 			name:XP
@@ -1289,7 +1142,6 @@ Resources
 
 //----------------------------------------------Counters-----------------------------------------------------------------//
 
-Resources
 	*TEMPLATE
 		tag:statisticTab
 		no tooltip
@@ -1410,7 +1262,7 @@ Buttons
 	[include placeNoIcon %id="0" %region="0" %name="Rota 1" %desc="Rota Inicial de Pindoh!" %common1Lvl="3" %common1Range="1" %common1PkmNum="10" %common1PkmVar="0" %common2Lvl="4" %common2Range="1" %common2PkmNum="10" %common2PkmVar="0" %common3Lvl="2" %common3Range="0" %common3PkmNum="10" %common3PkmVar="0" %uncommonLvl="5" %uncommonRange="1" %uncommonPkmNum="10" %uncommonPkmVar="0" %rareLvl="7" %rareRange="2" %rarePkmNum="10" %rarePkmVar="0" %exoticLvl="8" %exoticRange="3" %exoticPkmNum="10" %exoticPkmVar="0" %legendLvl="20" %legendRange="5" %legendPkmNum="10" %legendPkmVar="0"]
     *TEMPLATE
 
-//-------------------------------------------------Moves-----------------------------------------------------------------//
+//-----------------------------------------------Golpes-----------------------------------------------------------------//
 Upgrades
     *TEMPLATE
 		text:<t>[n:this]</t>
@@ -1426,60 +1278,17 @@ Upgrades
 			end
 		end
 
-	[include move %id="0" %key="tackle" %name="Investida" %priority="0" %crit="6.25" %type="0" %isSpecial="0" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
-	[include move %id="1" %key="machPunch" %name="Soco Rápido" %priority="1" %crit="6.25" %type="1" %isSpecial="0" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
-	[include move %id="2" %key="peck" %name="Bicada" %priority="0" %crit="6.25" %type="2" %isSpecial="0" %power="35" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
-	[include move %id="3" %key="poisonSting" %name="Picada Venenosa" %priority="0" %crit="6.25" %type="3" %isSpecial="0" %power="15" %class="0" %effect="4" %fxChance="30" %accuracy="100"]
-	[include move %id="4" %key="bulldoze" %name="Tremor" %priority="0" %crit="6.25" %type="4" %isSpecial="0" %power="60" %class="0" %effect="14" %fxChance="100" %accuracy="100"]
-	[include move %id="5" %key="rollout" %name="Rolagem" %priority="0" %crit="6.25" %type="5" %isSpecial="0" %power="30" %class="1" %effect="0" %fxChance="0" %accuracy="100"]
-	[include move %id="6" %key="bugBite" %name="Mordida de Inseto" %priority="0" %crit="6.25" %type="6" %isSpecial="0" %power="60" %class="0" %effect="62" %fxChance="100" %accuracy="100"]
-	[include move %id="7" %key="astonish" %name="Assustar" %priority="0" %crit="6.25" %type="7" %isSpecial="0" %power="30" %class="0" %effect="40" %fxChance="30" %accuracy="100"]
-	[include move %id="8" %key="metalClaw" %name="Garra de Metal" %priority="0" %crit="6.25" %type="8" %isSpecial="0" %power="50" %class="0" %effect="25" %fxChance="10" %accuracy="100"]
-	[include move %id="9" %key="flameCharge" %name="Carga de Chamas" %priority="0" %crit="6.25" %type="9" %isSpecial="0" %power="50" %class="0" %effect="29" %fxChance="100" %accuracy="100"]
-	[include move %id="10" %key="aquaJet" %name="Aqua Jato" %priority="1" %crit="6.25" %type="10" %isSpecial="0" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
-	[include move %id="11" %key="vineWhip" %name="Chicote de Vinha" %priority="0" %crit="6.25" %type="11" %isSpecial="0" %power="45" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
-	[include move %id="12" %key="nuzzle" %name="Chamego" %priority="0" %crit="6.25" %type="12" %isSpecial="0" %power="20" %class="0" %effect="7" %fxChance="100" %accuracy="100"]
-	[include move %id="13" %key="heartStamp" %name="Selo de Coração" %priority="0" %crit="6.25" %type="13" %isSpecial="0" %power="60" %class="0" %effect="40" %fxChance="30" %accuracy="100"]
-	[include move %id="14" %key="iceball" %name="Bola de Neve" %priority="0" %crit="6.25" %type="14" %isSpecial="0" %power="30" %class="1" %effect="0" %fxChance="0" %accuracy="100"]
-	[include move %id="15" %key="dragonTail" %name="Cauda do Dragão" %priority="0" %crit="6.25" %type="15" %isSpecial="0" %power="60" %class="0" %effect="41" %fxChance="100" %accuracy="100"]
-	[include move %id="16" %key="bite" %name="Mordida" %priority="0" %crit="6.25" %type="16" %isSpecial="0" %power="60" %class="0" %effect="40" %fxChance="30" %accuracy="100"]
-	[include move %id="17" %key="drainingKiss" %name="Beijo Drenante" %priority="0" %crit="6.25" %type="17" %isSpecial="0" %power="50" %class="0" %effect="1" %fxChance="100" %accuracy="100"]
-	[include move %id="18" %key="echoedVoice" %name="Voz Ecoante" %priority="0" %crit="6.25" %type="0" %isSpecial="1" %power="40" %class="1" %effect="0" %fxChance="0" %accuracy="100"]
-	[include move %id="19" %key="vacuumWave" %name="Onda de Vácuo" %priority="1" %crit="6.25" %type="1" %isSpecial="1" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
-	[include move %id="20" %key="gust" %name="Ventania" %priority="0" %crit="6.25" %type="2" %isSpecial="1" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
-	[include move %id="21" %key="smog" %name="Poluição" %priority="0" %crit="6.25" %type="3" %isSpecial="1" %power="30" %class="0" %effect="4" %fxChance="40" %accuracy="100"]
-	[include move %id="22" %key="mudShot" %name="Tiro de Lama" %priority="0" %crit="6.25" %type="4" %isSpecial="1" %power="55" %class="0" %effect="14" %fxChance="100" %accuracy="100"]
-	[include move %id="23" %key="ancientPower" %name="Poder Ancestral" %priority="0" %crit="6.25" %type="5" %isSpecial="1" %power="60" %class="1" %effect="42" %fxChance="10" %accuracy="100"]
-	[include move %id="24" %key="struggleBug" %name="Ira de Inseto" %priority="0" %crit="6.25" %type="6" %isSpecial="1" %power="50" %class="0" %effect="12" %fxChance="100" %accuracy="100"]
-	[include move %id="25" %key="ominousWind" %name="Vento Nefasto" %priority="0" %crit="6.25" %type="7" %isSpecial="1" %power="60" %class="0" %effect="42" %fxChance="10" %accuracy="100"]
-	[include move %id="26" %key="flashCannon" %name="Canhão de Luz" %priority="0" %crit="6.25" %type="8" %isSpecial="1" %power="80" %class="0" %effect="13" %fxChance="10" %accuracy="100"]
-	[include move %id="27" %key="ember" %name="Brasas" %priority="0" %crit="6.25" %type="9" %isSpecial="1" %power="40" %class="0" %effect="6" %fxChance="10" %accuracy="100"]
-	[include move %id="28" %key="bubble" %name="Bolhas" %priority="1" %crit="6.25" %type="10" %isSpecial="1" %power="40" %class="0" %effect="14" %fxChance="10" %accuracy="100"]
-	[include move %id="29" %key="absorb" %name="Absorção" %priority="0" %crit="6.25" %type="11" %isSpecial="1" %power="20" %class="0" %effect="1" %fxChance="100" %accuracy="100"]
-	[include move %id="30" %key="thundershock" %name="Choque do Trovão" %priority="0" %crit="6.25" %type="12" %isSpecial="1" %power="40" %class="0" %effect="7" %fxChance="10" %accuracy="100"]
-	[include move %id="31" %key="extrasensory" %name="Extrasensorial" %priority="0" %crit="6.25" %type="13" %isSpecial="1" %power="80" %class="0" %effect="40" %fxChance="10" %accuracy="100"]
-	[include move %id="32" %key="powderSnow" %name="Pó de Neve" %priority="0" %crit="6.25" %type="14" %isSpecial="1" %power="40" %class="0" %effect="9" %fxChance="10" %accuracy="100"]
-	[include move %id="33" %key="twister" %name="Ciclone" %priority="0" %crit="6.25" %type="15" %isSpecial="1" %power="40" %class="0" %effect="40" %fxChance="20" %accuracy="100"]
-	[include move %id="34" %key="snarl" %name="Rosnado" %priority="0" %crit="6.25" %type="16" %isSpecial="1" %power="55" %class="0" %effect="12" %fxChance="100" %accuracy="100"]
-	[include move %id="35" %key="fairyWind" %name="Vento de Fada" %priority="0" %crit="6.25" %type="17" %isSpecial="1" %power="40" %class="0" %effect="0" %fxChance="0" %accuracy="100"]
-	[include nonDamagingMove %id="36" %key="acupressure" %name="Acupuntura" %priority="0" %type="0" %effect="0" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="100"]
-	[include nonDamagingMove %id="37" %key="bulkup" %name="Aumento de Massa" %priority="0" %type="1" %effect="25" %fxChance="100" %effect2="26" %fxChance2="100" %accuracy="100"]
-	[include nonDamagingMove %id="38" %key="featherDance" %name="Dança das Penas" %priority="0" %type="2" %effect="15" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="100"]
-	[include nonDamagingMove %id="39" %key="acidArmor" %name="Armadura Ácida" %priority="0" %type="3" %effect="31" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="100"]
-	[include nonDamagingMove %id="40" %key="sandAttack" %name="Ataque de Areia" %priority="0" %type="4" %effect="49" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="100"]
-	[include nonDamagingMove %id="41" %key="rockPolish" %name="Rocha Polida" %priority="0" %type="5" %effect="34" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="100"]
-	[include nonDamagingMove %id="42" %key="stringShot" %name="Tiro de Estilingue" %priority="0" %type="6" %effect="19" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="95"]
-	[include nonDamagingMove %id="43" %key="confuseRay" %name="Raio da Confusão" %priority="0" %type="7" %effect="55" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="100"]
-	[include nonDamagingMove %id="44" %key="ironDefense" %name="Defesa de Ferro" %priority="0" %type="8" %effect="31" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="100"]
-	[include nonDamagingMove %id="45" %key="willOwisp" %name="Fogo Fátuo" %priority="0" %type="9" %effect="6" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="85"]
-	[include enemyTypeChangingMove %id="46" %key="soak" %name="Encharcar" %priority="0" %type="10" %newType="10" %fxChance="100" %accuracy="100"]
-	[include nonDamagingMove %id="47" %key="aromatherapy" %name="Aromaterapia" %priority="0" %type="11" %effect="65" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="100"]
-	[include nonDamagingMove %id="48" %key="eerieImpulse" %name="Impulso Misterioso" %priority="0" %type="12" %effect="17" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="100"]
-	[include nonDamagingMove %id="49" %key="teleport" %name="Teleporte" %priority="0" %type="13" %effect="(-41)" %fxChance="100" %effect2="0" %fxChance2="0" %accuracy="100"]
-	[include nonDamagingMove %id="50" %key="haze" %name="Nevoeiro" %priority="0" %type="14" %effect="66" %fxChance="100" %effect2="(-66)" %fxChance2="100" %accuracy="100"]
-	[include move %id="51" %key="dragonRage" %name="Fúria do Dragão" %priority="0" %crit="0" %type="15" %isSpecial="1" %power="40" %class="-2" %effect="67" %fxChance="100" %accuracy="100"]
-	[include nonDamagingMove %id="52" %key="snatch" %name="Arrebatar" %priority="4" %type="16" %effect="71" %fxChance="100" %effect2="72" %fxChance2="100" %accuracy="100"]
-	[include move %id="53" %key="moonlight" %name="Luar" %priority="0" %crit="0" %type="17" %isSpecial="1" %power="25" %class="-3" %effect="0" %fxChance="0" %accuracy="100"]
+	[include move %id="0" %key="tackle" %name="Investida" %priority="0" %crit="6.25" %type="0" %isSpecial="0" %power="40" %class="0" %effect="0" %fxPower="0" %fxChance="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="90" %desc="Um ataque físico onde o usuário investe contra o alvo com todo seu corpo."]
+	[include move %id="1" %key="bite" %name="Mordida" %priority="0" %crit="6.25" %type="16" %isSpecial="0" %power="60" %class="0" %effect="40" %fxPower="0" %fxChance="30" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="95" %desc="Uma mordida feita com dentes afiados. Pode fazer o adversário hesitar."]
+	[include move %id="2" %key="vineWhip" %name="Chicote de Vinha" %priority="0" %crit="6.25" %type="11" %isSpecial="0" %power="45" %class="0" %effect="0" %fxPower="0" %fxChance="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="95" %desc="Um ataque onde o alvo é chicoteado com finos cipós de vinha."]
+	[include move %id="3" %key="juiceShot" %name="Tiro de Suco" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="60" %class="100" %effect="(-70)" %fxPower="0" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="1" %fxCondNum="0" %accuracy="95" %desc="O usuário espreme um fruto, lançando o suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói."]
+	[include nonDamagingMove %id="4" %key="agility" %name="Agilidade" %priority="0" %type="13" %isSelf="1" %effect="19" %fxPower="2" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="100" %desc="O usuário relaxa, deixando seu corpo mais leve para se mover mais rápido."]
+	[include move %id="6" %key="crunch" %name="Mastigada" %priority="0" %crit="6.25" %type="16" %isSpecial="0" %power="80" %class="0" %effect="11" %fxPower="20" %fxChance="20" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="95" %desc="Uma mordida feita com dentes afiados. Pode fazer o adversário hesitar."]
+	[include move %id="7" %key="juiceCannon" %name="Canhão de Suco" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="120" %class="100" %effect="(-70)" %fxPower="20" %fxChance="100" %effect2="71" %fxPower2="20" %fxChance2="100" %fxCondID="1" %fxCondNum="0" %accuracy="90" %desc="Um disparo altamente pressurizado de suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói. O usuário fica fadigado depois de usar."]
+	[include move %id="2" %key="powerWhip" %name="Chicote Poderoso" %priority="0" %crit="6.25" %type="11" %isSpecial="0" %power="120" %class="0" %effect="0" %fxPower="20" %fxChance="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="85" %desc="Um ataque onde o alvo é chicoteado violentamente com cipós, tentáculos ou qualquer coisa parecida."]
+	[include move %id="7" %key="coffePump" %name="Bomba de Café" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="120" %class="100" %effect="(-70)" %fxPower="0" %fxChance="100" %effect2="6" %fxPower2="0" %fxChance2="30" %fxCondID="1" %fxCondNum="0" %accuracy="85" %desc="Um disparo de café quente contra o adversário. Só funciona se estiver carregando um fruto e o destrói. Pode deixar o adversário em chamas."]
+	[include nonDamagingMove %id="4" %key="coffeSeed" %name="Semente de Café" %priority="0" %type="11" %isSelf="0" %effect="72" %fxPower="0" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="100" %desc="O usuário relaxa, deixando seu corpo mais leve para se mover mais rápido."]
+	[include move %id="99" %key="bugBite" %name="Mordida de Inseto" %priority="0" %crit="6.25" %type="6" %isSpecial="0" %power="60" %class="0" %effect="62" %fxPower="0" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="1" %fxCondNum="0" %accuracy="100" %desc="Uma mordida contra o alvo. Se ele tiver um fruto, o usuário come este fruto."]
 
     *TEMPLATE
     *aMOVnone
@@ -1552,31 +1361,31 @@ Upgrades
 		no text
 		hidden when 0
 
-	[include battler %number="1" %region="0" %variation="0" %name="Guarimple" %sprite="https://i.imgur.com/Kco4d9D.png" %baseHP="70" %baseAtk="49" %baseDfs="30" %baseSpAtk="54" %baseSpDfs="32" %baseSpeed="75" %pType="11" %sType="11" %move1="tackle" %move2="bugBite" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="1" %region="0" %variation="0" %name="Guarimple" %sprite="https://i.imgur.com/Kco4d9D.png" %baseHP="70" %baseAtk="49" %baseDfs="30" %baseSpAtk="54" %baseSpDfs="32" %baseSpeed="75" %pType="11" %sType="11" %ability="1" %move1="tackle" %move2="vineWhip" %move3="juiceShot" %move4="agility" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceCannon" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="2" %region="0" %variation="0" %name="Geeckoke" %sprite="https://i.imgur.com/bE8k0kG.png" %baseHP="90" %baseAtk="59" %baseDfs="40" %baseSpAtk="64" %baseSpDfs="42" %baseSpeed="110" %pType="11" %sType="12" %move1="tackle" %move2="bugBite" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="2" %region="0" %variation="0" %name="Geeckoke" %sprite="https://i.imgur.com/bE8k0kG.png" %baseHP="90" %baseAtk="59" %baseDfs="40" %baseSpAtk="64" %baseSpDfs="42" %baseSpeed="110" %pType="11" %sType="12" %ability="1" %move1="bite" %move2="vineWhip" %move3="juiceShot" %move4="agility" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceCannon" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="3" %region="0" %variation="0" %name="Coffegineer" %sprite="https://i.imgur.com/qmMts25.png" %baseHP="135" %baseAtk="69" %baseDfs="68" %baseSpAtk="74" %baseSpDfs="69" %baseSpeed="120" %pType="11" %sType="12" %move1="tackle" %move2="bugBite" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="3" %region="0" %variation="0" %name="Coffegineer" %sprite="https://i.imgur.com/qmMts25.png" %baseHP="135" %baseAtk="69" %baseDfs="68" %baseSpAtk="74" %baseSpDfs="69" %baseSpeed="120" %pType="11" %sType="12" %ability="1" %move1="tackle" %move2="juiceShot" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="4" %region="0" %variation="0" %name="Balldillo" %sprite="https://i.imgur.com/FNP4vop.png" %baseHP="58" %baseAtk="23" %baseDfs="81" %baseSpAtk="19" %baseSpDfs="84" %baseSpeed="45" %pType="9" %sType="9" %move1="tackle" %move2="bulkup" %move3="rollout" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="4" %region="0" %variation="0" %name="Balldillo" %sprite="https://i.imgur.com/FNP4vop.png" %baseHP="58" %baseAtk="23" %baseDfs="81" %baseSpAtk="19" %baseSpDfs="84" %baseSpeed="45" %pType="9" %sType="9" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="5" %region="0" %variation="0" %name="Bullyllo" %sprite="https://i.imgur.com/arHzR2D.png" %baseHP="68" %baseAtk="83" %baseDfs="81" %baseSpAtk="39" %baseSpDfs="84" %baseSpeed="50" %pType="9" %sType="8" %move1="tackle" %move2="bulkup" %move3="rollout" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="5" %region="0" %variation="0" %name="Bullyllo" %sprite="https://i.imgur.com/arHzR2D.png" %baseHP="68" %baseAtk="83" %baseDfs="81" %baseSpAtk="39" %baseSpDfs="84" %baseSpeed="50" %pType="9" %sType="8" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="6" %region="0" %variation="0" %name="Jockadillo" %sprite="https://i.imgur.com/44OlD2e.png" %baseHP="98" %baseAtk="113" %baseDfs="111" %baseSpAtk="47" %baseSpDfs="94" %baseSpeed="72" %pType="9" %sType="8" %move1="tackle" %move2="bulkup" %move3="rollout" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="6" %region="0" %variation="0" %name="Jockadillo" %sprite="https://i.imgur.com/44OlD2e.png" %baseHP="98" %baseAtk="113" %baseDfs="111" %baseSpAtk="47" %baseSpDfs="94" %baseSpeed="72" %pType="9" %sType="8" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="7" %region="0" %variation="0" %name="Gossipavy" %sprite="https://i.imgur.com/xDNs4ss.png" %baseHP="76" %baseAtk="44" %baseDfs="40" %baseSpAtk="51" %baseSpDfs="37" %baseSpeed="63" %pType="10" %sType="10" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="7" %region="0" %variation="0" %name="Gossipavy" %sprite="https://i.imgur.com/xDNs4ss.png" %baseHP="76" %baseAtk="44" %baseDfs="40" %baseSpAtk="51" %baseSpDfs="37" %baseSpeed="63" %pType="10" %sType="10" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="8" %region="0" %variation="0" %name="Capymise" %sprite="https://i.imgur.com/wdT7GJn.png" %baseHP="86" %baseAtk="59" %baseDfs="60" %baseSpAtk="71" %baseSpDfs="67" %baseSpeed="63" %pType="10" %sType="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="8" %region="0" %variation="0" %name="Capymise" %sprite="https://i.imgur.com/wdT7GJn.png" %baseHP="86" %baseAtk="59" %baseDfs="60" %baseSpAtk="71" %baseSpDfs="67" %baseSpeed="63" %pType="10" %sType="0" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="9" %region="0" %variation="0" %name="Tapident" %sprite="https://i.imgur.com/5swE23I.png" %baseHP="116" %baseAtk="84" %baseDfs="85" %baseSpAtk="96" %baseSpDfs="92" %baseSpeed="63" %pType="10" %sType="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="9" %region="0" %variation="0" %name="Tapident" %sprite="https://i.imgur.com/5swE23I.png" %baseHP="116" %baseAtk="84" %baseDfs="85" %baseSpAtk="96" %baseSpDfs="92" %baseSpeed="63" %pType="10" %sType="0" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="10" %region="0" %variation="0" %name="Dengorm" %sprite="https://i.imgur.com/9Ehfwgo.png" %baseHP="23" %baseAtk="57" %baseDfs="27" %baseSpAtk="32" %baseSpDfs="27" %baseSpeed="19" %pType="6" %sType="10" %move1="bugBite" %move2="bugBite" %move3="bugBite" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="10" %region="0" %variation="0" %name="Dengorm" %sprite="https://i.imgur.com/9Ehfwgo.png" %baseHP="23" %baseAtk="57" %baseDfs="27" %baseSpAtk="32" %baseSpDfs="27" %baseSpeed="19" %pType="6" %sType="10" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="3" %move3lvl="5" %move4lvl="7" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="11" %region="0" %variation="0" %name="Chikukoon" %sprite="https://i.imgur.com/YvnsJ8L.png" %baseHP="25" %baseAtk="25" %baseDfs="49" %baseSpAtk="22" %baseSpDfs="50" %baseSpeed="19" %pType="6" %sType="10" %move1="bugBite" %move2="bugBite" %move3="bugBite" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="11" %region="0" %variation="0" %name="Chikukoon" %sprite="https://i.imgur.com/YvnsJ8L.png" %baseHP="25" %baseAtk="25" %baseDfs="49" %baseSpAtk="22" %baseSpDfs="50" %baseSpeed="19" %pType="6" %sType="10" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="12" %region="0" %variation="0" %name="Aedarrier" %sprite="https://i.imgur.com/jFPFWeG.png" %baseHP="148" %baseAtk="147" %baseDfs="37" %baseSpAtk="32" %baseSpDfs="37" %baseSpeed="79" %pType="6" %sType="16" %move1="bugBite" %move2="bugBite" %move3="bugBite" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="12" %region="0" %variation="0" %name="Aedarrier" %sprite="https://i.imgur.com/jFPFWeG.png" %baseHP="148" %baseAtk="147" %baseDfs="37" %baseSpAtk="32" %baseSpDfs="37" %baseSpeed="79" %pType="6" %sType="16" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="13" %region="0" %variation="0" %name="Birdeggy" %sprite="https://i.imgur.com/eRTuAex.png" %baseHP="28" %baseAtk="37" %baseDfs="37" %baseSpAtk="22" %baseSpDfs="37" %baseSpeed="39" %pType="2" %sType="0" %move1="bugBite" %move2="bugBite" %move3="bugBite" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16"]
+	[include battler %number="13" %region="0" %variation="0" %name="Birdeggy" %sprite="https://i.imgur.com/eRTuAex.png" %baseHP="28" %baseAtk="37" %baseDfs="37" %baseSpAtk="22" %baseSpDfs="37" %baseSpeed="39" %pType="2" %sType="0" %ability="0" %move1="tackle" %move2="bugBite" %move3="bugBite" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="vineWhip" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
     *TEMPLATE
 
 //----------------------------------------------Found Pkm----------------------------------------------------------------//
@@ -1649,58 +1458,58 @@ Achievements
 	*TEMPLATE
 		tags:enemyMove hidden
 	*BER1
-		name:Cheri
-		[include statusHealingBerry %name="Cheri" %status="-2" %log="... e se curou da paralisia!"]
+		name:Ereja
+		[include statusHealingBerry %name="Ereja" %status="-2" %log="... e se curou da paralisia!"]
 		desc:Ao ser consumida, cura <b>paralisia</b>.
 	*BER2
-		name:Chesto
-		[include statusHealingBerry %name="Chesto" %status="-3" %log="... e acordou!"]
+		name:Catanha
+		[include statusHealingBerry %name="Catanha" %status="-3" %log="... e acordou!"]
 		desc:Ao ser consumida, <b>acorda</b> o pokémon.
 	*BER3
-		name:Pecha
-		[include statusHealingBerry %name="Pecha" %status="1" %log="... e se curou do envenenamento!"]
+		name:Pêsso
+		[include statusHealingBerry %name="Pêsso" %status="1" %log="... e se curou do envenenamento!"]
 		desc:Ao ser consumida, cura <b>envenenamento</b>.
 	*BER4
-		name:Rawst
-		[include statusHealingBerry %name="Rawst" %status="3" %log="... e se curou das chamas!"]
+		name:Orango
+		[include statusHealingBerry %name="Orango" %status="3" %log="... e se curou das chamas!"]
 		desc:Ao ser consumida, tira o pokémon <b>das chamas</b>.
 	*BER5
-		name:Aspear
-		[include statusHealingBerry %name="Aspear" %status="-4" %log="... e se curou do congelamento!"]
+		name:Aspêra
+		[include statusHealingBerry %name="Aspêra" %status="-4" %log="... e se curou do congelamento!"]
 		desc:Ao ser consumida, cura <b>congelamento</b>.
 	*BER6
-		name:Persim
-		[include statusHealingBerry %name="Persim" %status="-7" %log="... e se curou da confusão!"]
+		name:Caquí
+		[include statusHealingBerry %name="Caquí" %status="-7" %log="... e se curou da confusão!"]
 		desc:Ao ser consumida, cura <b>confusão</b>.
 	*BER7
-		name:Lum
-		on activeeat:
+		name:Meixa
+		on activeeatactive:
 			do getname with tag:active
-			log consumiu uma <#e65c00>Lum</#> ...
+			log consumiu uma <#e65c00><b>Meixa</b></#> ...
 			activeStatus=0
 			log se curou de seu status!
 			log <#3366ff>-----------------------------------</#>
 			activeBerry = 0
 		end
-		on activebite:
+		on activeeatenemy:
 			do getname with tag:active
-			log mordeu a <#e65c00>Lum</#> do adversário ...
+			log mordeu a <#e65c00><b>Meixa</b></#> do adversário ...
 			activeStatus=0
 			log se curou de seu status!
 			log <#3366ff>-----------------------------------</#>
 			enemyBerry = 0
 		end
-		on enemyeat:
+		on enemyeatenemy:
 			do getname with tag:enemy
-			log consumiu uma <#e65c00>Lum</#> ...
+			log consumiu uma <#e65c00><b>Meixa</b></#> ...
 			enemyStatus=0
 			log se curou de seu status!
 			log <#3366ff>-----------------------------------</#>
 			enemyBerry = 0
 		end
-		on enemybite:
+		on enemyeatactive:
 			do getname with tag:enemy
-			log mordeu a <#e65c00>Lum</#> do adversário ...
+			log mordeu a <#e65c00><b>Meixa</b></#> do adversário ...
 			enemyStatus=0
 			log se curou de seu status!
 			log <#3366ff>-----------------------------------</#>
@@ -1708,28 +1517,28 @@ Achievements
 		end
 		desc:Ao ser consumida, cura <b>qualquer status</b>.
 	*BER8
-		name:Figy
-		[include hpHealingBerry %name="Figy" %heal="6.25"]
+		name:Figue
+		[include hpHealingBerry %name="Figue" %heal="6.25"]
 		desc:Ao ser consumida, cura <b>6.25%</b> da vida.
 	*BER9
-		name:Wiki
-		[include hpHealingBerry %name="Wiki" %heal="12.5"]
+		name:Quiui
+		[include hpHealingBerry %name="Quiui" %heal="12.5"]
 		desc:Ao ser consumida, cura <b>12.5%</b> da vida.
 	*BER10
-		name:Mago
-		[include hpHealingBerry %name="Mago" %heal="25"]
+		name:Mága
+		[include hpHealingBerry %name="Mága" %heal="25"]
 		desc:Ao ser consumida, cura <b>25%</b> da vida.
 	*BER11
-		name:Aguav
-		[include hpHealingBerry %name="Aguav" %heal="50"]
+		name:Goia
+		[include hpHealingBerry %name="Goia" %heal="50"]
 		desc:Ao ser consumida, cura <b>50%</b> da vida.
 	*BER12
-		name:Lapapa
-		[include hpHealingBerry %name="Lapapa" %heal="75"]
+		name:Paiapa
+		[include hpHealingBerry %name="Paiapa" %heal="75"]
 		desc:Ao ser consumida, cura <b>75%</b> da vida.
 	*BER13
-		name:Sitrus
-		[include hpHealingBerry %name="Sitrus" %heal="100"]
+		name:Cítrus
+		[include hpHealingBerry %name="Cítrus" %heal="100"]
 		desc:Ao ser consumida, cura <b>100%</b> da vida.
 	
 	*TEMPLATE
@@ -1737,9 +1546,10 @@ Achievements
 //----------------------------------------------Includes----------------------------------------------------------------//
 
 Includes
-*include move %id %key %priority %name %crit %type %isSpecial %power %class %effect %fxChance %accuracy
+*include move %id %key %priority %name %crit %type %isSpecial %power %class %effect %fxPower %fxChance %effect2 %fxPower2 %fxChance2 %fxCondID %fxCondNum %accuracy %desc
 	*aMOV[%key]
 		name:[%name]
+		desc:<t>Poder: [%power]</t><t>[?([%isSpecial]=0)|Físico|Especial]</t><t>Precisão: [?([%accuracy]>=0)|[%accuracy]%|Garantida]</t></>[%desc]
 		tags:activeMove type[%type]
 		on select:
 			do getname with tag:active
@@ -1752,7 +1562,13 @@ Includes
 			$activeMovePower = [%power]
 			$activeMoveClass = [%class]
 			$activeMoveEffect = [%effect]
+			$activeMoveFxPower = [%fxPower]
 			$activeMoveFxChance = [%fxChance]
+			$activeMoveEffect2 = [%effect2]
+			$activeMoveFxPower2 = [%fxPower2]
+			$activeMoveFxChance2 = [%fxChance2]
+			$activeMoveCondID = [%fxCondID]
+			$activeMoveCondNum = [%fxCondNum]
 			$activeMoveAccuracy = [%accuracy]
 		end
 	*eMOV[%key]
@@ -1769,53 +1585,19 @@ Includes
 			$enemyMovePower = [%power]
 			$enemyMoveClass = [%class]
 			$enemyMoveEffect = [%effect]
-			$enemyMoveFxChance = [%fxChance]
-			$enemyMoveAccuracy = [%accuracy]
-		end
-
-*include extraFxMove %id %key %priority %name %crit %type %isSpecial %power %class %effect %fxChance %effect2 %fxChance2 %accuracy
-	*aMOV[%key]
-		name:[%name]
-		tags:activeMove type[%type]
-		on select:
-			do getname with tag:active
-			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
-			$activeMoveID = [%id]
-			$activeMovePriority = [%priority]
-			$activeMoveCrit = [%crit]
-			$activeMoveType = [%type]
-			$activeMoveIsSpecial = [%isSpecial]
-			$activeMovePower = [%power]
-			$activeMoveClass = [%class]
-			$activeMoveEffect = [%effect]
-			$activeMoveFxChance = [%fxChance]
-			$activeMoveEffect2 = [%effect2]
-			$activeMoveFxChance2 = [%fxChance2]
-			$activeMoveAccuracy = [%accuracy]
-		end
-	*eMOV[%key]
-		name:[%name]
-		tags:enemyMove hidden
-		on select:
-			do getname with tag:enemy
-			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
-			$enemyMoveID = [%id]
-			$enemyMovePriority = [%priority]
-			$enemyMoveCrit = [%crit]
-			$enemyMoveType = [%type]
-			$enemyMoveIsSpecial = [%isSpecial]
-			$enemyMovePower = [%power]
-			$enemyMoveClass = [%class]
-			$enemyMoveEffect = [%effect]
+			$enemyMoveFxPower = [%fxPower]
 			$enemyMoveFxChance = [%fxChance]
 			$enemyMoveEffect2 = [%effect2]
+			$enemyMoveFxPower2 = [%fxPower2]
 			$enemyMoveFxChance2 = [%fxChance2]
+			$enemyMoveCondID = [%fxCondID]
+			$enemyMoveCondNum = [%fxCondNum]
 			$enemyMoveAccuracy = [%accuracy]
 		end
-
-*include nonDamagingMove %id %key %priority %name %type %effect %fxChance %effect2 %fxChance2 %accuracy
+*include nonDamagingMove %id %key %name %priority %type %isSelf %effect %fxPower %fxChance %effect2 %fxPower2 %fxChance2 %fxCondID %fxCondNum %accuracy %desc
 	*aMOV[%key]
 		name:[%name]
+		desc:<t>Estado</t><t>Precisão: [?([%accuracy]>=0)|[%accuracy]%|Garantida]</t></>[%desc]
 		tags:activeMove type[%type]
 		on select:
 			do getname with tag:active
@@ -1823,11 +1605,15 @@ Includes
 			$activeMoveID = [%id]
 			$activeMovePriority = [%priority]
 			$activeMoveType = [%type]
-			$activeMoveClass = -1
+			$activeMoveClass = ((3*[%isSelf]) - 4)
 			$activeMoveEffect = [%effect]
+			$activeMoveFxPower = [%fxPower]
 			$activeMoveFxChance = [%fxChance]
 			$activeMoveEffect2 = [%effect2]
+			$activeMoveFxPower2 = [%fxPower2]
 			$activeMoveFxChance2 = [%fxChance2]
+			$activeMoveCondID = [%fxCondID]
+			$activeMoveCondNum = [%fxCondNum]
 			$activeMoveAccuracy = [%accuracy]
 		end
 	*eMOV[%key]
@@ -1839,95 +1625,18 @@ Includes
 			$enemyMoveID = [%id]
 			$enemyMovePriority = [%priority]
 			$enemyMoveType = [%type]
-			$enemyMoveClass = -1
+			$enemyMoveClass = ((3*[%isSelf]) - 4)
 			$enemyMoveEffect = [%effect]
+			$enemyMoveFxPower = [%fxPower]
 			$enemyMoveFxChance = [%fxChance]
 			$enemyMoveEffect2 = [%effect2]
+			$enemyMoveFxPower2 = [%fxPower2]
 			$enemyMoveFxChance2 = [%fxChance2]
+			$enemyMoveCondID = [%fxCondID]
+			$enemyMoveCondNum = [%fxCondNum]
 			$enemyMoveAccuracy = [%accuracy]
 		end
-
-*include enemyTypeChangingMove %id %key %priority %name %type %newType %fxChance %accuracy
-	*aMOV[%key]
-		name:[%name]
-		tags:activeMove type[%type]
-		on select:
-			do getname with tag:active
-			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
-			$activeMoveID = [%id]
-			$activeMovePriority = [%priority]
-			$activeMoveType = [%type]
-			$activeMoveClass = -1
-			$activeMoveEffect = 63
-			$activeMovePower = [%newType]
-			$activeMoveFxChance = [%fxChance]
-			$activeMoveAccuracy = [%accuracy]
-		end
-	*eMOV[%key]
-		name:[%name]
-		tags:enemyMove hidden
-		on select:
-			do getname with tag:enemy
-			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
-			$enemyMoveID = [%id]
-			$enemyMovePriority = [%priority]
-			$enemyMoveType = [%type]
-			$enemyMoveClass = -1
-			$enemyMoveEffect = 63
-			$enemyMovePower = [%newType]
-			$enemyMoveFxChance = [%fxChance]
-			$enemyMoveAccuracy = [%accuracy]
-		end
-
-*include selfTypeChangingMove %id %key %priority %name %type %newType %fxChance %accuracy
-	*aMOV[%key]
-		name:[%name]
-		tags:activeMove type[%type]
-		on select:
-			do getname with tag:active
-			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
-			$activeMoveID = [%id]
-			$activeMovePriority = [%priority]
-			$activeMoveType = [%type]
-			$activeMoveClass = -1
-			$activeMoveEffect = 64
-			$activeMovePower = [%newType]
-			$activeMoveFxChance = [%fxChance]
-			$activeMoveAccuracy = [%accuracy]
-		end
-	*eMOV[%key]
-		name:[%name]
-		tags:enemyMove hidden
-		on select:
-			do getname with tag:enemy
-			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
-			$enemyMoveID = [%id]
-			$enemyMovePriority = [%priority]
-			$enemyMoveType = [%type]
-			$enemyMoveClass = -1
-			$enemyMoveEffect = 64
-			$enemyMovePower = [%newType]
-			$enemyMoveFxChance = [%fxChance]
-			$enemyMoveAccuracy = [%accuracy]
-		end
-
-*include moveSettingsCopy %caster %target
-	$[%caster]MoveID = $[%target]MoveID
-	$[%caster]MovePriority = $[%target]MovePriority
-	$[%caster]MoveCrit = $[%target]MoveCrit
-	$[%caster]MoveType = $[%target]MoveType
-	$[%caster]MoveIsSpecial = $[%target]MoveIsSpecial
-	$[%caster]MovePower = $[%target]MovePower
-	$[%caster]MoveClass = $[%target]MoveClass
-	$[%caster]MoveAccuracy = $[%target]MoveAccuracy
-
-*include moveEffectsCopy %caster %target
-	$[%caster]MoveEffect = $[%target]MoveEffect
-	$[%caster]MoveFxChance = $[%target]MoveFxChance
-	$[%caster]MoveEffect2 = $[%target]MoveEffect2
-	$[%caster]MoveFxChance2 = $[%target]MoveFxChance2
-
-*include battler %number %region %variation %name %sprite %baseHP %baseAtk %baseDfs %baseSpAtk %baseSpDfs %baseSpeed %pType %sType %move1 %move2 %move3 %move4 %move2lvl %move3lvl %move4lvl
+*include battler %number %region %variation %name %sprite %baseHP %baseAtk %baseDfs %baseSpAtk %baseSpDfs %baseSpeed %pType %sType %ability %move1 %move2 %move3 %move4 %move2lvl %move3lvl %move4lvl %move1Up %move2Up %move3Up %move4Up %move1UpLvl %move2UpLvl %move3UpLvl %move4UpLvl
 	*ATV[%number]from[%region]var[%variation]
 		name:[%name]
 		icon:[%sprite]
@@ -1957,10 +1666,15 @@ Includes
 			activeBaseSpeed = ((([%baseSpeed]*activeLvl)/50)+5)
 			activePtype = [%pType]
 			activeStype = [%sType]
-			gain aMOV[%move1]
-			if (activeLvl>=[%move2lvl]) gain aMOV[%move2]
-			if (activeLvl>=[%move3lvl]) gain aMOV[%move3]
-			if (activeLvl>=[%move4lvl]) gain aMOV[%move4]
+			activeAbility = [%ability]
+			if ([%move1UpLvl]>activeLvl) gain aMOV[%move1]
+			if ((activeLvl>=[%move2lvl]) and ([%move2UpLvl]>activeLvl)) gain aMOV[%move2]
+			if ((activeLvl>=[%move3lvl]) and ([%move3UpLvl]>activeLvl)) gain aMOV[%move3]
+			if ((activeLvl>=[%move4lvl]) and ([%move4UpLvl]>activeLvl)) gain aMOV[%move4]
+			if (activeLvl>=[%move1UpLvl]) gain aMOV[%move1Up]
+			if (activeLvl>=[%move2UpLvl]) gain aMOV[%move2Up]
+			if (activeLvl>=[%move3UpLvl]) gain aMOV[%move3Up]
+			if (activeLvl>=[%move4UpLvl]) gain aMOV[%move4Up]
 		end
 		on lose:
 			lose activePkm
@@ -2007,6 +1721,7 @@ Includes
 			enemyPtype = [%pType]
 			enemyStype = [%sType]
 			enemyBerry = random(13)
+			enemyAbility = [%ability]
 		end
 		on capture:
 			CPT[%number]from[%region]var[%variation] = max(enemyLvl,CPT[%number]from[%region]var[%variation])
@@ -2023,10 +1738,14 @@ Includes
 				$movesLearned = ($movesLearned + 1)
 			end	
 			$bestMove = random(1,$movesLearned)
-			if ((have this) and ($bestMove=1)) do select with eMOV[%move1]
-			else if ((have this) and ($bestMove=2)) do select with eMOV[%move2]
-			else if ((have this) and ($bestMove=3)) do select with eMOV[%move3]
-			else if ((have this) and ($bestMove=4)) do select with eMOV[%move4]
+			if ((have this) and ($bestMove=1) and ([%move1UpLvl]>enemyLvl)) do select with eMOV[%move1]
+			else if ((have this) and ($bestMove=2) and ([%move2UpLvl]>enemyLvl)) do select with eMOV[%move2]
+			else if ((have this) and ($bestMove=3) and ([%move3UpLvl]>enemyLvl)) do select with eMOV[%move3]
+			else if ((have this) and ($bestMove=4) and ([%move4UpLvl]>enemyLvl)) do select with eMOV[%move4]
+			else if ((have this) and ($bestMove=1) and (enemyLvl>=[%move1UpLvl])) do select with eMOV[%move1Up]
+			else if ((have this) and ($bestMove=2) and (enemyLvl>=[%move2UpLvl])) do select with eMOV[%move2Up]
+			else if ((have this) and ($bestMove=3) and (enemyLvl>=[%move3UpLvl])) do select with eMOV[%move3Up]
+			else if ((have this) and ($bestMove=4) and (enemyLvl>=[%move4UpLvl])) do select with eMOV[%move4Up]
 		end
 		on faint:
 			if (have this)
@@ -2044,7 +1763,6 @@ Includes
 		on getname:
 			if (have this) log <#ff3300><b>[n:this]</b></#>
 		end
-
 *include activeMoveTypeAdvantage %type
 	if ((activeCurHP>0) and ($auxMtype=[%type]))
 		do type[%type]advantage with this
@@ -2052,7 +1770,6 @@ Includes
 		$auxType = enemyStype
 		do type[%type]advantage with this
 	end
-
 *include enemyMoveTypeAdvantage %type
 	if ((enemyCurHP>0) and ($auxMtype=[%type]))
 		do type[%type]advantage with this
@@ -2060,127 +1777,31 @@ Includes
 		$auxType = activeStype
 		do type[%type]advantage with this
 	end
-
-*include activeMultipleHit %hit
-	$activeAim = chance(($activeMoveAccuracy*activeAccuracyMod*enemyEvasionMod)*100)
-
-	if ($activeAim = 0)
-		do getname with tag:active
+*include multipleHit %caster %target %hit
+	$[%caster]Aim = chance(($[%caster]MoveAccuracy*[%caster]AccuracyMod*[%target]EvasionMod)*100)
+	if ($[%caster]Aim = 0)
+		do getname with tag:[%caster]
 		log errou o golpe!
-		activeMovesInARow = 0
+		[%caster]MovesInARow = 0
 	end
-
-	if ((activeCurHP>0) and (enemyCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($activeAim = 1))
-		do getname with tag:active
+	if (([%caster]CurHP>0) and ([%target]CurHP>0) and ($[%caster]MoveClassM>=[%hit]) and ($numberOfHits>=[%hit]) and ($[%caster]Aim = 1))
+		do getname with tag:[%caster]
 		log atacou pela [%hit]ª vez...
-		$activeCrit = 1
-		$activeRandomVar = frandom(0.85,1)
+		$[%caster]Crit = 1
+		$[%caster]RandomVar = frandom(0.85,1)
 	end
-
-	if ((activeCurHP>0) and (enemyCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and (chance($activeMoveCrit)) and ($activeAim = 1))
-		$activeCrit = 1.5
+	if (([%caster]CurHP>0) and ([%target]CurHP>0) and ($[%caster]MoveClassM>=[%hit]) and ($numberOfHits>=[%hit]) and (chance($[%caster]MoveCrit)) and ($[%caster]Aim = 1))
+		$[%caster]Crit = 1.5
 		log ... e realizou um golpe crítico!
 	end
-
-	if ((activeCurHP>0) and (enemyCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($activeAim = 1))
-		$activeDamageMods = $activeTypeAdvg*$activeRandomVar*$activeSTAB*$activeCrit*$activeStatusMod
-		$activeEffectiveDamage = round(min(enemyCurHP,($activeRawDamage*$activeDamageMods)))
-		lose $activeEffectiveDamage enemyCurHP
-		do getname with tag:enemy
-		log tomou [$activeEffectiveDamage] dano!
+	if (([%caster]CurHP>0) and ([%target]CurHP>0) and ($[%caster]MoveClassM>=[%hit]) and ($numberOfHits>=[%hit]) and ($[%caster]Aim = 1))
+		$[%caster]DamageMods = $[%caster]TypeAdvg*$[%caster]RandomVar*$[%caster]STAB*$[%caster]Crit*$[%caster]StatusMod
+		$[%caster]EffectiveDamage = round(min([%target]CurHP,($[%caster]RawDamage*$[%caster]DamageMods)))
+		lose $[%caster]EffectiveDamage [%target]CurHP
+		do getname with tag:[%target]
+		log tomou [$[%caster]EffectiveDamage] dano!
 		log <#3366ff>-----------------------------------</#>
 	end
-
-*include enemyMultipleHit %hit
-	$enemyAim = chance(($enemyMoveAccuracy*enemyAccuracyMod*activeEvasionMod)*100)
-
-	if ($enemyAim = 0)
-		do getname with tag:enemy
-		log errou o golpe!
-		enemyMovesInARow = 0
-	end
-
-	if ((activeCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($enemyAim = 1))
-		do getname with tag:enemy
-		log atacou pela [%hit]ª vez...
-		$enemyCrit = 1
-		$enemyRandomVar = frandom(0.85,1)
-	end
-
-	if ((activeCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and (chance($enemyMoveCrit)) and ($enemyAim = 1))
-		$enemyCrit = 1.5
-		log ... e realizou um golpe crítico!
-	end
-
-	if ((activeCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($enemyAim = 1))
-		$enemyDamageMods = $enemyTypeAdvg*$enemyRandomVar*$enemySTAB*$enemyCrit*$enemyStatusMod
-		$enemyEffectiveDamage = round(min(activeCurHP,($enemyRawDamage*$enemyDamageMods)))
-		lose $enemyEffectiveDamage activeCurHP
-		do getname with tag:active
-		log tomou [$enemyEffectiveDamage] dano!
-		log <#3366ff>-----------------------------------</#>
-	end
-
-*include activeConfusedMultHit %hit
-	$activeAim = chance(($activeMoveAccuracy*activeAccuracyMod*activeEvasionMod)*100)
-
-	if ($activeAim = 0)
-		do getname with tag:active
-		log errou o golpe!
-		activeMovesInARow = 0
-	end
-
-	if ((activeCurHP>0) and (activeCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($activeAim = 1))
-		do getname with tag:active
-		log atacou pela [%hit]ª vez...
-		$activeCrit = 1
-		$activeRandomVar = frandom(0.85,1)
-	end
-
-	if ((activeCurHP>0) and (activeCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and (chance($activeMoveCrit)) and ($activeAim = 1))
-		$activeCrit = 1.5
-		log ... e realizou um golpe crítico!
-	end
-
-	if ((activeCurHP>0) and (activeCurHP>0) and ($activeMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($activeAim = 1))
-		$activeDamageMods = $activeTypeAdvg*$activeRandomVar*$activeSTAB*$activeCrit*$activeStatusMod
-		$activeEffectiveDamage = round(min(activeCurHP,($activeRawDamage*$activeDamageMods)))
-		lose $activeEffectiveDamage activeCurHP
-		do getname with tag:active
-		log tomou [$activeEffectiveDamage] dano!
-		log <#3366ff>-----------------------------------</#>
-	end
-
-*include enemyConfusedMultHit %hit
-	$enemyAim = chance(($enemyMoveAccuracy*enemyAccuracyMod*enemyEvasionMod)*100)
-
-	if ($enemyAim = 0)
-		do getname with tag:enemy
-		log errou o golpe!
-		enemyMovesInARow = 0
-	end
-
-	if ((enemyCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($enemyAim = 1))
-		do getname with tag:enemy
-		log atacou pela [%hit]ª vez...
-		$enemyCrit = 1
-		$enemyRandomVar = frandom(0.85,1)
-	end
-
-	if ((enemyCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and (chance($enemyMoveCrit)) and ($enemyAim = 1))
-		$enemyCrit = 1.5
-		log ... e realizou um golpe crítico!
-	end
-
-	if ((enemyCurHP>0) and (enemyCurHP>0) and ($enemyMoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($enemyAim = 1))
-		$enemyDamageMods = $enemyTypeAdvg*$enemyRandomVar*$enemySTAB*$enemyCrit*$enemyStatusMod
-		$enemyEffectiveDamage = round(min(enemyCurHP,($enemyRawDamage*$enemyDamageMods)))
-		lose $enemyEffectiveDamage enemyCurHP
-		do getname with tag:enemy
-		log tomou [$enemyEffectiveDamage] dano!
-		log <#3366ff>-----------------------------------</#>
-	end
-
 *include defModByStage %stage %mod
 	if (activeAttackStage=[%stage]) activeAttackMod = [%mod]
 	if (activeDefenseStage=[%stage]) activeDefenseMod = [%mod]
@@ -2192,13 +1813,19 @@ Includes
 	if (enemySpAttackStage=[%stage]) enemySpAttackMod = [%mod]
 	if (enemySpDefenseStage=[%stage]) enemySpDefenseMod = [%mod]
 	if (enemySpeedStage=[%stage]) enemySpeedMod = [%mod]
-
 *include defAcEvModByStage %stage %mod
 	if (activeAccuracyStage=[%stage]) activeAccuracyMod = [%mod]
 	if (activeEvasionStage=(-[%stage])) activeEvasionMod = [%mod]
 	if (enemyAccuracyStage=[%stage]) enemyAccuracyMod = [%mod]
 	if (enemyEvasionStage=(-[%stage])) enemyEvasionMod = [%mod]
-
+*include triggerPeriodicAbilities %caster %target
+	$half = random(1,2)
+	if (([%caster]Ability=1) and ($half=1))
+		[%caster]Berry = 8
+		do getname with tag:[%caster]
+		log ativou sua habilidade <#00bfff><b>Frutífero</b></#> e brotou uma <#e65c00><b>[n:BER8]</b></#>!
+		log <#3366ff>-----------------------------------</#>
+	end
 *include capturedNoIcon %name %number %region %variation %evoLvl %evoNumber
 	*CPT[%number]from[%region]var[%variation]
 		name:[%name]
@@ -2217,7 +1844,6 @@ Includes
 				toast <#00cc00><b>[n:this]</b></#>, vai!
 			end
 		end
-
 *include placeNoIcon %id %region %name %desc %common1Lvl %common1Range %common1PkmNum %common1PkmVar %common2Lvl %common2Range %common2PkmNum %common2PkmVar %common3Lvl %common3Range %common3PkmNum %common3PkmVar %uncommonLvl %uncommonRange %uncommonPkmNum %uncommonPkmVar %rareLvl %rareRange %rarePkmNum %rarePkmVar %exoticLvl %exoticRange %exoticPkmNum %exoticPkmVar %legendLvl %legendRange %legendPkmNum %legendPkmVar
     *place[%id]from[%region]
 		name:[%name]
@@ -2251,176 +1877,421 @@ Includes
 			enemyLvl = ([%legendLvl] + random(-[%legendRange],[%legendRange]))
 			gain ENM[%legendPkmNum]from[%region]var[%legendPkmVar]
 		end
-
-*include moveEffect %who %number
-	if (((($[%who]MoveEffect=[%number]) and (chance($[%who]MoveFxChance))) or (($[%who]MoveEffect2=[%number]) and (chance($[%who]MoveFxChance2)))) and ($[%who]Aim = 1))
-
-*include conditionalMoveEffect %who %number %condition
-	if (((($[%who]MoveEffect=[%number]) and (chance($[%who]MoveFxChance))) or (($[%who]MoveEffect2=[%number]) and (chance($[%who]MoveFxChance2)))) and ($[%who]Aim = 1) and ([%condition]))
-
-*include moveStatusEffect %caster %target %number %status %log
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Status = 0))
-		[%target]Status = [%status]
-		do getname with tag:[%target]
-		log [%log]
+*include moveDrainEffect %caster %number
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
+		$[%caster]EffectiveHeal = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower),([%caster]MaxHP-[%caster]CurHP)))
+		gain $[%caster]EffectiveHeal [%caster]CurHP
+		do getname with tag:[%caster]
+		log drenou [$[%caster]EffectiveHeal] pontos de vida!
 		log <#3366ff>-----------------------------------</#>
 	end
-
-*include moveHealStatusEffect %caster %target %number %status %log
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
+		$[%caster]EffectiveHeal = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower2),([%caster]MaxHP-[%caster]CurHP)))
+		gain $[%caster]EffectiveHeal [%caster]CurHP
+		do getname with tag:[%caster]
+		log drenou [$[%caster]EffectiveHeal] pontos de vida!
+		log <#3366ff>-----------------------------------</#>
+	end
+*include moveRecoilEffect %caster %number
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
+		$[%caster]EffectiveRecoil = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower),[%caster]CurHP))
+		lose $[%caster]EffectiveRecoil [%caster]CurHP
+		do getname with tag:[%caster]
+		log também se feriu, tomando [$[%caster]EffectiveRecoil] dano!
+		log <#3366ff>-----------------------------------</#>
+	end
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
+		$[%caster]EffectiveRecoil = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower2),[%caster]CurHP))
+		lose $[%caster]EffectiveRecoil [%caster]CurHP
+		do getname with tag:[%caster]
+		log também se feriu, tomando [$[%caster]EffectiveRecoil] dano!
+		log <#3366ff>-----------------------------------</#>
+	end
+*include moveStatusEffect %caster %target %number
+	$timer=1
+	$timer2=1
+	if ($[%caster]MoveFxPower=(-3))
+		$timer = random(1,3)
+	end
+	if ($[%caster]MoveFxPower2=(-3))
+		$timer2 = random(1,3)
+	end
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1) and ([%target]Status = 0))
+		[%target]Status = $[%caster]MoveFxPower
+		[%target]StatusTimer = $timer
+		do getname with tag:[%target]
+		log [?([%target]Status=1)|foi envenenado!|][?([%target]Status=2)|foi intoxicado!|][?([%target]Status=3)|está em chamas!|][?([%target]Status=(-2))|foi paralisado!|][?([%target]Status=(-3))|caiu no sono!|][?([%target]Status=(-4))|foi congelado!|][?([%target]Status=(-5))|ficou hesitante!|][?([%target]Status=(-6))|se prepara para fugir!|][?([%target]Status=(-7))|ficou confuso!|][?([%target]Status=(-8))|ficou fadigado!|]
+		log <#3366ff>-----------------------------------</#>
+	end
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1) and ([%target]Status = 0))
+		[%target]Status = $[%caster]MoveFxPower2
+		[%target]StatusTimer = $timer2
+		do getname with tag:[%target]
+		log [?([%target]Status=1)|foi envenenado!|][?([%target]Status=2)|foi intoxicado!|][?([%target]Status=3)|está em chamas!|][?([%target]Status=(-2))|foi paralisado!|][?([%target]Status=(-3))|caiu no sono!|][?([%target]Status=(-4))|foi congelado!|][?([%target]Status=(-5))|ficou hesitante!|][?([%target]Status=(-6))|se prepara para fugir!|][?([%target]Status=(-7))|ficou confuso!|][?([%target]Status=(-8))|ficou fadigado!|]
+		log <#3366ff>-----------------------------------</#>
+	end
+*include moveHealStatusEffect %caster %target %number
+	if ($[%caster]MoveFxPower=0)
+		$[%caster]MoveFxPower = [%target]Status
+	end
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1) and ([%target]Status=$[%caster]MoveFxPower))
 		[%target]Status = 0
 		do getname with tag:[%target]
-		log [%log]
+		log foi curado de sua condição!
 		log <#3366ff>-----------------------------------</#>
 	end
-
-*include moveDebuffEffect %caster %target %number %status %amount %log
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
-		[%target][%status]Stage = max((-6),([%target][%status]Stage-[%amount]))
+	if ($[%caster]MoveFxPower2=0)
+		$[%caster]MoveFxPower2 = [%target]Status
+	end
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1) and ([%target]Status=$[%caster]MoveFxPower2))
+		[%target]Status = 0
 		do getname with tag:[%target]
-		log [%log]
+		log foi curado de sua condição!
 		log <#3366ff>-----------------------------------</#>
 	end
-
-*include moveBuffEffect %caster %target %number %status %amount %log
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
-		[%target][%status]Stage = min(6,([%target][%status]Stage+[%amount]))
+*include moveAllDebuffEffect %caster %target %number
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
+		[%target]AttackStage = max((-6),([%target]AttackStage-$[%caster]MoveFxPower))
+		[%target]DefenseStage = max((-6),([%target]DefenseStage-$[%caster]MoveFxPower))
+		[%target]SpAttackStage = max((-6),([%target]SpAttackStage-$[%caster]MoveFxPower))
+		[%target]SpDefenseStage = max((-6),([%target]SpDefenseStage-$[%caster]MoveFxPower))
+		[%target]SpeedStage = max((-6),([%target]SpeedStage-$[%caster]MoveFxPower))
 		do getname with tag:[%target]
-		log [%log]
+		log teve todos os seus atributos reduzidos em [$[%caster]MoveFxPower]!
 		log <#3366ff>-----------------------------------</#>
 	end
-
-*include moveStageResetEffect %caster %target %number %log
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
-		[%target]AttackStage = 0
-		[%target]DefenseStage = 0
-		[%target]SpAttackStage = 0
-		[%target]SpDefenseStage = 0
-		[%target]SpeedStage = 0
-		[%target]AccuracyStage = 0
-		[%target]EvasionStage = 0
-		[%target]CriticalStage = 0
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
+		[%target]AttackStage = max((-6),([%target]AttackStage-$[%caster]MoveFxPower2))
+		[%target]DefenseStage = max((-6),([%target]DefenseStage-$[%caster]MoveFxPower2))
+		[%target]SpAttackStage = max((-6),([%target]SpAttackStage-$[%caster]MoveFxPower2))
+		[%target]SpDefenseStage = max((-6),([%target]SpDefenseStage-$[%caster]MoveFxPower2))
+		[%target]SpeedStage = max((-6),([%target]SpeedStage-$[%caster]MoveFxPower2))
 		do getname with tag:[%target]
-		log [%log]
+		log teve todos os seus atributos reduzidos em [$[%caster]MoveFxPower2]!
 		log <#3366ff>-----------------------------------</#>
 	end
-
+*include moveAllBuffEffect %caster %target %number
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
+		[%target]AttackStage = min(6,([%target]AttackStage+$[%caster]MoveFxPower))
+		[%target]DefenseStage = min(6,([%target]DefenseStage+$[%caster]MoveFxPower))
+		[%target]SpAttackStage = min(6,([%target]SpAttackStage+$[%caster]MoveFxPower))
+		[%target]SpDefenseStage = min(6,([%target]SpDefenseStage+$[%caster]MoveFxPower))
+		[%target]SpeedStage = min(6,([%target]SpeedStage+$[%caster]MoveFxPower))
+		do getname with tag:[%target]
+		log teve todos os seus atributos aumentados em [$[%caster]MoveFxPower]!
+		log <#3366ff>-----------------------------------</#>
+	end
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
+		[%target]AttackStage = min(6,([%target]AttackStage+$[%caster]MoveFxPower2))
+		[%target]DefenseStage = min(6,([%target]DefenseStage+$[%caster]MoveFxPower2))
+		[%target]SpAttackStage = min(6,([%target]SpAttackStage+$[%caster]MoveFxPower2))
+		[%target]SpDefenseStage = min(6,([%target]SpDefenseStage+$[%caster]MoveFxPower2))
+		[%target]SpeedStage = min(6,([%target]SpeedStage+$[%caster]MoveFxPower2))
+		do getname with tag:[%target]
+		log teve todos os seus atributos aumentados em [$[%caster]MoveFxPower]!
+		log <#3366ff>-----------------------------------</#>
+	end
+*include moveDebuffEffect %caster %target %number %statusKey %statusName %gender %gender2
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
+		[%target][%statusKey]Stage = max((-6),([%target][%statusKey]Stage-$[%caster]MoveFxPower))
+		do getname with tag:[%target]
+		log teve [%gender2] [%statusName] reduzid[%gender] em [$[%caster]MoveFxPower]!
+		log <#3366ff>-----------------------------------</#>
+	end
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
+		[%target][%statusKey]Stage = max((-6),([%target][%statusKey]Stage-$[%caster]MoveFxPower2))
+		do getname with tag:[%target]
+		log teve [%gender2] [%statusName] reduzid[%gender] em [$[%caster]MoveFxPower2]!
+		log <#3366ff>-----------------------------------</#>
+	end
+*include moveBuffEffect %caster %target %number %statusKey %amount %statusName %gender %gender2
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
+		[%target][%statusKey]Stage = min(6,([%target][%statusKey]Stage+$[%caster]MoveFxPower))
+		do getname with tag:[%target]
+		log teve [%gender2] [%statusName] aumentad[%gender] em [$[%caster]MoveFxPower]!
+		log <#3366ff>-----------------------------------</#>
+	end
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
+		[%target][%statusKey]Stage = min(6,([%target][%statusKey]Stage+$[%caster]MoveFxPower2))
+		do getname with tag:[%target]
+		log teve [%gender2] [%statusName] aumentad[%gender] em [$[%caster]MoveFxPower2]!
+		log <#3366ff>-----------------------------------</#>
+	end
+*include moveStageResetEffect %caster %target %number
+	if (($[%caster]MovePower=1) or ($[%caster]MovePower=0))
+		$atkReset = 1
+	end
+	if (($[%caster]MovePower=2) or ($[%caster]MovePower=0))
+		$dfsReset = 1
+	end
+	if (($[%caster]MovePower=3) or ($[%caster]MovePower=0))
+		$spatkReset = 1
+	end
+	if (($[%caster]MovePower=4) or ($[%caster]MovePower=0))
+		$spdfsReset = 1
+	end
+	if (($[%caster]MovePower=5) or ($[%caster]MovePower=0))
+		$speedReset = 1
+	end
+	if (($[%caster]MovePower=6) or ($[%caster]MovePower=0))
+		$acuReset = 1
+	end
+	if (($[%caster]MovePower=7) or ($[%caster]MovePower=0))
+		$evsReset = 1
+	end
+	if (($[%caster]MovePower=8) or ($[%caster]MovePower=0))
+		$crtReset = 1
+	end
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
+		[%target]AttackStage = [%target]AttackStage*(1-$atkReset)
+		[%target]DefenseStage = [%target]DefenseStage*(1-$dfsReset)
+		[%target]SpAttackStage = [%target]SpAttackStage*(1-$spatkReset)
+		[%target]SpDefenseStage = [%target]SpDefenseStage*(1-$spdfsReset)
+		[%target]SpeedStage = [%target]SpeedStage*(1-$speedReset)
+		[%target]AccuracyStage = [%target]AccuracyStage*(1-$acuReset)
+		[%target]EvasionStage = [%target]EvasionStage*(1-$evsReset)
+		[%target]CriticalStage = [%target]CriticalStage*(1-$crtReset)
+		do getname with tag:[%target]
+		log teve o modificador de [?($[%caster]MovePower=0)|todos os atributos|][?($[%caster]MovePower=1)|Ataque|][?($[%caster]MovePower=2)|Defesa|][?($[%caster]MovePower=3)|Ataque Especial|][?($[%caster]MovePower=4)|Defesa Especial|][?($[%caster]MovePower=5)|Velocidade|][?($[%caster]MovePower=6)|Precisão|][?($[%caster]MovePower=7)|Evasão|][?($[%caster]MovePower=8)|Chance de Crítico|] zerado! 
+		log <#3366ff>-----------------------------------</#>
+	end
+	if (($[%caster]MovePower2=1) or ($[%caster]MovePower2=0))
+		$atkReset2 = 1
+	end
+	if (($[%caster]MovePower2=2) or ($[%caster]MovePower2=0))
+		$dfsReset2 = 1
+	end
+	if (($[%caster]MovePower2=3) or ($[%caster]MovePower2=0))
+		$spatkReset2 = 1
+	end
+	if (($[%caster]MovePower2=4) or ($[%caster]MovePower2=0))
+		$spdfsReset2 = 1
+	end
+	if (($[%caster]MovePower2=5) or ($[%caster]MovePower2=0))
+		$speedReset2 = 1
+	end
+	if (($[%caster]MovePower2=6) or ($[%caster]MovePower2=0))
+		$acuReset2 = 1
+	end
+	if (($[%caster]MovePower2=7) or ($[%caster]MovePower2=0))
+		$evsReset2 = 1
+	end
+	if (($[%caster]MovePower2=8) or ($[%caster]MovePower2=0))
+		$crtReset2 = 1
+	end
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
+		[%target]AttackStage = [%target]AttackStage*(1-$atkReset2)
+		[%target]DefenseStage = [%target]DefenseStage*(1-$dfsReset2)
+		[%target]SpAttackStage = [%target]SpAttackStage*(1-$spatkReset2)
+		[%target]SpDefenseStage = [%target]SpDefenseStage*(1-$spdfsReset2)
+		[%target]SpeedStage = [%target]SpeedStage*(1-$speedReset2)
+		[%target]AccuracyStage = [%target]AccuracyStage*(1-$acuReset2)
+		[%target]EvasionStage = [%target]EvasionStage*(1-$evsReset2)
+		[%target]CriticalStage = [%target]CriticalStage*(1-$crtReset2)
+		do getname with tag:[%target]
+		log teve o modificador de [?($[%caster]MovePower2=0)|todos os atributos|][?($[%caster]MovePower2=1)|Ataque|][?($[%caster]MovePower2=2)|Defesa|][?($[%caster]MovePower2=3)|Ataque Especial|][?($[%caster]MovePower2=4)|Defesa Especial|][?($[%caster]MovePower2=5)|Velocidade|][?($[%caster]MovePower2=6)|Precisão|][?($[%caster]MovePower2=7)|Evasão|][?($[%caster]MovePower2=8)|Chance de Crítico|] zerado! 
+		log <#3366ff>-----------------------------------</#>
+	end
 *include moveDirectDamageEffect %caster %target %number
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
-		$[%caster]EffectiveDamage = round(min([%target]CurHP,$[%caster]MovePower))
-		lose $[%caster]EffectiveDamage [%target]CurHP
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
+		$[%caster]EffectiveFxDamage = round(min([%target]CurHP,$[%caster]MoveFxPower))
+		lose $[%caster]EffectiveFxDamage [%target]CurHP
 		do getname with tag:[%target]
-		log tomou [$[%caster]EffectiveDamage] dano!
+		log tomou [$[%caster]EffectiveFxDamage] dano!
 		log <#3366ff>-----------------------------------</#>
 	end
-
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
+		$[%caster]EffectiveFxDamage = round(min([%target]CurHP,$[%caster]MoveFxPower2))
+		lose $[%caster]EffectiveFxDamage [%target]CurHP
+		do getname with tag:[%target]
+		log tomou [$[%caster]EffectiveFxDamage] dano!
+		log <#3366ff>-----------------------------------</#>
+	end
+*include moveLoseBerryEffect %caster %target %number
+	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
+		[%target]Berry = 0
+		do getname with tag:[%target]
+		log perdeu seu fruto!
+		log <#3366ff>-----------------------------------</#>
+	end
 *include moveEatEffect %caster %target %number
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=1))
-		 do [%caster]bite with BER1
+		 do [%caster]eat[%target] with BER1
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=2))
-		 do [%caster]bite with BER2
+		 do [%caster]eat[%target] with BER2
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=3))
-		 do [%caster]bite with BER3
+		 do [%caster]eat[%target] with BER3
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=4))
-		 do [%caster]bite with BER4
+		 do [%caster]eat[%target] with BER4
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=5))
-		 do [%caster]bite with BER5
+		 do [%caster]eat[%target] with BER5
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=6))
-		 do [%caster]bite with BER6
+		 do [%caster]eat[%target] with BER6
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=7))
-		 do [%caster]bite with BER7
+		 do [%caster]eat[%target] with BER7
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=8))
-		 do [%caster]bite with BER8
+		 do [%caster]eat[%target] with BER8
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=9))
-		 do [%caster]bite with BER9
+		 do [%caster]eat[%target] with BER9
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=10))
-		 do [%caster]bite with BER10
+		 do [%caster]eat[%target] with BER10
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=11))
-		 do [%caster]bite with BER11
+		 do [%caster]eat[%target] with BER11
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=12))
-		 do [%caster]bite with BER12
+		 do [%caster]eat[%target] with BER12
 	end
 	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=13))
-		 do [%caster]bite with BER13
+		 do [%caster]eat[%target] with BER13
 	end
-
 *include moveTypeChangeEffect %caster %target %number
-	if (($[%caster]MoveEffect=[%number]) or ($[%caster]MoveEffect2=[%number]) and ($[%caster]MovePower=(-1)))
-		$[%caster]MovePower = [%caster]Ptype
+	if (($[%caster]MoveEffect=[%number]) and ($[%caster]MoveFxPower=(-1)))
+		$[%caster]MoveFxPower = [%caster]Ptype
 	end
-	if (($[%caster]MoveEffect=[%number]) or ($[%caster]MoveEffect2=[%number]) and ($[%caster]MovePower=(-2)))
-		$[%caster]MovePower = [%target]Ptype
+	if (($[%caster]MoveEffect=[%number]) and ($[%caster]MoveFxPower=(-2)))
+		$[%caster]MoveFxPower = [%target]Ptype
 	end
-
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
-		[%target]Ptype = $[%caster]MovePower
-		[%target]Stype = $[%caster]MovePower
+	if (($[%caster]MoveEffect2=[%number]) and ($[%caster]MoveFxPower2=(-1)))
+		$[%caster]MoveFxPower2 = [%caster]Ptype
+	end
+	if (($[%caster]MoveEffect2=[%number]) and ($[%caster]MoveFxPower2=(-2)))
+		$[%caster]MoveFxPower2 = [%target]Ptype
+	end
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
+		[%target]Ptype = $[%caster]MoveFxPower
+		[%target]Stype = $[%caster]MoveFxPower
 		do getname with tag:[%target]
 		log mudou de tipo, agora ele é [?[%target]Ptype=0|Normal|][?[%target]Ptype=1|Lutador|][?[%target]Ptype=2|Voador|][?[%target]Ptype=3|Venenoso|][?[%target]Ptype=4|Terrestre|][?[%target]Ptype=5|de Pedra|][?[%target]Ptype=6|Inseto|][?[%target]Ptype=7|Fantasma|][?[%target]Ptype=8|Metálico|][?[%target]Ptype=9|de Fogo|][?[%target]Ptype=10|Aquático|][?[%target]Ptype=11|Planta|][?[%target]Ptype=12|Elétrico|][?[%target]Ptype=13|Psíquico|][?[%target]Ptype=14|de Gelo|][?[%target]Ptype=15|Dragão|][?[%target]Ptype=16|Noturno|][?[%target]Ptype=17|Fada|]
 		log <#3366ff>-----------------------------------</#>
 	end
-
-*include announce %who %log
-		do getname with tag:[%who]
-		log [%log]
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
+		[%target]Ptype = $[%caster]MoveFxPower2
+		[%target]Stype = $[%caster]MoveFxPower2
+		do getname with tag:[%target]
+		log mudou de tipo, agora ele é [?[%target]Ptype=0|Normal|][?[%target]Ptype=1|Lutador|][?[%target]Ptype=2|Voador|][?[%target]Ptype=3|Venenoso|][?[%target]Ptype=4|Terrestre|][?[%target]Ptype=5|de Pedra|][?[%target]Ptype=6|Inseto|][?[%target]Ptype=7|Fantasma|][?[%target]Ptype=8|Metálico|][?[%target]Ptype=9|de Fogo|][?[%target]Ptype=10|Aquático|][?[%target]Ptype=11|Planta|][?[%target]Ptype=12|Elétrico|][?[%target]Ptype=13|Psíquico|][?[%target]Ptype=14|de Gelo|][?[%target]Ptype=15|Dragão|][?[%target]Ptype=16|Noturno|][?[%target]Ptype=17|Fada|]
 		log <#3366ff>-----------------------------------</#>
 	end
-
+*include moveAbilityChangeEffect %caster %target %number
+	if (($[%caster]MoveEffect=[%number]) and ($[%caster]MoveFxPower=(-1)))
+		$[%caster]MoveFxPower = [%caster]Ability
+	end
+	if (($[%caster]MoveEffect=[%number]) and ($[%caster]MoveFxPower=(-2)))
+		$[%caster]MoveFxPower = [%target]Ability
+	end
+	if (($[%caster]MoveEffect2=[%number]) and ($[%caster]MoveFxPower2=(-1)))
+		$[%caster]MoveFxPower2 = [%caster]Ability
+	end
+	if (($[%caster]MoveEffect2=[%number]) and ($[%caster]MoveFxPower2=(-2)))
+		$[%caster]MoveFxPower2 = [%target]Ability
+	end
+	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
+		[%target]Ability = $[%caster]MoveFxPower
+		do getname with tag:[%target]
+		log mudou de habilidade, agora ele tem [?[%target]Ability=0|Nenhuma|][?[%target]Ability=1|Frutífero|][?[%target]Ability=3|Insômnia|]!
+		log <#3366ff>-----------------------------------</#>
+	end
+	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
+		[%target]Ability = $[%caster]MoveFxPower2
+		do getname with tag:[%target]
+		log mudou de habilidade, agora ele tem [?[%target]Ability=0|Nenhuma|][?[%target]Ability=1|Frutífero|][?[%target]Ability=3|Insômnia|]!
+		log <#3366ff>-----------------------------------</#>
+	end
+*include moveFullCopyEffect %caster %target %number
+	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
+		$[%caster]MoveID = $[%target]MoveID
+		$[%caster]MovePriority = $[%target]MovePriority
+		$[%caster]MoveCrit = $[%target]MoveCrit
+		$[%caster]MoveType = $[%target]MoveType
+		$[%caster]MoveIsSpecial = $[%target]MoveIsSpecial
+		$[%caster]MovePower = $[%target]MovePower
+		$[%caster]MoveClass = $[%target]MoveClass
+		$[%caster]MoveAccuracy = $[%target]MoveAccuracy
+		$[%caster]MoveEffect = $[%target]MoveEffect
+		$[%caster]MoveFxPower = $[%target]MoveFxPower
+		$[%caster]MoveFxChance = $[%target]MoveFxChance
+		$[%caster]MoveEffect2 = $[%target]MoveEffect2
+		$[%caster]MoveFxPower2 = $[%target]MoveFxPower2
+		$[%caster]MoveFxChance2 = $[%target]MoveFxChance2
+	end
+*include moveFxCopyEffect %caster %target %number
+	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
+		$[%caster]MoveEffect = $[%target]MoveEffect
+		$[%caster]MoveFxPower = $[%target]MoveFxPower
+		$[%caster]MoveFxChance = $[%target]MoveFxChance
+		$[%caster]MoveEffect2 = $[%target]MoveEffect2
+		$[%caster]MoveFxPower2 = $[%target]MoveFxPower2
+		$[%caster]MoveFxChance2 = $[%target]MoveFxChance2
+	end
+*include checkFxConditions %caster %target
+	$[%caster]MoveClassM = ($[%caster]MoveClass%100)
+	$conditionSuccess = 0
+	if ($[%caster]MoveCondID = 0)
+		$conditionSuccess = 1
+	end
+	if (($[%caster]MoveCondID = 1) and ([%caster]Berry>0))
+		$conditionSuccess = 1
+	end
+	if (($[%caster]MoveCondID = 2) and ([%caster]Berry=$[%caster]MoveCondNum))
+		$conditionSuccess = 1
+	end
+	$[%caster]MoveFxChance = ($[%caster]MoveFxChance*$conditionSuccess)
 *include onMove %caster %target
 	$[%caster]Aim = 1
-
 	if ($[%caster]MoveAccuracy>=0)
-		$[%caster]Aim = chance(($[%caster]MoveAccuracy*[%caster]AccuracyMod*[%target]EvasionMod)*100)
+		$[%caster]Aim = chance($[%caster]MoveAccuracy*[%caster]AccuracyMod*[%target]EvasionMod)
 	end
-
+	if (($[%caster]MoveClass>=100) or ((-100)>=$[%caster]MoveClass))
+		$[%caster]Aim = $conditionSuccess
+	end
 	if ($[%caster]Aim = 0)
 		do getname with tag:[%caster]
 		log errou o golpe!
 		[%caster]MovesInARow = 0
 	end
-
 	if (($[%caster]MoveID=[%caster]LastMove) and ($[%caster]Aim = 1))
 		[%caster]MovesInARow = ([%caster]MovesInARow+1)
 	end
 	if ((!($[%caster]MoveID=[%caster]LastMove)) and ($[%caster]Aim = 1))
 		[%caster]MovesInARow = 1
 	end
-
+	if ((0>$[%caster]MoveClass) and ($[%caster]Aim = 1))
+		do getname with tag:[%caster]
+		log acertou o golpe ...
+	end
 	if (($[%caster]MoveClass>=0) and ($[%caster]Aim = 1))
 		do getname with tag:[%caster]
-		log atacou...
+		log atacou ...
 		$[%caster]STAB = 1
 		$[%caster]Crit = 1
 		$[%caster]StatusMod = 1
 	end
-	if (($[%caster]MoveClass=1) and ($[%caster]Aim = 1))
+	if (($[%caster]MoveClassM=1) and ($[%caster]Aim = 1))
 		$[%caster]MovePower = ($[%caster]MovePower*(min(5,[%caster]MovesInARow)))
 		log ... com um poder acumulado de [[%caster]MovesInARow] golpes seguidos ...
 	end
-	if (($[%caster]MoveClass>=2) and ($[%caster]Aim = 1))
+	if (($[%caster]MoveClassM>=2) and ($[%caster]Aim = 1))
 		$numberOfHits = random(2,$[%caster]MoveClass)
 		log ... [$numberOfHits] vezes ...
 	end
-	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClass=(-3))) and ([%caster]Ptype=$[%caster]Movetype) and ($[%caster]Aim = 1))
+	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClassM=(-3))) and ([%caster]Ptype=$[%caster]Movetype) and ($[%caster]Aim = 1))
 		$[%caster]STAB = $[%caster]STAB + 0.5
 		log ... o golpe foi fortalecido pelo seu tipo principal ...
 	end
-	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClass=(-3))) and ([%caster]Stype=$[%caster]Movetype) and ($[%caster]Aim = 1))
+	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClassM=(-3))) and ([%caster]Stype=$[%caster]Movetype) and ($[%caster]Aim = 1))
 		$[%caster]STAB = $[%caster]STAB + 0.5
 		log ... o golpe foi fortalecido pelo seu tipo secundário ...
 	end
-	if (($[%caster]MoveClass=(-3)) and ($[%caster]Aim = 1))
+	if (($[%caster]MoveClassM=(-3)) and ($[%caster]Aim = 1))
 		$[%caster]Heal = round(min(([%caster]MaxHP-[%caster]CurHP),(([%caster]MaxHP/100)*$[%caster]MovePower*$[%caster]STAB)))
 		gain $[%caster]Heal [%caster]CurHP
 		log se curou em [$[%caster]Heal] pontos de vida!
@@ -2429,18 +2300,14 @@ Includes
 		$[%caster]Crit = 1.5
 		log ... e realizou um golpe crítico!
 	end
-
 	$auxMtype = $[%caster]MoveType
 	$auxType = [%target]Ptype
-
 *include effectivenessVerification %caster %target
 	$[%caster]Sadvg = $auxAdvg
 	$[%caster]TypeAdvg = $[%caster]Padvg*$[%caster]Sadvg
-
 	if ([%target]Ptype=[%target]Stype)
 		$[%caster]TypeAdvg = $[%caster]Padvg
 	end
-
 	if (($[%caster]MoveClass>=0) and ($[%caster]TypeAdvg=4) and ($[%caster]Aim = 1))
 		log ... <#cc33ff><b>foi hiper efetivo!</b></#>
 	end
@@ -2456,10 +2323,8 @@ Includes
 	if (($[%caster]MoveClass>=0) and ($[%caster]TypeAdvg=0) and ($[%caster]Aim = 1))
 		log ... <#b30000><b>mas o golpe não afeta o adversário!</b></#>
 	end
-
 *include damageCalculation %caster %target
 	$[%caster]RandomVar = frandom(0.85,1)
-
 	if ($[%caster]MoveIsSpecial=0)
 		$aA = [%caster]Attack
 		$aD = [%target]Defense
@@ -2471,7 +2336,6 @@ Includes
 	if (($[%caster]MoveIsSpecial=0) and ([%caster]Status=3))
 		$[%caster]StatusMod = 0.5
 	end
-
 	if (($[%caster]MoveClass>=0) and ($[%caster]Aim = 1))
 		$[%caster]RawDamage = ((((0.4*[%caster]Lvl + 2)*$[%caster]MovePower*($aA/$aD))/50)+2)
 		$[%caster]DamageMods = $[%caster]TypeAdvg*$[%caster]RandomVar*$[%caster]STAB*$[%caster]Crit*$[%caster]StatusMod
@@ -2481,118 +2345,95 @@ Includes
 		log tomou [$[%caster]EffectiveDamage] dano!
 		log <#3366ff>-----------------------------------</#>
 	end
-
-*include randomBasedConditions
-	log <#3366ff>-----------------------------------</#>
-	$quarter=random(1,4)
-	$paralysis=0
-	$confusion=0
-	if ($quarter=1)
-		$paralysis=1
-		$confusion=1
-	end
-	$equarter=random(1,4)
-	$eparalysis=0
-	$econfusion=0
-	if ($equarter=1)
-		$eparalysis=1
-		$econfusion=1
-	end
-
 *include checkMoveFirst
-	if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus>=0)) do activemove with this
-
+	if (((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000)) and (activeStatus>=0)) do activemove with this
 *include checkMoveFirstUnderStatus %statusID %statusName
 	if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=0)) do activemove with this
 	if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=1)) do active[%statusName] with this
-
 *include checkEnemyMoveUnderStatus %statusID %statusName
 	if ((enemyStatus=(-[%statusID])) and ($e[%statusName]=0)) do enemymove with this
 	if ((enemyStatus=(-[%statusID])) and ($e[%statusName]=1)) do enemy[%statusName] with this
-
 *include checkMoveSecond
 	if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus>=0)) do activemove with this
-
 *include checkMoveSecondUnderStatus %statusID %statusName
 	if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=0)) do activemove with this
 	if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=1)) do active[%statusName] with this
-
 *include statusHealingBerry %name %status %log
-		on activeeat:
-			do getname with tag:active
-			log consumiu uma <#e65c00>[%name]</#> ...
-			if (activeStatus=([%status]))
-				activeStatus=0
-				log [%log]
-				log <#3366ff>-----------------------------------</#>
-			end
-			activeBerry = 0
+	on activeeatactive:
+		do getname with tag:active
+		log consumiu uma <#e65c00><b>[%name]</b></#> ...
+		if (activeStatus=([%status]))
+			activeStatus=0
+			log [%log]
+			log <#3366ff>-----------------------------------</#>
 		end
-		on activebite:
-			do getname with tag:active
-			log mordeu a <#e65c00>[%name]</#> do adversário ...
-			if (activeStatus=([%status]))
-				activeStatus=0
-				log [%log]
-				log <#3366ff>-----------------------------------</#>
-			end
-			enemyBerry = 0
+		activeBerry = 0
+	end
+	on activeeatenemy:
+		do getname with tag:active
+		log mordeu a <#e65c00><b>[%name]</b></#> do adversário ...
+		if (activeStatus=([%status]))
+			activeStatus=0
+			log [%log]
+			log <#3366ff>-----------------------------------</#>
 		end
-		on enemyeat:
-			do getname with tag:enemy
-			log consumiu uma <#e65c00>[%name]</#> ...
-			if (enemyStatus=([%status]))
-				enemyStatus=0
-				log [%log]
-				log <#3366ff>-----------------------------------</#>
-			end
-			enemyBerry = 0
+		enemyBerry = 0
+	end
+	on enemyeatenemy:
+		do getname with tag:enemy
+		log consumiu uma <#e65c00><b>[%name]</b></#> ...
+		if (enemyStatus=([%status]))
+			enemyStatus=0
+			log [%log]
+			log <#3366ff>-----------------------------------</#>
 		end
-		on enemybite:
-			do getname with tag:enemy
-			log mordeu a <#e65c00>[%name]</#> do adversário ...
-			if (enemyStatus=([%status]))
-				enemyStatus=0
-				log [%log]
-				log <#3366ff>-----------------------------------</#>
-			end
-			activeBerry = 0
+		enemyBerry = 0
+	end
+	on enemyeatactive:
+		do getname with tag:enemy
+		log mordeu a <#e65c00><b>[%name]</b></#> do adversário ...
+		if (enemyStatus=([%status]))
+			enemyStatus=0
+			log [%log]
+			log <#3366ff>-----------------------------------</#>
 		end
-
+		activeBerry = 0
+	end
 *include hpHealingBerry %name %heal
-		on activeeat:
-			do getname with tag:active
-			log consumiu uma <#e65c00>[%name]</#> ...
-			$heal = min(round((activeMaxHP/100)*[%heal]),(activeMaxHP-activeCurHP))
-			gain $heal activeCurHP
-			log se curou em [$heal] pontos de vida!
-			log <#3366ff>-----------------------------------</#>
-			activeBerry = 0
-		end
-		on activebite:
-			do getname with tag:active
-			log mordeu a <#e65c00>[%name]</#> do adversário ...
-			$heal = min(round((activeMaxHP/100)*[%heal]),(activeMaxHP-activeCurHP))
-			gain $heal activeCurHP
-			log se curou em [$heal] pontos de vida!
-			log <#3366ff>-----------------------------------</#>
-			enemyBerry = 0
-		end
-		on enemyeat:
-			do getname with tag:enemy
-			log consumiu uma <#e65c00>[%name]</#> ...
-			$heal = min(round((enemyMaxHP/100)*[%heal]),(enemyMaxHP-enemyCurHP))
-			gain $heal enemyCurHP
-			log se curou em [$heal] pontos de vida!
-			log <#3366ff>-----------------------------------</#>
-			enemyBerry = 0
-		end
-		on enemybite:
-			do getname with tag:enemy
-			log mordeu a <#e65c00>[%name]</#> do adversário ...
-			$heal = min(round((enemyMaxHP/100)*[%heal]),(enemyMaxHP-enemyCurHP))
-			gain $heal enemyCurHP
-			log se curou em [$heal] pontos de vida!
-			log <#3366ff>-----------------------------------</#>
-			activeBerry = 0
-		end
+	on activeeatactive:
+		do getname with tag:active
+		log consumiu uma <#e65c00>[%name]</#> ...
+		$heal = min(round((activeMaxHP/100)*[%heal]),(activeMaxHP-activeCurHP))
+		gain $heal activeCurHP
+		log se curou em [$heal] pontos de vida!
+		log <#3366ff>-----------------------------------</#>
+		activeBerry = 0
+	end
+	on activeeatenemy:
+		do getname with tag:active
+		log mordeu a <#e65c00>[%name]</#> do adversário ...
+		$heal = min(round((activeMaxHP/100)*[%heal]),(activeMaxHP-activeCurHP))
+		gain $heal activeCurHP
+		log se curou em [$heal] pontos de vida!
+		log <#3366ff>-----------------------------------</#>
+		enemyBerry = 0
+	end
+	on enemyeatenemy:
+		do getname with tag:enemy
+		log consumiu uma <#e65c00>[%name]</#> ...
+		$heal = min(round((enemyMaxHP/100)*[%heal]),(enemyMaxHP-enemyCurHP))
+		gain $heal enemyCurHP
+		log se curou em [$heal] pontos de vida!
+		log <#3366ff>-----------------------------------</#>
+		enemyBerry = 0
+	end
+	on enemyeatactive:
+		do getname with tag:enemy
+		log mordeu a <#e65c00>[%name]</#> do adversário ...
+		$heal = min(round((enemyMaxHP/100)*[%heal]),(enemyMaxHP-enemyCurHP))
+		gain $heal enemyCurHP
+		log se curou em [$heal] pontos de vida!
+		log <#3366ff>-----------------------------------</#>
+		activeBerry = 0
+	end
+*include bugWorkAround
