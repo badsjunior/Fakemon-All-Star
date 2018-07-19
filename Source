@@ -1,9 +1,9 @@
 Let's make a game!
-	name:	Fakemon All-Star v0.2 (ALPHA)
+	name:	Fakemon All-Star v0.3 (ALPHA)
 	by:		Braz Araujo da Silva Junior
 	desc:	Bem vindo ao projeto <b>Fakemon All-Stars</b>! Agradecimentos especiais ao <b>Iddle Game Maker</b>*, por possibilitar a criação deste jogo. Ao projeto <b>Game-Icons</b>**, por possibilitar a criação dos ícones utilizados no jogo, sob a licença <b>CC BY 3.0</b>***. Foram utilizados os </></><b>Ícones</b>:</></><//>Magnifying glass, by Lorc<//>Pokecog, by Lorc<//>Treasure map, by Lorc<//>Trophy cup, by Delapouite<//>Chart, by Delapouite<//>Shining heart, by Lorc<//>Punch Blast, by Lorc<//>Checked Shield, by Lorc<//>Hypersonic bolt, by Lorc<//>Ball glow, by Lorc<//>Thunderball, by Lorc<//>Up card, by Delapouite<//>Cycle, by Lorc<//>High grass, by Delapouite<//>Raspberry, by Delapouite<//>Fluffy trefoil, by Lorc<//>Stars stack by Delapouite</></>feitos pelos <b>Artistas</b>:</></><//>Lorc - http://lorcblog.blogspot.com<//>Delapouite - http://delapouite.com</></><//></></><//>Braz Junior - Região de <b>Pindoh</b> - https://www.facebook.com/PindohRegion/.</>______________________________________________________________</>*http://orteil.dashnet.org/igm/help.html</>**https://game-icons.net</>***https://creativecommons.org/licenses/by/3.0/</>
 	created:04/07/2018
-	updated:13/07/2018
+	updated:19/07/2018
 
 Settings
 	background:http://i.imgur.com/Dnd9gLk.png
@@ -142,9 +142,54 @@ Resources
 		end
 
 		on activemove:
-			[include checkFxConditions %caster="active" %target="enemy"]
-			[include moveFullCopyEffect %caster="active" %target="enemy" %number="31"]
-			[include moveFxCopyEffect %caster="active" %target="enemy" %number="32"]
+			[include checkConditions %caster="active" %target="enemy" %number="0"]
+			[include checkConditions %caster="active" %target="enemy" %number="1"]
+			[include checkConditions %caster="active" %target="enemy" %number="2"]
+			[include checkConditions %caster="active" %target="enemy" %number="3"]
+
+			[include moveFxIf %caster="active" %number="31" %fxNum="1"]
+				[include moveCoreCopy %caster="active" %target="enemy"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="31" %fxNum="2"]
+				[include moveCoreCopy %caster="active" %target="enemy"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="31" %fxNum="3"]
+				[include moveCoreCopy %caster="active" %target="enemy"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="32" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="32" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="32" %fxNum="3"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="33" %fxNum="1"]
+				$activeMovePower = $activeMovePower + $activeMoveFxPower1
+			end
+			[include moveFxIf %caster="active" %number="33" %fxNum="2"]
+				$activeMovePower = $activeMovePower + $activeMoveFxPower2
+			end
+			[include moveFxIf %caster="active" %number="33" %fxNum="3"]
+				$activeMovePower = $activeMovePower + $activeMoveFxPower3
+			end
+
 			[include onMove %caster="active" %target="enemy"]
 			[include activeMoveTypeAdvantage %type="0"]
 			[include activeMoveTypeAdvantage %type="1"]
@@ -166,65 +211,186 @@ Resources
 			[include activeMoveTypeAdvantage %type="17"]
 			[include effectivenessVerification %caster="active" %target="enemy"]
 			[include damageCalculation %caster="active" %target="enemy"]
-			if (($activeMoveEffect=13) or ($activeMoveEffect=23))
-				$activeMoveEffect = $activeMoveEffect - random(1,8)
-			end
-			if (($activeMoveEffect=-13) or ($activeMoveEffect=-23))
-				$activeMoveEffect = $activeMoveEffect + random(1,8)
-			end
-			[include moveDrainEffect %caster="active" %number="1"]
-			[include moveRecoilEffect %caster="active" %number="2"]
-			[include moveStatusEffect %caster="active" %target="enemy" %number="3"]
-			[include moveHealStatusEffect %caster="active" %target="enemy" %number="4"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="enemy" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllDebuffEffect %caster="active" %target="enemy" %number="14"]
-			[include moveBuffEffect %caster="active" %target="enemy" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="active" %target="enemy" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="enemy" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="active" %target="enemy" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="enemy" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="enemy" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="enemy" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="enemy" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllBuffEffect %caster="active" %target="enemy" %number="24"]
-			[include moveStageResetEffect %caster="active" %target="enemy" %number="25"]
+
+			[include moveMetaEffects %caster="active" %fxNum="1"]
+			[include moveMetaEffects %caster="active" %fxNum="2"]
+			[include moveMetaEffects %caster="active" %fxNum="3"]
+
+			[include moveDrainEffect %caster="active" %number="1" %fxNum="1"]
+			[include moveDrainEffect %caster="active" %number="1" %fxNum="2"]
+			[include moveDrainEffect %caster="active" %number="1" %fxNum="3"]
+			[include moveRecoilEffect %caster="active" %number="2" %fxNum="1"]
+			[include moveRecoilEffect %caster="active" %number="2" %fxNum="2"]
+			[include moveRecoilEffect %caster="active" %number="2" %fxNum="3"]
+			[include moveStatusEffect %caster="active" %target="enemy" %number="3" %fxNum="1"]
+			[include moveStatusEffect %caster="active" %target="enemy" %number="3" %fxNum="2"]
+			[include moveStatusEffect %caster="active" %target="enemy" %number="3" %fxNum="3"]
+			[include moveHealStatusEffect %caster="active" %target="enemy" %number="4" %fxNum="1"]
+			[include moveHealStatusEffect %caster="active" %target="enemy" %number="4" %fxNum="2"]
+			[include moveHealStatusEffect %caster="active" %target="enemy" %number="4" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="enemy" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllDebuffEffect %caster="active" %target="enemy" %number="14" %fxNum="1"]
+			[include moveAllDebuffEffect %caster="active" %target="enemy" %number="14" %fxNum="2"]
+			[include moveAllDebuffEffect %caster="active" %target="enemy" %number="14" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="enemy" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllBuffEffect %caster="active" %target="enemy" %number="24" %fxNum="1"]
+			[include moveAllBuffEffect %caster="active" %target="enemy" %number="24" %fxNum="2"]
+			[include moveAllBuffEffect %caster="active" %target="enemy" %number="24" %fxNum="3"]
+			[include moveStageResetEffect %caster="active" %target="enemy" %number="25" %fxNum="1"]
+			[include moveStageResetEffect %caster="active" %target="enemy" %number="25" %fxNum="2"]
+			[include moveStageResetEffect %caster="active" %target="enemy" %number="25" %fxNum="3"]
 			[include moveLoseBerryEffect %caster="active" %target="enemy" %number="26"]
-			[include moveEatEffect %caster="active" %target="enemy" %number="27"]
-			[include moveTypeChangeEffect %caster="active" %target="enemy" %number="28"]
-			[include moveAbilityChangeEffect %caster="active" %target="enemy" %number="29"]
-			[include moveDirectDamageEffect %caster="active" %target="enemy" %number="30"]
-			[include moveHealStatusEffect %caster="active" %target="active" %number="-4"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllDebuffEffect %caster="active" %target="active" %number="-14"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllBuffEffect %caster="active" %target="active" %number="-24"]
-			[include moveStageResetEffect %caster="active" %target="active" %number="-25"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="1"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="2"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="3"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="4"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="5"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="6"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="7"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="8"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="9"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="10"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="11"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="12"]
+			[include moveEatEffect %caster="active" %target="enemy" %number="27" %berry="13"]
+			[include moveTypeChangeEffect %caster="active" %target="enemy" %number="28" %fxNum="1"]
+			[include moveTypeChangeEffect %caster="active" %target="enemy" %number="28" %fxNum="2"]
+			[include moveTypeChangeEffect %caster="active" %target="enemy" %number="28" %fxNum="3"]
+			[include moveAbilityChangeEffect %caster="active" %target="enemy" %number="29" %fxNum="1"]
+			[include moveAbilityChangeEffect %caster="active" %target="enemy" %number="29" %fxNum="2"]
+			[include moveAbilityChangeEffect %caster="active" %target="enemy" %number="29" %fxNum="3"]
+			[include moveDirectDamageEffect %caster="active" %target="enemy" %number="30" %fxNum="1"]
+			[include moveDirectDamageEffect %caster="active" %target="enemy" %number="30" %fxNum="2"]
+			[include moveDirectDamageEffect %caster="active" %target="enemy" %number="30" %fxNum="3"]
+			[include moveHealStatusEffect %caster="active" %target="active" %number="-4" %fxNum="1"]
+			[include moveHealStatusEffect %caster="active" %target="active" %number="-4" %fxNum="2"]
+			[include moveHealStatusEffect %caster="active" %target="active" %number="-4" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllDebuffEffect %caster="active" %target="active" %number="-14" %fxNum="1"]
+			[include moveAllDebuffEffect %caster="active" %target="active" %number="-14" %fxNum="2"]
+			[include moveAllDebuffEffect %caster="active" %target="active" %number="-14" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllBuffEffect %caster="active" %target="active" %number="-24" %fxNum="1"]
+			[include moveAllBuffEffect %caster="active" %target="active" %number="-24" %fxNum="2"]
+			[include moveAllBuffEffect %caster="active" %target="active" %number="-24" %fxNum="3"]
+			[include moveStageResetEffect %caster="active" %target="active" %number="-25" %fxNum="1"]
+			[include moveStageResetEffect %caster="active" %target="active" %number="-25" %fxNum="2"]
+			[include moveStageResetEffect %caster="active" %target="active" %number="-25" %fxNum="3"]
 			[include moveLoseBerryEffect %caster="active" %target="active" %number="-26"]
-			[include moveEatEffect %caster="active" %target="active" %number="-27"]
-			[include moveTypeChangeEffect %caster="active" %target="active" %number="-28"]
-			[include moveAbilityChangeEffect %caster="active" %target="active" %number="-29"]
-			[include moveDirectDamageEffect %caster="active" %target="active" %number="-30"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="1"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="2"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="3"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="4"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="5"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="6"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="7"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="8"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="9"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="10"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="11"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="12"]
+			[include moveEatEffect %caster="active" %target="active" %number="-27" %berry="13"]
+			[include moveTypeChangeEffect %caster="active" %target="active" %number="-28" %fxNum="1"]
+			[include moveTypeChangeEffect %caster="active" %target="active" %number="-28" %fxNum="2"]
+			[include moveTypeChangeEffect %caster="active" %target="active" %number="-28" %fxNum="3"]
+			[include moveAbilityChangeEffect %caster="active" %target="active" %number="-29" %fxNum="1"]
+			[include moveAbilityChangeEffect %caster="active" %target="active" %number="-29" %fxNum="2"]
+			[include moveAbilityChangeEffect %caster="active" %target="active" %number="-29" %fxNum="3"]
+			[include moveDirectDamageEffect %caster="active" %target="active" %number="-30" %fxNum="1"]
+			[include moveDirectDamageEffect %caster="active" %target="active" %number="-30" %fxNum="2"]
+			[include moveDirectDamageEffect %caster="active" %target="active" %number="-30" %fxNum="3"]
 
 			[include multipleHit %caster="active" %target="enemy" %hit="2"]
 			[include multipleHit %caster="active" %target="enemy" %hit="3"]
@@ -235,15 +401,59 @@ Resources
 				enemyStatus=-1
 			end
 
-			activeLastMove = $activeMoveID
+			activeLastMoveID = $activeMoveID
+			activeLastMoveShape = $activeMoveShape
 		end
 
 //-------------------------------------------------------------------------------------------------//
 
 		on enemymove:
-			[include checkFxConditions %caster="enemy" %target="active"]
-			[include moveFullCopyEffect %caster="enemy" %target="active" %number="31"]
-			[include moveFxCopyEffect %caster="enemy" %target="active" %number="32"]
+			[include checkConditions %caster="enemy" %target="active" %number="0"]
+			[include checkConditions %caster="enemy" %target="active" %number="1"]
+			[include checkConditions %caster="enemy" %target="active" %number="2"]
+			[include checkConditions %caster="enemy" %target="active" %number="3"]
+			[include moveFxIf %caster="enemy" %number="31" %fxNum="1"]
+				[include moveCoreCopy %caster="enemy" %target="active"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="31" %fxNum="2"]
+				[include moveCoreCopy %caster="enemy" %target="active"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="31" %fxNum="3"]
+				[include moveCoreCopy %caster="enemy" %target="active"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="32" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="32" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="32" %fxNum="3"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="33" %fxNum="1"]
+				$enemyMovePower = $enemyMovePower + $enemyMoveFxPower1
+			end
+			[include moveFxIf %caster="enemy" %number="33" %fxNum="2"]
+				$enemyMovePower = $enemyMovePower + $enemyMoveFxPower2
+			end
+			[include moveFxIf %caster="enemy" %number="33" %fxNum="3"]
+				$enemyMovePower = $enemyMovePower + $enemyMoveFxPower3
+			end
 			[include onMove %caster="enemy" %target="active"]
 			[include enemyMoveTypeAdvantage %type="0"]
 			[include enemyMoveTypeAdvantage %type="1"]
@@ -265,65 +475,186 @@ Resources
 			[include enemyMoveTypeAdvantage %type="17"]
 			[include effectivenessVerification %caster="enemy" %target="active"]
 			[include damageCalculation %caster="enemy" %target="active"]
-			if (($enemyMoveEffect=13) or ($enemyMoveEffect=23))
-				$enemyMoveEffect = $enemyMoveEffect - random(1,8)
-			end
-			if (($enemyMoveEffect=-13) or ($enemyMoveEffect=-23))
-				$enemyMoveEffect = $enemyMoveEffect + random(1,8)
-			end
-			[include moveDrainEffect %caster="enemy" %number="1"]
-			[include moveRecoilEffect %caster="enemy" %number="2"]
-			[include moveStatusEffect %caster="enemy" %target="active" %number="3"]
-			[include moveHealStatusEffect %caster="enemy" %target="active" %number="4"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="active" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllDebuffEffect %caster="enemy" %target="active" %number="14"]
-			[include moveBuffEffect %caster="enemy" %target="active" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="enemy" %target="active" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="active" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="enemy" %target="active" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="active" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="active" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="active" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="active" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllBuffEffect %caster="enemy" %target="active" %number="24"]
-			[include moveStageResetEffect %caster="enemy" %target="active" %number="25"]
+
+			[include moveMetaEffects %caster="enemy" %fxNum="1"]
+			[include moveMetaEffects %caster="enemy" %fxNum="2"]
+			[include moveMetaEffects %caster="enemy" %fxNum="3"]
+
+			[include moveDrainEffect %caster="enemy" %number="1" %fxNum="1"]
+			[include moveDrainEffect %caster="enemy" %number="1" %fxNum="2"]
+			[include moveDrainEffect %caster="enemy" %number="1" %fxNum="3"]
+			[include moveRecoilEffect %caster="enemy" %number="2" %fxNum="1"]
+			[include moveRecoilEffect %caster="enemy" %number="2" %fxNum="2"]
+			[include moveRecoilEffect %caster="enemy" %number="2" %fxNum="3"]
+			[include moveStatusEffect %caster="enemy" %target="active" %number="3" %fxNum="1"]
+			[include moveStatusEffect %caster="enemy" %target="active" %number="3" %fxNum="2"]
+			[include moveStatusEffect %caster="enemy" %target="active" %number="3" %fxNum="3"]
+			[include moveHealStatusEffect %caster="enemy" %target="active" %number="4" %fxNum="1"]
+			[include moveHealStatusEffect %caster="enemy" %target="active" %number="4" %fxNum="2"]
+			[include moveHealStatusEffect %caster="enemy" %target="active" %number="4" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="active" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllDebuffEffect %caster="enemy" %target="active" %number="14" %fxNum="1"]
+			[include moveAllDebuffEffect %caster="enemy" %target="active" %number="14" %fxNum="2"]
+			[include moveAllDebuffEffect %caster="enemy" %target="active" %number="14" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="active" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllBuffEffect %caster="enemy" %target="active" %number="24" %fxNum="1"]
+			[include moveAllBuffEffect %caster="enemy" %target="active" %number="24" %fxNum="2"]
+			[include moveAllBuffEffect %caster="enemy" %target="active" %number="24" %fxNum="3"]
+			[include moveStageResetEffect %caster="enemy" %target="active" %number="25" %fxNum="1"]
+			[include moveStageResetEffect %caster="enemy" %target="active" %number="25" %fxNum="2"]
+			[include moveStageResetEffect %caster="enemy" %target="active" %number="25" %fxNum="3"]
 			[include moveLoseBerryEffect %caster="enemy" %target="active" %number="26"]
-			[include moveEatEffect %caster="enemy" %target="active" %number="27"]
-			[include moveTypeChangeEffect %caster="enemy" %target="active" %number="28"]
-			[include moveAbilityChangeEffect %caster="enemy" %target="active" %number="29"]
-			[include moveDirectDamageEffect %caster="enemy" %target="active" %number="30"]
-			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="-4"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="-14"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="-24"]
-			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="-25"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="1"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="2"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="3"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="4"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="5"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="6"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="7"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="8"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="9"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="10"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="11"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="12"]
+			[include moveEatEffect %caster="enemy" %target="active" %number="27" %berry="13"]
+			[include moveTypeChangeEffect %caster="enemy" %target="active" %number="28" %fxNum="1"]
+			[include moveTypeChangeEffect %caster="enemy" %target="active" %number="28" %fxNum="2"]
+			[include moveTypeChangeEffect %caster="enemy" %target="active" %number="28" %fxNum="3"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="active" %number="29" %fxNum="1"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="active" %number="29" %fxNum="2"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="active" %number="29" %fxNum="3"]
+			[include moveDirectDamageEffect %caster="enemy" %target="active" %number="30" %fxNum="1"]
+			[include moveDirectDamageEffect %caster="enemy" %target="active" %number="30" %fxNum="2"]
+			[include moveDirectDamageEffect %caster="enemy" %target="active" %number="30" %fxNum="3"]
+			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="-4" %fxNum="1"]
+			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="-4" %fxNum="2"]
+			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="-4" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="-14" %fxNum="1"]
+			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="-14" %fxNum="2"]
+			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="-14" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="-24" %fxNum="1"]
+			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="-24" %fxNum="2"]
+			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="-24" %fxNum="3"]
+			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="-25" %fxNum="1"]
+			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="-25" %fxNum="2"]
+			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="-25" %fxNum="3"]
 			[include moveLoseBerryEffect %caster="enemy" %target="enemy" %number="-26"]
-			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27"]
-			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="-28"]
-			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="-29"]
-			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="-30"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="1"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="2"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="3"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="4"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="5"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="6"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="7"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="8"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="9"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="10"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="11"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="12"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27" %berry="13"]
+			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="-28" %fxNum="1"]
+			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="-28" %fxNum="2"]
+			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="-28" %fxNum="3"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="-29" %fxNum="1"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="-29" %fxNum="2"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="-29" %fxNum="3"]
+			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="-30" %fxNum="1"]
+			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="-30" %fxNum="2"]
+			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="-30" %fxNum="3"]
 
 			[include multipleHit %caster="enemy" %target="active" %hit="2"]
 			[include multipleHit %caster="enemy" %target="active" %hit="3"]
@@ -334,7 +665,8 @@ Resources
 				activeStatus=-1
 			end
 
-			enemyLastMove = $enemyMoveID
+			enemyLastMoveID = $enemyMoveID
+			enemyLastMoveShape = $enemyMoveShape
 		end
 
 //-------------------------------------------------------------------------------------------------//
@@ -344,10 +676,57 @@ Resources
 
 			do getname with tag:active
 			log se atacou por conta da confusão!
-
-			[include checkFxConditions %caster="active" %target="active"]
-			[include moveFullCopyEffect %caster="active" %target="active" %number="31"]
-			[include moveFxCopyEffect %caster="active" %target="active" %number="32"]
+			
+			[include setFxToAbsValue %caster="active" %fxNum="1"]
+			[include setFxToAbsValue %caster="active" %fxNum="2"]
+			[include setFxToAbsValue %caster="active" %fxNum="3"]
+			
+			[include checkConditions %caster="active" %target="active" %number="0"]
+			[include checkConditions %caster="active" %target="active" %number="1"]
+			[include checkConditions %caster="active" %target="active" %number="2"]
+			[include checkConditions %caster="active" %target="active" %number="3"]
+			[include moveFxIf %caster="active" %number="31" %fxNum="1"]
+				[include moveCoreCopy %caster="active" %target="active"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="31" %fxNum="2"]
+				[include moveCoreCopy %caster="active" %target="active"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="31" %fxNum="3"]
+				[include moveCoreCopy %caster="active" %target="active"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="32" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="32" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="32" %fxNum="3"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="1"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="2"]
+				[include moveFxCopy %caster="active" %target="active" %fxNum="3"]
+			end
+			[include moveFxIf %caster="active" %number="33" %fxNum="1"]
+				$activeMovePower = $activeMovePower + $activeMoveFxPower1
+			end
+			[include moveFxIf %caster="active" %number="33" %fxNum="2"]
+				$activeMovePower = $activeMovePower + $activeMoveFxPower2
+			end
+			[include moveFxIf %caster="active" %number="33" %fxNum="3"]
+				$activeMovePower = $activeMovePower + $activeMoveFxPower3
+			end
 			[include onMove %caster="active" %target="active"]
 			[include activeMoveTypeAdvantage %type="0"]
 			[include activeMoveTypeAdvantage %type="1"]
@@ -369,65 +748,103 @@ Resources
 			[include activeMoveTypeAdvantage %type="17"]
 			[include effectivenessVerification %caster="active" %target="active"]
 			[include damageCalculation %caster="active" %target="active"]
-			if (($activeMoveEffect=13) or ($activeMoveEffect=23))
-				$activeMoveEffect = $activeMoveEffect - random(1,8)
-			end
-			if (($activeMoveEffect=-13) or ($activeMoveEffect=-23))
-				$activeMoveEffect = $activeMoveEffect + random(1,8)
-			end
-			[include moveDrainEffect %caster="active" %number="1"]
-			[include moveRecoilEffect %caster="active" %number="2"]
-			[include moveStatusEffect %caster="active" %target="active" %number="3"]
-			[include moveHealStatusEffect %caster="active" %target="active" %number="4"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllDebuffEffect %caster="active" %target="active" %number="14"]
-			[include moveBuffEffect %caster="active" %target="active" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="active" %target="active" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="active" %target="active" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllBuffEffect %caster="active" %target="active" %number="24"]
-			[include moveStageResetEffect %caster="active" %target="active" %number="25"]
+
+			[include moveMetaEffects %caster="active" %fxNum="1"]
+			[include moveMetaEffects %caster="active" %fxNum="2"]
+			[include moveMetaEffects %caster="active" %fxNum="3"]
+
+			[include moveDrainEffect %caster="active" %number="1" %fxNum="1"]
+			[include moveDrainEffect %caster="active" %number="1" %fxNum="2"]
+			[include moveDrainEffect %caster="active" %number="1" %fxNum="3"]
+			[include moveRecoilEffect %caster="active" %number="2" %fxNum="1"]
+			[include moveRecoilEffect %caster="active" %number="2" %fxNum="2"]
+			[include moveRecoilEffect %caster="active" %number="2" %fxNum="3"]
+			[include moveStatusEffect %caster="active" %target="active" %number="3" %fxNum="1"]
+			[include moveStatusEffect %caster="active" %target="active" %number="3" %fxNum="2"]
+			[include moveStatusEffect %caster="active" %target="active" %number="3" %fxNum="3"]
+			[include moveHealStatusEffect %caster="active" %target="active" %number="4" %fxNum="1"]
+			[include moveHealStatusEffect %caster="active" %target="active" %number="4" %fxNum="2"]
+			[include moveHealStatusEffect %caster="active" %target="active" %number="4" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="active" %target="active" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllDebuffEffect %caster="active" %target="active" %number="14" %fxNum="1"]
+			[include moveAllDebuffEffect %caster="active" %target="active" %number="14" %fxNum="2"]
+			[include moveAllDebuffEffect %caster="active" %target="active" %number="14" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="active" %target="active" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="active" %target="active" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="active" %target="active" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllBuffEffect %caster="active" %target="active" %number="24" %fxNum="1"]
+			[include moveAllBuffEffect %caster="active" %target="active" %number="24" %fxNum="2"]
+			[include moveAllBuffEffect %caster="active" %target="active" %number="24" %fxNum="3"]
+			[include moveStageResetEffect %caster="active" %target="active" %number="25" %fxNum="1"]
+			[include moveStageResetEffect %caster="active" %target="active" %number="25" %fxNum="2"]
+			[include moveStageResetEffect %caster="active" %target="active" %number="25" %fxNum="3"]
 			[include moveLoseBerryEffect %caster="active" %target="active" %number="26"]
-			[include moveEatEffect %caster="active" %target="active" %number="27"]
-			[include moveTypeChangeEffect %caster="active" %target="active" %number="28"]
-			[include moveAbilityChangeEffect %caster="active" %target="active" %number="29"]
-			[include moveDirectDamageEffect %caster="active" %target="active" %number="30"]
-			[include moveHealStatusEffect %caster="active" %target="active" %number="-4"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="active" %target="active" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllDebuffEffect %caster="active" %target="active" %number="-14"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="active" %target="active" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllBuffEffect %caster="active" %target="active" %number="-24"]
-			[include moveStageResetEffect %caster="active" %target="active" %number="-25"]
-			[include moveLoseBerryEffect %caster="active" %target="active" %number="-26"]
-			[include moveEatEffect %caster="active" %target="active" %number="-27"]
-			[include moveTypeChangeEffect %caster="active" %target="active" %number="-28"]
-			[include moveAbilityChangeEffect %caster="active" %target="active" %number="-29"]
-			[include moveDirectDamageEffect %caster="active" %target="active" %number="-30"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="1"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="2"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="3"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="4"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="5"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="6"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="7"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="8"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="9"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="10"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="11"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="12"]
+			[include moveEatEffect %caster="active" %target="active" %number="27" %berry="13"]
+			[include moveTypeChangeEffect %caster="active" %target="active" %number="28" %fxNum="1"]
+			[include moveTypeChangeEffect %caster="active" %target="active" %number="28" %fxNum="2"]
+			[include moveTypeChangeEffect %caster="active" %target="active" %number="28" %fxNum="3"]
+			[include moveAbilityChangeEffect %caster="active" %target="active" %number="29" %fxNum="1"]
+			[include moveAbilityChangeEffect %caster="active" %target="active" %number="29" %fxNum="2"]
+			[include moveAbilityChangeEffect %caster="active" %target="active" %number="29" %fxNum="3"]
+			[include moveDirectDamageEffect %caster="active" %target="active" %number="30" %fxNum="1"]
+			[include moveDirectDamageEffect %caster="active" %target="active" %number="30" %fxNum="2"]
+			[include moveDirectDamageEffect %caster="active" %target="active" %number="30" %fxNum="3"]
 
 			[include multipleHit %caster="active" %target="active" %hit="2"]
 			[include multipleHit %caster="active" %target="active" %hit="3"]
@@ -441,7 +858,8 @@ Resources
 			do getname with tag:active
 			log não está mais confuso.
 
-			activeLastMove = $activeMoveID
+			activeLastMoveID = $activeMoveID
+			activeLastMoveShape = $activeMoveShape
 		end
 
 //-------------------------------------------------------------------------------------------------//
@@ -452,9 +870,56 @@ Resources
 			do getname with tag:enemy
 			log se atacou por conta da confusão!
 
-			[include checkFxConditions %caster="enemy" %target="enemy"]
-			[include moveFullCopyEffect %caster="enemy" %target="enemy" %number="31"]
-			[include moveFxCopyEffect %caster="enemy" %target="enemy" %number="32"]
+			[include setFxToAbsValue %caster="enemy" %fxNum="1"]
+			[include setFxToAbsValue %caster="enemy" %fxNum="2"]
+			[include setFxToAbsValue %caster="enemy" %fxNum="3"]
+			
+			[include checkConditions %caster="enemy" %target="enemy" %number="0"]
+			[include checkConditions %caster="enemy" %target="enemy" %number="1"]
+			[include checkConditions %caster="enemy" %target="enemy" %number="2"]
+			[include checkConditions %caster="enemy" %target="enemy" %number="3"]
+			[include moveFxIf %caster="enemy" %number="31" %fxNum="1"]
+				[include moveCoreCopy %caster="enemy" %target="enemy"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="31" %fxNum="2"]
+				[include moveCoreCopy %caster="enemy" %target="enemy"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="31" %fxNum="3"]
+				[include moveCoreCopy %caster="enemy" %target="enemy"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="32" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="32" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="32" %fxNum="3"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="1"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="2"]
+				[include moveFxCopy %caster="enemy" %target="enemy" %fxNum="3"]
+			end
+			[include moveFxIf %caster="enemy" %number="33" %fxNum="1"]
+				$enemyMovePower = $enemyMovePower + $enemyMoveFxPower1
+			end
+			[include moveFxIf %caster="enemy" %number="33" %fxNum="2"]
+				$enemyMovePower = $enemyMovePower + $enemyMoveFxPower2
+			end
+			[include moveFxIf %caster="enemy" %number="33" %fxNum="3"]
+				$enemyMovePower = $enemyMovePower + $enemyMoveFxPower3
+			end
 			[include onMove %caster="enemy" %target="enemy"]
 			[include enemyMoveTypeAdvantage %type="0"]
 			[include enemyMoveTypeAdvantage %type="1"]
@@ -476,65 +941,103 @@ Resources
 			[include enemyMoveTypeAdvantage %type="17"]
 			[include effectivenessVerification %caster="enemy" %target="enemy"]
 			[include damageCalculation %caster="enemy" %target="enemy"]
-			if (($enemyMoveEffect=13) or ($enemyMoveEffect=23))
-				$enemyMoveEffect = $enemyMoveEffect - random(1,8)
-			end
-			if (($enemyMoveEffect=-13) or ($enemyMoveEffect=-23))
-				$enemyMoveEffect = $enemyMoveEffect + random(1,8)
-			end
-			[include moveDrainEffect %caster="enemy" %number="1"]
-			[include moveRecoilEffect %caster="enemy" %number="2"]
-			[include moveStatusEffect %caster="enemy" %target="enemy" %number="3"]
-			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="4"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="14"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="24"]
-			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="25"]
+
+			[include moveMetaEffects %caster="enemy" %fxNum="1"]
+			[include moveMetaEffects %caster="enemy" %fxNum="2"]
+			[include moveMetaEffects %caster="enemy" %fxNum="3"]
+
+			[include moveDrainEffect %caster="enemy" %number="1" %fxNum="1"]
+			[include moveDrainEffect %caster="enemy" %number="1" %fxNum="2"]
+			[include moveDrainEffect %caster="enemy" %number="1" %fxNum="3"]
+			[include moveRecoilEffect %caster="enemy" %number="2" %fxNum="1"]
+			[include moveRecoilEffect %caster="enemy" %number="2" %fxNum="2"]
+			[include moveRecoilEffect %caster="enemy" %number="2" %fxNum="3"]
+			[include moveStatusEffect %caster="enemy" %target="enemy" %number="3" %fxNum="1"]
+			[include moveStatusEffect %caster="enemy" %target="enemy" %number="3" %fxNum="2"]
+			[include moveStatusEffect %caster="enemy" %target="enemy" %number="3" %fxNum="3"]
+			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="4" %fxNum="1"]
+			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="4" %fxNum="2"]
+			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="4" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="14" %fxNum="1"]
+			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="14" %fxNum="2"]
+			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="14" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="1"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="2"]
+			[include moveBuffEffect %caster="enemy" %target="enemy" %number="22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua" %fxNum="3"]
+			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="24" %fxNum="1"]
+			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="24" %fxNum="2"]
+			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="24" %fxNum="3"]
+			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="25" %fxNum="1"]
+			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="25" %fxNum="2"]
+			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="25" %fxNum="3"]
 			[include moveLoseBerryEffect %caster="enemy" %target="enemy" %number="26"]
-			[include moveEatEffect %caster="enemy" %target="enemy" %number="27"]
-			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="28"]
-			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="29"]
-			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="30"]
-			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="-4"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-5" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-6" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-7" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-8" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-9" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-10" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-11" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveDebuffEffect %caster="enemy" %target="enemy" %number="-12" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllDebuffEffect %caster="enemy" %target="enemy" %number="-14"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-15" %statusKey="Attack" %statusName="Ataque" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-16" %statusKey="Defense" %statusName="Defesa" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-17" %statusKey="SpAttack" %statusName="Ataque Especial" %gender="o" %gender2="seu"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-18" %statusKey="SpDefense" %statusName="Defesa Especial" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-19" %statusKey="Speed" %statusName="Velocidade" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-20" %statusKey="Accuracy" %statusName="Precisão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-21" %statusKey="Evasion" %statusName="Evasão" %gender="a" %gender2="sua"]
-			[include moveBuffEffect %caster="enemy" %target="enemy" %number="-22" %statusKey="Critical" %statusName="Chance de Crítico" %gender="a" %gender2="sua"]
-			[include moveAllBuffEffect %caster="enemy" %target="enemy" %number="-24"]
-			[include moveStageResetEffect %caster="enemy" %target="enemy" %number="-25"]
-			[include moveLoseBerryEffect %caster="enemy" %target="enemy" %number="-26"]
-			[include moveEatEffect %caster="enemy" %target="enemy" %number="-27"]
-			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="-28"]
-			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="-29"]
-			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="-30"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="1"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="2"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="3"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="4"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="5"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="6"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="7"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="8"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="9"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="10"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="11"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="12"]
+			[include moveEatEffect %caster="enemy" %target="enemy" %number="27" %berry="13"]
+			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="28" %fxNum="1"]
+			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="28" %fxNum="2"]
+			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="28" %fxNum="3"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="29" %fxNum="1"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="29" %fxNum="2"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="29" %fxNum="3"]
+			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="30" %fxNum="1"]
+			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="30" %fxNum="2"]
+			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="30" %fxNum="3"]
 
 			[include multipleHit %caster="enemy" %target="enemy" %hit="2"]
 			[include multipleHit %caster="enemy" %target="enemy" %hit="3"]
@@ -548,7 +1051,8 @@ Resources
 			do getname with tag:enemy
 			log não está mais confuso.
 
-			enemyLastMove = $enemyMoveID
+			enemyLastMoveID = $enemyMoveID
+			enemyLastMoveShape = $enemyMoveShape
 		end
 
 //-------------------------------------------------------------------------------------------------//
@@ -972,8 +1476,10 @@ Resources
 		end
 		*activeStatus
 			desc:Condição do seu pokémon
-		*activeLastMove
+		*activeLastMoveID
 			desc:O último golpe usado pelo seu pokémon
+		*activeLastMoveShape
+			desc:A forma do último golpe usado pelo seu pokémon
 		*activeMovesInARow
 			desc:A quantidade de vezes que seu pokémon usou o mesmo golpe consecutivamente
 		*activeBadPoison
@@ -1023,8 +1529,10 @@ Resources
 		end
 		*enemyStatus
 			desc:Condição do pokémon inimigo
-		*enemyLastMove
+		*enemyLastMoveID
 			desc:O último golpe usado pelo pokémon inimigo
+		*enemyLastMoveShape
+			desc:A forma do último golpe usado pelo pokémon inimigo
 		*enemyMovesInARow
 			desc:A quantidade de vezes que o pokémon inimigo usou o mesmo golpe consecutivamente
 		*enemyBadPoison
@@ -1291,17 +1799,16 @@ Upgrades
 			end
 		end
 
-	[include move %id="0" %key="tackle" %name="Investida" %priority="0" %crit="6.25" %type="0" %isSpecial="0" %power="40" %class="0" %effect="0" %fxPower="0" %fxChance="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="90" %desc="Um ataque físico onde o usuário investe contra o alvo com todo seu corpo."]
-	[include move %id="1" %key="bite" %name="Mordida" %priority="0" %crit="6.25" %type="16" %isSpecial="0" %power="60" %class="0" %effect="3" %fxPower="-5" %fxChance="30" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="95" %desc="Uma mordida feita com dentes afiados. Pode fazer o adversário hesitar."]
-	[include move %id="2" %key="bulletSeed" %name="Metralhadora de Sementes" %priority="0" %crit="6.25" %type="11" %isSpecial="0" %power="15" %class="5" %effect="0" %fxPower="0" %fxChance="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="85" %desc="O usuário dispara uma rajada de sementes contra o adversário. O ataque pode se repetir de 2 a 5 vezes."]
-	[include move %id="3" %key="juiceShot" %name="Tiro de Suco" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="60" %class="100" %effect="(-26)" %fxPower="0" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="1" %fxCondNum="0" %accuracy="95" %desc="O usuário espreme um fruto, lançando o suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói."]
-	[include nonDamagingMove %id="4" %key="agility" %name="Agilidade" %priority="0" %type="13" %isSelf="1" %effect="19" %fxPower="2" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="100" %desc="O usuário relaxa, deixando seu corpo mais leve para se mover mais rápido."]
-	[include move %id="6" %key="crunch" %name="Mastigada" %priority="0" %crit="6.25" %type="16" %isSpecial="0" %power="80" %class="0" %effect="6" %fxPower="1" %fxChance="20" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="95" %desc="Uma mordida feita com dentes afiados. Pode fazer o adversário hesitar."]
-	[include move %id="7" %key="juiceCannon" %name="Canhão de Suco" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="120" %class="100" %effect="(-3)" %fxPower="-8" %fxChance="100" %effect2="-26" %fxPower2="0" %fxChance2="100" %fxCondID="1" %fxCondNum="0" %accuracy="90" %desc="Um disparo altamente pressurizado de suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói. O usuário fica fadigado depois de usar."]
-	[include move %id="8" %key="powerWhip" %name="Chicote Poderoso" %priority="0" %crit="6.25" %type="11" %isSpecial="0" %power="120" %class="0" %effect="0" %fxPower="0" %fxChance="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="85" %desc="Um ataque onde o alvo é chicoteado violentamente com cipós, tentáculos ou qualquer coisa parecida."]
-	[include move %id="9" %key="coffePump" %name="Bomba de Café" %priority="0" %crit="6.25" %type="10" %isSpecial="1" %power="120" %class="100" %effect="(-26)" %fxPower="0" %fxChance="100" %effect2="3" %fxPower2="3" %fxChance2="30" %fxCondID="1" %fxCondNum="0" %accuracy="85" %desc="Um disparo de café quente contra o adversário. Só funciona se estiver carregando um fruto e o destrói. Pode deixar o adversário em chamas."]
-	[include nonDamagingMove %id="10" %key="coffeSeed" %name="Semente de Café" %priority="0" %type="11" %isSelf="0" %effect="29" %fxPower="4" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="0" %fxCondNum="0" %accuracy="100" %desc="Dispara uma semente de café no alvo, trocando sua habilidade para Insômnia."]
-	[include move %id="99" %key="bugBite" %name="Mordida de Inseto" %priority="0" %crit="6.25" %type="6" %isSpecial="0" %power="60" %class="0" %effect="62" %fxPower="0" %fxChance="100" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID="1" %fxCondNum="0" %accuracy="100" %desc="Uma mordida contra o alvo. Se ele tiver um fruto, o usuário come este fruto."]
+	[include move %id="0" %key="tackle" %name="Investida" %type="0" %category="0" %class="0" %shape="1" %priority="0" %crit="6.25" %power="30" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="0" %fxPower="0" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um ataque físico onde o usuário investe contra o alvo com todo seu corpo."]
+	[include move %id="1" %key="bite" %name="Mordida" %type="16" %category="0" %class="0" %shape="5" %priority="0" %crit="6.25" %power="45" %accuracy="95" %moveCondID="0" %moveCondNum="0" %effect="3" %fxPower="-5" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Uma mordida feita com dentes afiados. Pode fazer o adversário hesitar."]
+	[include move %id="2" %key="bulletSeed" %name="Metralhadora de Sementes" %type="11" %category="0" %class="5" %shape="2" %priority="0" %crit="6.25" %power="10" %accuracy="75" %moveCondID="0" %moveCondNum="0" %effect="0" %fxPower="0" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário dispara uma rajada de sementes contra o adversário. O ataque pode se repetir de 2 a 5 vezes."]
+	[include move %id="3" %key="juiceShot" %name="Tiro de Suco" %type="10" %category="1" %class="0" %shape="7" %priority="0" %crit="6.25" %power="45" %accuracy="90" %moveCondID="1" %moveCondNum="0" %effect="-26" %fxPower="0" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário espreme um fruto, lançando o suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói."]
+	[include move %id="4" %key="agility" %name="Agilidade" %type="13" %category="-1" %class="-1" %shape="0" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="-19" %fxPower="2" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário relaxa, deixando seu corpo mais leve para se mover mais rápido."]
+	[include move %id="5" %key="crunch" %name="Mastigada" %type="16" %category="0" %class="0" %shape="5" %priority="0" %crit="6.25" %power="40" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="6" %fxPower="1" %fxChance="20" %fxCondID="0" %fxCondNum="0" %effect2="33" %fxPower2="40" %fxChance2="100" %fxCondID2="3" %fxCondNum2="5" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário pressiona suas presas contra o adversário, mastigando-o. Pode diminuir a defesa do adversário. Tem o dobro do poder se usado depois de algum golpe realizado com os dentes."]
+	[include move %id="6" %key="juiceCannon" %name="Canhão de Suco" %type="10" %category="1" %class="0" %shape="7" %priority="0" %crit="6.25" %power="120" %accuracy="90" %moveCondID="1" %moveCondNum="0" %effect="-3" %fxPower="-8" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="-26" %fxPower2="0" %fxChance2="100" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um disparo altamente pressurizado de suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói. O usuário fica fadigado depois de usar."]
+	[include move %id="7" %key="coffePump" %name="Bomba de Café" %type="10" %category="1" %class="0" %shape="7" %priority="0" %crit="6.25" %power="120" %accuracy="85" %moveCondID="1" %moveCondNum="0" %effect="-26" %fxPower="0" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="3" %fxPower2="3" %fxChance2="30" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um disparo de café quente contra o adversário. Só funciona se estiver carregando um fruto e o destrói. Pode deixar o adversário em chamas."]
+	[include move %id="8" %key="coffeSeed" %name="Semente de Café" %type="11" %category="-1" %class="-1" %shape="2" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="29" %fxPower="4" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Dispara uma semente de café no alvo, trocando sua habilidade para Insômnia."]
+	[include move %id="9" %key="bugBite" %name="Mordida de Inseto" %type="6" %category="0" %class="0" %shape="5" %priority="0" %crit="6.25" %power="60" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="27" %fxPower="0" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Uma mordida contra o alvo. Se ele tiver um fruto, o usuário come este fruto."]
 
     *TEMPLATE
     *aMOVnone
@@ -1561,30 +2068,40 @@ Achievements
 //-----------------------------------------------------------------------------------------------------------------//
 
 Includes
-*include move %id %key %priority %name %crit %type %isSpecial %power %class %effect %fxPower %fxChance %effect2 %fxPower2 %fxChance2 %fxCondID %fxCondNum %accuracy %desc
+*include move %id %key %name %type %category %class %shape %priority %crit %power %accuracy %moveCondID %moveCondNum %effect %fxPower %fxChance %fxCondID %fxCondNum %effect2 %fxPower2 %fxChance2 %fxCondID2 %fxCondNum2 %effect3 %fxPower3 %fxChance3 %fxCondID3 %fxCondNum3 %desc
 	*aMOV[%key]
 		name:[%name]
-		desc:<t>Poder: [%power]</t><t>[?([%isSpecial]=0)|Físico|Especial]</t><t>Precisão: [?([%accuracy]>=0)|[%accuracy]%|Garantida]</t></>[%desc]
+		desc:[?([%category]=-1)||<t>Poder: [%power]</t>]<t>[?([%category]=-1)|Estado|][?([%category]=0)|Físico|][?([%category]=1)|Especial|]</t><t>Precisão: [?([%accuracy]>=0)|[%accuracy]%|Garantida]</t></>[%desc]
 		tags:activeMove type[%type]
 		on select:
 			do getname with tag:active
 			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
 			$activeMoveID = [%id]
+			$activeMoveType = [%type]
+			$activeMoveCategory = [%category]
+			$activeMoveClass = [%class]
+			$activeMoveShape = [%shape]
 			$activeMovePriority = [%priority]
 			$activeMoveCrit = [%crit]
-			$activeMoveType = [%type]
-			$activeMoveIsSpecial = [%isSpecial]
 			$activeMovePower = [%power]
-			$activeMoveClass = [%class]
-			$activeMoveEffect = [%effect]
-			$activeMoveFxPower = [%fxPower]
-			$activeMoveFxChance = [%fxChance]
+			$activeMoveFxChance0 = [%accuracy]
+			$activeMoveFxCondID0 = [%moveCondID]
+			$activeMoveFxCondNum0 = [%moveCondNum]
+			$activeMoveEffect1 = [%effect]
+			$activeMoveFxPower1 = [%fxPower]
+			$activeMoveFxChance1 = [%fxChance]
+			$activeMoveFxCondID1 = [%fxCondID]
+			$activeMoveFxCondNum1 = [%fxCondNum]
 			$activeMoveEffect2 = [%effect2]
 			$activeMoveFxPower2 = [%fxPower2]
 			$activeMoveFxChance2 = [%fxChance2]
-			$activeMoveCondID = [%fxCondID]
-			$activeMoveCondNum = [%fxCondNum]
-			$activeMoveAccuracy = [%accuracy]
+			$activeMoveFxCondID2 = [%fxCondID2]
+			$activeMoveFxCondNum2 = [%fxCondNum2]
+			$activeMoveEffect3 = [%effect3]
+			$activeMoveFxPower3 = [%fxPower3]
+			$activeMoveFxChance3 = [%fxChance3]
+			$activeMoveFxCondID3 = [%fxCondID3]
+			$activeMoveFxCondNum3 = [%fxCondNum3]
 		end
 	*eMOV[%key]
 		name:[%name]
@@ -1593,63 +2110,31 @@ Includes
 			do getname with tag:enemy
 			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
 			$enemyMoveID = [%id]
+			$enemyMoveType = [%type]
+			$enemyMoveCategory = [%category]
+			$enemyMoveClass = [%class]
+			$enemyMoveShape = [%shape]
 			$enemyMovePriority = [%priority]
 			$enemyMoveCrit = [%crit]
-			$enemyMoveType = [%type]
-			$enemyMoveIsSpecial = [%isSpecial]
 			$enemyMovePower = [%power]
-			$enemyMoveClass = [%class]
-			$enemyMoveEffect = [%effect]
-			$enemyMoveFxPower = [%fxPower]
-			$enemyMoveFxChance = [%fxChance]
+			$enemyMoveFxChance0 = [%accuracy]
+			$enemyMoveFxCondID0 = [%moveCondID]
+			$enemyMoveFxCondNum0 = [%moveCondNum]
+			$enemyMoveEffect1 = [%effect]
+			$enemyMoveFxPower1 = [%fxPower]
+			$enemyMoveFxChance1 = [%fxChance]
+			$enemyMoveFxCondID1 = [%fxCondID]
+			$enemyMoveFxCondNum1 = [%fxCondNum]
 			$enemyMoveEffect2 = [%effect2]
 			$enemyMoveFxPower2 = [%fxPower2]
 			$enemyMoveFxChance2 = [%fxChance2]
-			$enemyMoveCondID = [%fxCondID]
-			$enemyMoveCondNum = [%fxCondNum]
-			$enemyMoveAccuracy = [%accuracy]
-		end
-*include nonDamagingMove %id %key %name %priority %type %isSelf %effect %fxPower %fxChance %effect2 %fxPower2 %fxChance2 %fxCondID %fxCondNum %accuracy %desc
-	*aMOV[%key]
-		name:[%name]
-		desc:<t>Estado</t><t>Precisão: [?([%accuracy]>=0)|[%accuracy]%|Garantida]</t></>[%desc]
-		tags:activeMove type[%type]
-		on select:
-			do getname with tag:active
-			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
-			$activeMoveID = [%id]
-			$activeMovePriority = [%priority]
-			$activeMoveType = [%type]
-			$activeMoveClass = ((3*[%isSelf]) - 4)
-			$activeMoveEffect = [%effect]
-			$activeMoveFxPower = [%fxPower]
-			$activeMoveFxChance = [%fxChance]
-			$activeMoveEffect2 = [%effect2]
-			$activeMoveFxPower2 = [%fxPower2]
-			$activeMoveFxChance2 = [%fxChance2]
-			$activeMoveCondID = [%fxCondID]
-			$activeMoveCondNum = [%fxCondNum]
-			$activeMoveAccuracy = [%accuracy]
-		end
-	*eMOV[%key]
-		name:[%name]
-		tags:enemyMove hidden
-		on select:
-			do getname with tag:enemy
-			log se prepara para usar <#ffcc00><b>[n:this]</b></#>...
-			$enemyMoveID = [%id]
-			$enemyMovePriority = [%priority]
-			$enemyMoveType = [%type]
-			$enemyMoveClass = ((3*[%isSelf]) - 4)
-			$enemyMoveEffect = [%effect]
-			$enemyMoveFxPower = [%fxPower]
-			$enemyMoveFxChance = [%fxChance]
-			$enemyMoveEffect2 = [%effect2]
-			$enemyMoveFxPower2 = [%fxPower2]
-			$enemyMoveFxChance2 = [%fxChance2]
-			$enemyMoveCondID = [%fxCondID]
-			$enemyMoveCondNum = [%fxCondNum]
-			$enemyMoveAccuracy = [%accuracy]
+			$enemyMoveFxCondID2 = [%fxCondID2]
+			$enemyMoveFxCondNum2 = [%fxCondNum2]
+			$enemyMoveEffect3 = [%effect3]
+			$enemyMoveFxPower3 = [%fxPower3]
+			$enemyMoveFxChance3 = [%fxChance3]
+			$enemyMoveFxCondID3 = [%fxCondID3]
+			$enemyMoveFxCondNum3 = [%fxCondNum3]
 		end
 *include battler %number %region %variation %name %sprite %baseHP %baseAtk %baseDfs %baseSpAtk %baseSpDfs %baseSpeed %pType %sType %ability %move1 %move2 %move3 %move4 %move2lvl %move3lvl %move4lvl %move1Up %move2Up %move3Up %move4Up %move1UpLvl %move2UpLvl %move3UpLvl %move4UpLvl
 	*ATV[%number]from[%region]var[%variation]
@@ -1793,25 +2278,25 @@ Includes
 		do type[%type]advantage with this
 	end
 *include multipleHit %caster %target %hit
-	$[%caster]Aim = chance($[%caster]MoveAccuracy*[%caster]AccuracyMod*[%target]EvasionMod)
-	if (($[%caster]Aim=0) and ($numberOfHits>=[%hit]))
+	$[%caster]Aim = chance($[%caster]MoveFxChance0*[%caster]AccuracyMod*[%target]EvasionMod)
+	if (($[%caster]Aim=0) and ($numberOfHits>=[%hit]) and ($[%caster]MoveClass>=[%hit]))
 		do getname with tag:[%caster]
 		log errou o [%hit]º golpe!
 		[%caster]MovesInARow = 0
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (([%caster]CurHP>0) and ([%target]CurHP>0) and ($[%caster]MoveClassM>=[%hit]) and ($numberOfHits>=[%hit]) and ($[%caster]Aim = 1))
+	if (([%caster]CurHP>0) and ([%target]CurHP>0) and ($[%caster]MoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($[%caster]Aim = 1))
 		do getname with tag:[%caster]
 		log atacou pela [%hit]ª vez...
 		$[%caster]Crit = 1
 		$[%caster]RandomVar = frandom(0.85,1)
 	end
-	if (([%caster]CurHP>0) and ([%target]CurHP>0) and ($[%caster]MoveClassM>=[%hit]) and ($numberOfHits>=[%hit]) and (chance($[%caster]MoveCrit)) and ($[%caster]Aim = 1))
+	if (([%caster]CurHP>0) and ([%target]CurHP>0) and ($[%caster]MoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and (chance($[%caster]MoveCrit)) and ($[%caster]Aim = 1))
 		$[%caster]Crit = 1.5
 		log ... e realizou um golpe crítico!
 	end
-	if (([%caster]CurHP>0) and ([%target]CurHP>0) and ($[%caster]MoveClassM>=[%hit]) and ($numberOfHits>=[%hit]) and ($[%caster]Aim = 1))
-		$[%caster]DamageMods = $[%caster]TypeAdvg*$[%caster]RandomVar*$[%caster]STAB*$[%caster]Crit*$[%caster]StatusMod
+	if (([%caster]CurHP>0) and ([%target]CurHP>0) and ($[%caster]MoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($[%caster]Aim = 1))
+		$[%caster]DamageMods = $[%caster]TypeAdvg*$[%caster]RandomVar*$[%caster]STAB*$[%caster]Crit*$[%caster]StatusMod*$[%caster]ShapeMod
 		$[%caster]EffectiveDamage = round(min([%target]CurHP,($[%caster]RawDamage*$[%caster]DamageMods)))
 		lose $[%caster]EffectiveDamage [%target]CurHP
 		do getname with tag:[%target]
@@ -1893,172 +2378,106 @@ Includes
 			enemyLvl = ([%legendLvl] + random(-[%legendRange],[%legendRange]))
 			gain ENM[%legendPkmNum]from[%region]var[%legendPkmVar]
 		end
-*include moveDrainEffect %caster %number
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
-		$[%caster]EffectiveHeal = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower),([%caster]MaxHP-[%caster]CurHP)))
+*include moveDrainEffect %caster %number %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		$[%caster]EffectiveHeal = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower[%fxNum]),([%caster]MaxHP-[%caster]CurHP)))
 		gain $[%caster]EffectiveHeal [%caster]CurHP
 		do getname with tag:[%caster]
 		log drenou [$[%caster]EffectiveHeal] pontos de vida!
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
-		$[%caster]EffectiveHeal = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower2),([%caster]MaxHP-[%caster]CurHP)))
-		gain $[%caster]EffectiveHeal [%caster]CurHP
-		do getname with tag:[%caster]
-		log drenou [$[%caster]EffectiveHeal] pontos de vida!
-		log <#3366ff>-----------------------------------</#>
-	end
-*include moveRecoilEffect %caster %number
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
-		$[%caster]EffectiveRecoil = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower),[%caster]CurHP))
+*include moveRecoilEffect %caster %number %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		$[%caster]EffectiveRecoil = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower[%fxNum]),[%caster]CurHP))
 		lose $[%caster]EffectiveRecoil [%caster]CurHP
 		do getname with tag:[%caster]
 		log também se feriu, tomando [$[%caster]EffectiveRecoil] dano!
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
-		$[%caster]EffectiveRecoil = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower2),[%caster]CurHP))
-		lose $[%caster]EffectiveRecoil [%caster]CurHP
-		do getname with tag:[%caster]
-		log também se feriu, tomando [$[%caster]EffectiveRecoil] dano!
-		log <#3366ff>-----------------------------------</#>
+*include moveStatusEffect %caster %target %number %fxNum
+	$timer[%fxNum]=1
+	if ($[%caster]MoveFxPower[%fxNum]=(-3))
+		$timer[%fxNum] = random(1,3)
 	end
-*include moveStatusEffect %caster %target %number
-	$timer=1
-	$timer2=1
-	if ($[%caster]MoveFxPower=(-3))
-		$timer = random(1,3)
-	end
-	if ($[%caster]MoveFxPower2=(-3))
-		$timer2 = random(1,3)
-	end
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1) and ([%target]Status = 0))
-		[%target]Status = $[%caster]MoveFxPower
-		[%target]StatusTimer = $timer
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ([%target]Status = 0) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		[%target]Status = $[%caster]MoveFxPower[%fxNum]
+		[%target]StatusTimer = $timer[%fxNum]
 		do getname with tag:[%target]
 		log [?([%target]Status=1)|foi envenenado!|][?([%target]Status=2)|foi intoxicado!|][?([%target]Status=3)|está em chamas!|][?([%target]Status=(-2))|foi paralisado!|][?([%target]Status=(-3))|caiu no sono!|][?([%target]Status=(-4))|foi congelado!|][?([%target]Status=(-5))|ficou hesitante!|][?([%target]Status=(-6))|se prepara para fugir!|][?([%target]Status=(-7))|ficou confuso!|][?([%target]Status=(-8))|ficou fadigado!|]
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1) and ([%target]Status = 0))
-		[%target]Status = $[%caster]MoveFxPower2
-		[%target]StatusTimer = $timer2
-		do getname with tag:[%target]
-		log [?([%target]Status=1)|foi envenenado!|][?([%target]Status=2)|foi intoxicado!|][?([%target]Status=3)|está em chamas!|][?([%target]Status=(-2))|foi paralisado!|][?([%target]Status=(-3))|caiu no sono!|][?([%target]Status=(-4))|foi congelado!|][?([%target]Status=(-5))|ficou hesitante!|][?([%target]Status=(-6))|se prepara para fugir!|][?([%target]Status=(-7))|ficou confuso!|][?([%target]Status=(-8))|ficou fadigado!|]
-		log <#3366ff>-----------------------------------</#>
+*include moveHealStatusEffect %caster %target %number %fxNum
+	if ($[%caster]MoveFxPower[%fxNum]=0)
+		$[%caster]MoveFxPower[%fxNum] = [%target]Status
 	end
-*include moveHealStatusEffect %caster %target %number
-	if ($[%caster]MoveFxPower=0)
-		$[%caster]MoveFxPower = [%target]Status
-	end
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1) and ([%target]Status=$[%caster]MoveFxPower))
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ([%target]Status=$[%caster]MoveFxPower[%fxNum]) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]Status = 0
 		do getname with tag:[%target]
 		log foi curado de sua condição!
 		log <#3366ff>-----------------------------------</#>
 	end
-	if ($[%caster]MoveFxPower2=0)
-		$[%caster]MoveFxPower2 = [%target]Status
-	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1) and ([%target]Status=$[%caster]MoveFxPower2))
-		[%target]Status = 0
+*include moveAllDebuffEffect %caster %target %number %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		[%target]AttackStage = max((-6),([%target]AttackStage-$[%caster]MoveFxPower[%fxNum]))
+		[%target]DefenseStage = max((-6),([%target]DefenseStage-$[%caster]MoveFxPower[%fxNum]))
+		[%target]SpAttackStage = max((-6),([%target]SpAttackStage-$[%caster]MoveFxPower[%fxNum]))
+		[%target]SpDefenseStage = max((-6),([%target]SpDefenseStage-$[%caster]MoveFxPower[%fxNum]))
+		[%target]SpeedStage = max((-6),([%target]SpeedStage-$[%caster]MoveFxPower[%fxNum]))
 		do getname with tag:[%target]
-		log foi curado de sua condição!
+		log teve todos os seus atributos reduzidos em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
 	end
-*include moveAllDebuffEffect %caster %target %number
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
-		[%target]AttackStage = max((-6),([%target]AttackStage-$[%caster]MoveFxPower))
-		[%target]DefenseStage = max((-6),([%target]DefenseStage-$[%caster]MoveFxPower))
-		[%target]SpAttackStage = max((-6),([%target]SpAttackStage-$[%caster]MoveFxPower))
-		[%target]SpDefenseStage = max((-6),([%target]SpDefenseStage-$[%caster]MoveFxPower))
-		[%target]SpeedStage = max((-6),([%target]SpeedStage-$[%caster]MoveFxPower))
+*include moveAllBuffEffect %caster %target %number %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		[%target]AttackStage = min(6,([%target]AttackStage+$[%caster]MoveFxPower[%fxNum]))
+		[%target]DefenseStage = min(6,([%target]DefenseStage+$[%caster]MoveFxPower[%fxNum]))
+		[%target]SpAttackStage = min(6,([%target]SpAttackStage+$[%caster]MoveFxPower[%fxNum]))
+		[%target]SpDefenseStage = min(6,([%target]SpDefenseStage+$[%caster]MoveFxPower[%fxNum]))
+		[%target]SpeedStage = min(6,([%target]SpeedStage+$[%caster]MoveFxPower[%fxNum]))
 		do getname with tag:[%target]
-		log teve todos os seus atributos reduzidos em [$[%caster]MoveFxPower]!
+		log teve todos os seus atributos aumentados em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
-		[%target]AttackStage = max((-6),([%target]AttackStage-$[%caster]MoveFxPower2))
-		[%target]DefenseStage = max((-6),([%target]DefenseStage-$[%caster]MoveFxPower2))
-		[%target]SpAttackStage = max((-6),([%target]SpAttackStage-$[%caster]MoveFxPower2))
-		[%target]SpDefenseStage = max((-6),([%target]SpDefenseStage-$[%caster]MoveFxPower2))
-		[%target]SpeedStage = max((-6),([%target]SpeedStage-$[%caster]MoveFxPower2))
+*include moveDebuffEffect %caster %target %number %statusKey %statusName %gender %gender2 %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		[%target][%statusKey]Stage = max((-6),([%target][%statusKey]Stage-$[%caster]MoveFxPower[%fxNum]))
 		do getname with tag:[%target]
-		log teve todos os seus atributos reduzidos em [$[%caster]MoveFxPower2]!
+		log teve [%gender2] [%statusName] reduzid[%gender] em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
 	end
-*include moveAllBuffEffect %caster %target %number
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
-		[%target]AttackStage = min(6,([%target]AttackStage+$[%caster]MoveFxPower))
-		[%target]DefenseStage = min(6,([%target]DefenseStage+$[%caster]MoveFxPower))
-		[%target]SpAttackStage = min(6,([%target]SpAttackStage+$[%caster]MoveFxPower))
-		[%target]SpDefenseStage = min(6,([%target]SpDefenseStage+$[%caster]MoveFxPower))
-		[%target]SpeedStage = min(6,([%target]SpeedStage+$[%caster]MoveFxPower))
+*include moveBuffEffect %caster %target %number %statusKey %amount %statusName %gender %gender2 %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		[%target][%statusKey]Stage = min(6,([%target][%statusKey]Stage+$[%caster]MoveFxPower[%fxNum]))
 		do getname with tag:[%target]
-		log teve todos os seus atributos aumentados em [$[%caster]MoveFxPower]!
+		log teve [%gender2] [%statusName] aumentad[%gender] em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
-		[%target]AttackStage = min(6,([%target]AttackStage+$[%caster]MoveFxPower2))
-		[%target]DefenseStage = min(6,([%target]DefenseStage+$[%caster]MoveFxPower2))
-		[%target]SpAttackStage = min(6,([%target]SpAttackStage+$[%caster]MoveFxPower2))
-		[%target]SpDefenseStage = min(6,([%target]SpDefenseStage+$[%caster]MoveFxPower2))
-		[%target]SpeedStage = min(6,([%target]SpeedStage+$[%caster]MoveFxPower2))
-		do getname with tag:[%target]
-		log teve todos os seus atributos aumentados em [$[%caster]MoveFxPower]!
-		log <#3366ff>-----------------------------------</#>
-	end
-*include moveDebuffEffect %caster %target %number %statusKey %statusName %gender %gender2
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
-		[%target][%statusKey]Stage = max((-6),([%target][%statusKey]Stage-$[%caster]MoveFxPower))
-		do getname with tag:[%target]
-		log teve [%gender2] [%statusName] reduzid[%gender] em [$[%caster]MoveFxPower]!
-		log <#3366ff>-----------------------------------</#>
-	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
-		[%target][%statusKey]Stage = max((-6),([%target][%statusKey]Stage-$[%caster]MoveFxPower2))
-		do getname with tag:[%target]
-		log teve [%gender2] [%statusName] reduzid[%gender] em [$[%caster]MoveFxPower2]!
-		log <#3366ff>-----------------------------------</#>
-	end
-*include moveBuffEffect %caster %target %number %statusKey %amount %statusName %gender %gender2
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
-		[%target][%statusKey]Stage = min(6,([%target][%statusKey]Stage+$[%caster]MoveFxPower))
-		do getname with tag:[%target]
-		log teve [%gender2] [%statusName] aumentad[%gender] em [$[%caster]MoveFxPower]!
-		log <#3366ff>-----------------------------------</#>
-	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
-		[%target][%statusKey]Stage = min(6,([%target][%statusKey]Stage+$[%caster]MoveFxPower2))
-		do getname with tag:[%target]
-		log teve [%gender2] [%statusName] aumentad[%gender] em [$[%caster]MoveFxPower2]!
-		log <#3366ff>-----------------------------------</#>
-	end
-*include moveStageResetEffect %caster %target %number
-	if (($[%caster]MovePower=1) or ($[%caster]MovePower=0))
+*include moveStageResetEffect %caster %target %number %fxNum
+	if (($[%caster]MovePower[%fxNum]=1) or ($[%caster]MovePower[%fxNum]=0))
 		$atkReset = 1
 	end
-	if (($[%caster]MovePower=2) or ($[%caster]MovePower=0))
+	if (($[%caster]MovePower[%fxNum]=2) or ($[%caster]MovePower[%fxNum]=0))
 		$dfsReset = 1
 	end
-	if (($[%caster]MovePower=3) or ($[%caster]MovePower=0))
+	if (($[%caster]MovePower[%fxNum]=3) or ($[%caster]MovePower[%fxNum]=0))
 		$spatkReset = 1
 	end
-	if (($[%caster]MovePower=4) or ($[%caster]MovePower=0))
+	if (($[%caster]MovePower[%fxNum]=4) or ($[%caster]MovePower[%fxNum]=0))
 		$spdfsReset = 1
 	end
-	if (($[%caster]MovePower=5) or ($[%caster]MovePower=0))
+	if (($[%caster]MovePower[%fxNum]=5) or ($[%caster]MovePower[%fxNum]=0))
 		$speedReset = 1
 	end
-	if (($[%caster]MovePower=6) or ($[%caster]MovePower=0))
+	if (($[%caster]MovePower[%fxNum]=6) or ($[%caster]MovePower[%fxNum]=0))
 		$acuReset = 1
 	end
-	if (($[%caster]MovePower=7) or ($[%caster]MovePower=0))
+	if (($[%caster]MovePower[%fxNum]=7) or ($[%caster]MovePower[%fxNum]=0))
 		$evsReset = 1
 	end
-	if (($[%caster]MovePower=8) or ($[%caster]MovePower=0))
+	if (($[%caster]MovePower[%fxNum]=8) or ($[%caster]MovePower[%fxNum]=0))
 		$crtReset = 1
 	end
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]AttackStage = [%target]AttackStage*(1-$atkReset)
 		[%target]DefenseStage = [%target]DefenseStage*(1-$dfsReset)
 		[%target]SpAttackStage = [%target]SpAttackStage*(1-$spatkReset)
@@ -2068,211 +2487,107 @@ Includes
 		[%target]EvasionStage = [%target]EvasionStage*(1-$evsReset)
 		[%target]CriticalStage = [%target]CriticalStage*(1-$crtReset)
 		do getname with tag:[%target]
-		log teve o modificador de [?($[%caster]MovePower=0)|todos os atributos|][?($[%caster]MovePower=1)|Ataque|][?($[%caster]MovePower=2)|Defesa|][?($[%caster]MovePower=3)|Ataque Especial|][?($[%caster]MovePower=4)|Defesa Especial|][?($[%caster]MovePower=5)|Velocidade|][?($[%caster]MovePower=6)|Precisão|][?($[%caster]MovePower=7)|Evasão|][?($[%caster]MovePower=8)|Chance de Crítico|] zerado! 
+		log teve o modificador de [?($[%caster]MovePower[%fxNum]=0)|todos os atributos|][?($[%caster]MovePower[%fxNum]=1)|Ataque|][?($[%caster]MovePower[%fxNum]=2)|Defesa|][?($[%caster]MovePower[%fxNum]=3)|Ataque Especial|][?($[%caster]MovePower[%fxNum]=4)|Defesa Especial|][?($[%caster]MovePower[%fxNum]=5)|Velocidade|][?($[%caster]MovePower[%fxNum]=6)|Precisão|][?($[%caster]MovePower[%fxNum]=7)|Evasão|][?($[%caster]MovePower[%fxNum]=8)|Chance de Crítico|] zerado! 
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (($[%caster]MovePower2=1) or ($[%caster]MovePower2=0))
-		$atkReset2 = 1
-	end
-	if (($[%caster]MovePower2=2) or ($[%caster]MovePower2=0))
-		$dfsReset2 = 1
-	end
-	if (($[%caster]MovePower2=3) or ($[%caster]MovePower2=0))
-		$spatkReset2 = 1
-	end
-	if (($[%caster]MovePower2=4) or ($[%caster]MovePower2=0))
-		$spdfsReset2 = 1
-	end
-	if (($[%caster]MovePower2=5) or ($[%caster]MovePower2=0))
-		$speedReset2 = 1
-	end
-	if (($[%caster]MovePower2=6) or ($[%caster]MovePower2=0))
-		$acuReset2 = 1
-	end
-	if (($[%caster]MovePower2=7) or ($[%caster]MovePower2=0))
-		$evsReset2 = 1
-	end
-	if (($[%caster]MovePower2=8) or ($[%caster]MovePower2=0))
-		$crtReset2 = 1
-	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
-		[%target]AttackStage = [%target]AttackStage*(1-$atkReset2)
-		[%target]DefenseStage = [%target]DefenseStage*(1-$dfsReset2)
-		[%target]SpAttackStage = [%target]SpAttackStage*(1-$spatkReset2)
-		[%target]SpDefenseStage = [%target]SpDefenseStage*(1-$spdfsReset2)
-		[%target]SpeedStage = [%target]SpeedStage*(1-$speedReset2)
-		[%target]AccuracyStage = [%target]AccuracyStage*(1-$acuReset2)
-		[%target]EvasionStage = [%target]EvasionStage*(1-$evsReset2)
-		[%target]CriticalStage = [%target]CriticalStage*(1-$crtReset2)
-		do getname with tag:[%target]
-		log teve o modificador de [?($[%caster]MovePower2=0)|todos os atributos|][?($[%caster]MovePower2=1)|Ataque|][?($[%caster]MovePower2=2)|Defesa|][?($[%caster]MovePower2=3)|Ataque Especial|][?($[%caster]MovePower2=4)|Defesa Especial|][?($[%caster]MovePower2=5)|Velocidade|][?($[%caster]MovePower2=6)|Precisão|][?($[%caster]MovePower2=7)|Evasão|][?($[%caster]MovePower2=8)|Chance de Crítico|] zerado! 
-		log <#3366ff>-----------------------------------</#>
-	end
-*include moveDirectDamageEffect %caster %target %number
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
-		$[%caster]EffectiveFxDamage = round(min([%target]CurHP,$[%caster]MoveFxPower))
-		lose $[%caster]EffectiveFxDamage [%target]CurHP
-		do getname with tag:[%target]
-		log tomou [$[%caster]EffectiveFxDamage] dano!
-		log <#3366ff>-----------------------------------</#>
-	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
-		$[%caster]EffectiveFxDamage = round(min([%target]CurHP,$[%caster]MoveFxPower2))
+*include moveDirectDamageEffect %caster %target %number %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		$[%caster]EffectiveFxDamage = round(min([%target]CurHP,$[%caster]MoveFxPower[%fxNum]))
 		lose $[%caster]EffectiveFxDamage [%target]CurHP
 		do getname with tag:[%target]
 		log tomou [$[%caster]EffectiveFxDamage] dano!
 		log <#3366ff>-----------------------------------</#>
 	end
 *include moveLoseBerryEffect %caster %target %number
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
+	if (((($[%caster]MoveEffect1=[%number]) and (chance($[%caster]MoveFxChance1)) and ($[%caster]FxCondSuccess1=1)) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]FxCondSuccess2=1)) or (($[%caster]MoveEffect3=[%number]) and (chance($[%caster]MoveFxChance3)) and ($[%caster]FxCondSuccess3=1))) and ($[%caster]Aim = 1))
 		[%target]Berry = 0
 		do getname with tag:[%target]
 		log perdeu seu fruto!
 		log <#3366ff>-----------------------------------</#>
 	end
-*include moveEatEffect %caster %target %number
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=1))
-		 do [%caster]eat[%target] with BER1
+*include moveEatEffect %caster %target %number %berry
+	if (((($[%caster]MoveEffect1=[%number]) and (chance($[%caster]MoveFxChance1)) and ($[%caster]FxCondSuccess1=1)) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]FxCondSuccess2=1)) or (($[%caster]MoveEffect3=[%number]) and (chance($[%caster]MoveFxChance3)) and ($[%caster]FxCondSuccess3=1))) and ($[%caster]Aim = 1) and ([%target]Berry=[%berry]))
+		 do [%caster]eat[%target] with BER[%berry]
 	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=2))
-		 do [%caster]eat[%target] with BER2
-	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=3))
-		 do [%caster]eat[%target] with BER3
-	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=4))
-		 do [%caster]eat[%target] with BER4
-	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=5))
-		 do [%caster]eat[%target] with BER5
-	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=6))
-		 do [%caster]eat[%target] with BER6
-	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=7))
-		 do [%caster]eat[%target] with BER7
-	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=8))
-		 do [%caster]eat[%target] with BER8
-	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=9))
-		 do [%caster]eat[%target] with BER9
-	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=10))
-		 do [%caster]eat[%target] with BER10
-	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=11))
-		 do [%caster]eat[%target] with BER11
-	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=12))
-		 do [%caster]eat[%target] with BER12
-	end
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1) and ([%target]Berry=13))
-		 do [%caster]eat[%target] with BER13
-	end
-*include moveTypeChangeEffect %caster %target %number
-	if (($[%caster]MoveEffect=[%number]) and ($[%caster]MoveFxPower=(-1)))
+*include moveTypeChangeEffect %caster %target %number %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and ($[%caster]MoveFxPower[%fxNum]=(-1)) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		$[%caster]MoveFxPower = [%caster]Ptype
 	end
-	if (($[%caster]MoveEffect=[%number]) and ($[%caster]MoveFxPower=(-2)))
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and ($[%caster]MoveFxPower[%fxNum]=(-2)) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		$[%caster]MoveFxPower = [%target]Ptype
 	end
-	if (($[%caster]MoveEffect2=[%number]) and ($[%caster]MoveFxPower2=(-1)))
-		$[%caster]MoveFxPower2 = [%caster]Ptype
-	end
-	if (($[%caster]MoveEffect2=[%number]) and ($[%caster]MoveFxPower2=(-2)))
-		$[%caster]MoveFxPower2 = [%target]Ptype
-	end
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
-		[%target]Ptype = $[%caster]MoveFxPower
-		[%target]Stype = $[%caster]MoveFxPower
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		[%target]Ptype = $[%caster]MoveFxPower[%fxNum]
+		[%target]Stype = $[%caster]MoveFxPower[%fxNum]
 		do getname with tag:[%target]
 		log mudou de tipo, agora ele é [?[%target]Ptype=0|Normal|][?[%target]Ptype=1|Lutador|][?[%target]Ptype=2|Voador|][?[%target]Ptype=3|Venenoso|][?[%target]Ptype=4|Terrestre|][?[%target]Ptype=5|de Pedra|][?[%target]Ptype=6|Inseto|][?[%target]Ptype=7|Fantasma|][?[%target]Ptype=8|Metálico|][?[%target]Ptype=9|de Fogo|][?[%target]Ptype=10|Aquático|][?[%target]Ptype=11|Planta|][?[%target]Ptype=12|Elétrico|][?[%target]Ptype=13|Psíquico|][?[%target]Ptype=14|de Gelo|][?[%target]Ptype=15|Dragão|][?[%target]Ptype=16|Noturno|][?[%target]Ptype=17|Fada|]
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
-		[%target]Ptype = $[%caster]MoveFxPower2
-		[%target]Stype = $[%caster]MoveFxPower2
-		do getname with tag:[%target]
-		log mudou de tipo, agora ele é [?[%target]Ptype=0|Normal|][?[%target]Ptype=1|Lutador|][?[%target]Ptype=2|Voador|][?[%target]Ptype=3|Venenoso|][?[%target]Ptype=4|Terrestre|][?[%target]Ptype=5|de Pedra|][?[%target]Ptype=6|Inseto|][?[%target]Ptype=7|Fantasma|][?[%target]Ptype=8|Metálico|][?[%target]Ptype=9|de Fogo|][?[%target]Ptype=10|Aquático|][?[%target]Ptype=11|Planta|][?[%target]Ptype=12|Elétrico|][?[%target]Ptype=13|Psíquico|][?[%target]Ptype=14|de Gelo|][?[%target]Ptype=15|Dragão|][?[%target]Ptype=16|Noturno|][?[%target]Ptype=17|Fada|]
-		log <#3366ff>-----------------------------------</#>
+*include moveAbilityChangeEffect %caster %target %number %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and ($[%caster]MoveFxPower[%fxNum]=(-1)) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		$[%caster]MoveFxPower[%fxNum] = [%caster]Ability
 	end
-*include moveAbilityChangeEffect %caster %target %number
-	if (($[%caster]MoveEffect=[%number]) and ($[%caster]MoveFxPower=(-1)))
-		$[%caster]MoveFxPower = [%caster]Ability
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and ($[%caster]MoveFxPower[%fxNum]=(-2)) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		$[%caster]MoveFxPower[%fxNum] = [%target]Ability
 	end
-	if (($[%caster]MoveEffect=[%number]) and ($[%caster]MoveFxPower=(-2)))
-		$[%caster]MoveFxPower = [%target]Ability
-	end
-	if (($[%caster]MoveEffect2=[%number]) and ($[%caster]MoveFxPower2=(-1)))
-		$[%caster]MoveFxPower2 = [%caster]Ability
-	end
-	if (($[%caster]MoveEffect2=[%number]) and ($[%caster]MoveFxPower2=(-2)))
-		$[%caster]MoveFxPower2 = [%target]Ability
-	end
-	if (($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance)) and ($[%caster]Aim = 1))
-		[%target]Ability = $[%caster]MoveFxPower
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		[%target]Ability = $[%caster]MoveFxPower[%fxNum]
 		do getname with tag:[%target]
 		log mudou de habilidade, agora ele tem [?[%target]Ability=0|Nenhuma|][?[%target]Ability=1|Frutífero|][?[%target]Ability=3|Insômnia|]!
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)) and ($[%caster]Aim = 1))
-		[%target]Ability = $[%caster]MoveFxPower2
-		do getname with tag:[%target]
-		log mudou de habilidade, agora ele tem [?[%target]Ability=0|Nenhuma|][?[%target]Ability=1|Frutífero|][?[%target]Ability=3|Insômnia|]!
-		log <#3366ff>-----------------------------------</#>
+*include moveMetaEffects %caster %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=13) or ($[%caster]MoveEffect[%fxNum]=23))
+		$[%caster]MoveEffect[%fxNum] = $[%caster]MoveEffect[%fxNum] - random(1,8)
 	end
-*include moveFullCopyEffect %caster %target %number
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
+	if (($[%caster]MoveEffect[%fxNum]=-13) or ($[%caster]MoveEffect[%fxNum]=-23))
+		$[%caster]MoveEffect[%fxNum] = $[%caster]MoveEffect[%fxNum] + random(1,8)
+	end
+*include moveFxIf %caster %number %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]FxCondSuccess[%fxNum]=1))
+*include moveCoreCopy %caster %target
 		$[%caster]MoveID = $[%target]MoveID
+		$[%caster]MoveType = $[%target]MoveType
+		$[%caster]MoveCategory = $[%target]MoveCategory
+		$[%caster]MoveClass = $[%target]MoveClass
+		$[%caster]MoveShape = $[%target]MoveShape
 		$[%caster]MovePriority = $[%target]MovePriority
 		$[%caster]MoveCrit = $[%target]MoveCrit
-		$[%caster]MoveType = $[%target]MoveType
-		$[%caster]MoveIsSpecial = $[%target]MoveIsSpecial
 		$[%caster]MovePower = $[%target]MovePower
-		$[%caster]MoveClass = $[%target]MoveClass
-		$[%caster]MoveAccuracy = $[%target]MoveAccuracy
-		$[%caster]MoveEffect = $[%target]MoveEffect
-		$[%caster]MoveFxPower = $[%target]MoveFxPower
-		$[%caster]MoveFxChance = $[%target]MoveFxChance
-		$[%caster]MoveEffect2 = $[%target]MoveEffect2
-		$[%caster]MoveFxPower2 = $[%target]MoveFxPower2
-		$[%caster]MoveFxChance2 = $[%target]MoveFxChance2
+		$[%caster]MoveFxChance0 = $[%target]MoveFxChance0
+		$[%caster]MoveFxCondID0 = $[%target]MoveFxCondID0
+		$[%caster]MoveFxCondNum0 = $[%target]MoveFxCondNum0
+*include moveFxCopy %caster %target %fxNum
+		$[%caster]MoveEffect[%fxNum] = $[%target]MoveEffect[%fxNum]
+		$[%caster]MoveFxPower[%fxNum] = $[%target]MoveFxPower[%fxNum]
+		$[%caster]MoveFxChance[%fxNum] = $[%target]MoveFxChance[%fxNum]
+		$[%caster]MoveFxCondID[%fxNum] = $[%target]MoveFxCondID[%fxNum]
+		$[%caster]MoveFxCondNum[%fxNum] = $[%target]MoveFxCondNum[%fxNum]
+*include checkConditions %caster %target %number
+	$[%caster]FxCondSuccess[%number] = 0
+	if ($[%caster]MoveFxCondID[%number] = 0)
+		$[%caster]FxCondSuccess[%number] = 1
 	end
-*include moveFxCopyEffect %caster %target %number
-	if (((($[%caster]MoveEffect=[%number]) and (chance($[%caster]MoveFxChance))) or (($[%caster]MoveEffect2=[%number]) and (chance($[%caster]MoveFxChance2)))) and ($[%caster]Aim = 1))
-		$[%caster]MoveEffect = $[%target]MoveEffect
-		$[%caster]MoveFxPower = $[%target]MoveFxPower
-		$[%caster]MoveFxChance = $[%target]MoveFxChance
-		$[%caster]MoveEffect2 = $[%target]MoveEffect2
-		$[%caster]MoveFxPower2 = $[%target]MoveFxPower2
-		$[%caster]MoveFxChance2 = $[%target]MoveFxChance2
+	if (($[%caster]MoveFxCondID[%number] = 1) and ([%caster]Berry>0))
+		$[%caster]FxCondSuccess[%number] = 1
 	end
-*include checkFxConditions %caster %target
-	$[%caster]MoveClassM = ($[%caster]MoveClass%100)
-	$conditionSuccess = 0
-	if ($[%caster]MoveCondID = 0)
-		$conditionSuccess = 1
+	if (($[%caster]MoveFxCondID[%number] = 2) and ([%caster]Berry=$[%caster]MoveFxCondNum[%number]))
+		$[%caster]FxCondSuccess[%number] = 1
 	end
-	if (($[%caster]MoveCondID = 1) and ([%caster]Berry>0))
-		$conditionSuccess = 1
+	if (($[%caster]MoveFxCondID[%number] = 3) and ([%caster]LastMoveShape=$[%caster]MoveFxCondNum[%number]))
+		$[%caster]FxCondSuccess[%number] = 1
 	end
-	if (($[%caster]MoveCondID = 2) and ([%caster]Berry=$[%caster]MoveCondNum))
-		$conditionSuccess = 1
-	end
-	$[%caster]MoveFxChance = ($[%caster]MoveFxChance*$conditionSuccess)
+	$[%caster]MoveFxChance[%number] = ($[%caster]MoveFxChance[%number]*$[%caster]FxCondSuccess[%number])
 *include onMove %caster %target
 	$[%caster]STAB = 1
 	$[%caster]Crit = 1
-	$[%caster]StatusMod = 1
 	$[%caster]Aim = 1
-	if ($[%caster]MoveAccuracy>=0)
-		$[%caster]Aim = chance($[%caster]MoveAccuracy*[%caster]AccuracyMod*[%target]EvasionMod)
+	$[%caster]StatusMod = 1
+	$[%caster]ShapeMod = 1
+	if ($[%caster]MoveFxChance0>=0)
+		$[%caster]Aim = chance($[%caster]MoveFxChance0*[%caster]AccuracyMod*[%target]EvasionMod)
 	end
-	if (($[%caster]MoveClass>=100) or ((-100)>=$[%caster]MoveClass))
-		$[%caster]Aim = $conditionSuccess
-	end
-	if ($[%caster]MoveClassM>=2)
+	if ($[%caster]MoveClass>=2)
 		do getname with tag:[%caster]
 		$numberOfHits = random(2,$[%caster]MoveClass)
 		log ... irá atacar [$numberOfHits] vezes neste turno ...
@@ -2280,37 +2595,37 @@ Includes
 	end
 	if ($[%caster]Aim = 0)
 		do getname with tag:[%caster]
-		log errou o [?($[%caster]MoveClassM>=2)|1º |]golpe!
+		log errou o [?($[%caster]MoveClass>=2)|1º |]golpe!
 		[%caster]MovesInARow = 0
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (($[%caster]MoveID=[%caster]LastMove) and ($[%caster]Aim = 1))
+	if (($[%caster]MoveID=[%caster]LastMoveID) and ($[%caster]Aim = 1))
 		[%caster]MovesInARow = ([%caster]MovesInARow+1)
 	end
-	if ((!($[%caster]MoveID=[%caster]LastMove)) and ($[%caster]Aim = 1))
+	if ((!($[%caster]MoveID=[%caster]LastMoveID)) and ($[%caster]Aim = 1))
 		[%caster]MovesInARow = 1
 	end
 	if ((0>$[%caster]MoveClass) and ($[%caster]Aim = 1))
 		do getname with tag:[%caster]
-		log acertou o golpe ...
+		log usou seu golpe ...
 	end
 	if (($[%caster]MoveClass>=0) and ($[%caster]Aim = 1))
 		do getname with tag:[%caster]
-		log atacou [?($[%caster]MoveClassM>=2)|pela 1ª vez |]...
+		log atacou [?($[%caster]MoveClass>=2)|pela 1ª vez |]...
 	end
-	if (($[%caster]MoveClassM=1) and ($[%caster]Aim = 1))
+	if (($[%caster]MoveClass=1) and ($[%caster]Aim = 1))
 		$[%caster]MovePower = ($[%caster]MovePower*(min(5,[%caster]MovesInARow)))
 		log ... com um poder acumulado de [[%caster]MovesInARow] golpes seguidos ...
 	end
-	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClassM=(-3))) and ([%caster]Ptype=$[%caster]Movetype) and ($[%caster]Aim = 1))
+	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClass=(-3))) and ([%caster]Ptype=$[%caster]Movetype) and ($[%caster]Aim = 1))
 		$[%caster]STAB = $[%caster]STAB + 0.5
 		log ... o golpe foi fortalecido pelo seu tipo principal ...
 	end
-	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClassM=(-3))) and ([%caster]Stype=$[%caster]Movetype) and ($[%caster]Aim = 1))
+	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClass=(-3))) and ([%caster]Stype=$[%caster]Movetype) and ($[%caster]Aim = 1))
 		$[%caster]STAB = $[%caster]STAB + 0.5
 		log ... o golpe foi fortalecido pelo seu tipo secundário ...
 	end
-	if (($[%caster]MoveClassM=(-3)) and ($[%caster]Aim = 1))
+	if (($[%caster]MoveClass=(-3)) and ($[%caster]Aim = 1))
 		$[%caster]Heal = round(min(([%caster]MaxHP-[%caster]CurHP),(([%caster]MaxHP/100)*$[%caster]MovePower*$[%caster]STAB)))
 		gain $[%caster]Heal [%caster]CurHP
 		log se curou em [$[%caster]Heal] pontos de vida!
@@ -2344,20 +2659,20 @@ Includes
 	end
 *include damageCalculation %caster %target
 	$[%caster]RandomVar = frandom(0.85,1)
-	if ($[%caster]MoveIsSpecial=0)
+	if ($[%caster]MoveCategory=0)
 		$aA = [%caster]Attack
 		$aD = [%target]Defense
 	end
-	if ($[%caster]MoveIsSpecial=1)
+	if ($[%caster]MoveCategory=1)
 		$aA = [%caster]SpAttack
 		$aD = [%target]SpDefense
 	end
-	if (($[%caster]MoveIsSpecial=0) and ([%caster]Status=3))
+	if (($[%caster]MoveCategory=0) and ([%caster]Status=3))
 		$[%caster]StatusMod = 0.5
 	end
+	$[%caster]RawDamage = ((((0.4*[%caster]Lvl + 2)*$[%caster]MovePower*($aA/$aD))/50)+2)
 	if (($[%caster]MoveClass>=0) and ($[%caster]Aim = 1))
-		$[%caster]RawDamage = ((((0.4*[%caster]Lvl + 2)*$[%caster]MovePower*($aA/$aD))/50)+2)
-		$[%caster]DamageMods = $[%caster]TypeAdvg*$[%caster]RandomVar*$[%caster]STAB*$[%caster]Crit*$[%caster]StatusMod
+		$[%caster]DamageMods = $[%caster]TypeAdvg*$[%caster]RandomVar*$[%caster]STAB*$[%caster]Crit*$[%caster]StatusMod*$[%caster]ShapeMod
 		$[%caster]EffectiveDamage = round(min([%target]CurHP,($[%caster]RawDamage*$[%caster]DamageMods)))
 		lose $[%caster]EffectiveDamage [%target]CurHP
 		do getname with tag:[%target]
@@ -2454,5 +2769,9 @@ Includes
 		log se curou em [$heal] pontos de vida!
 		log <#3366ff>-----------------------------------</#>
 		activeBerry = 0
+	end
+*include setFxToAbsValue %caster %fxNum
+	if (0>$[%caster]MoveEffect[%fxNum])
+		$[%caster]MoveEffect[%fxNum] = $[%caster]MoveEffect[%fxNum]*(-1)
 	end
 *include bugWorkAround
