@@ -1,9 +1,9 @@
 Let's make a game!
-	name:	Fakemon All-Star v0.3 (ALPHA)
-	by:		Braz Araujo da Silva Junior
+	name:	Fakemon All-Star v0.5 (ALPHA)
+	by:	Braz Araujo da Silva Junior
 	desc:	Bem vindo ao projeto <b>Fakemon All-Stars</b>! Agradecimentos especiais ao <b>Iddle Game Maker</b>*, por possibilitar a criação deste jogo. Ao projeto <b>Game-Icons</b>**, por possibilitar a criação dos ícones utilizados no jogo, sob a licença <b>CC BY 3.0</b>***. Foram utilizados os </></><b>Ícones</b>:</></><//>Magnifying glass, by Lorc<//>Pokecog, by Lorc<//>Treasure map, by Lorc<//>Trophy cup, by Delapouite<//>Chart, by Delapouite<//>Shining heart, by Lorc<//>Punch Blast, by Lorc<//>Checked Shield, by Lorc<//>Hypersonic bolt, by Lorc<//>Ball glow, by Lorc<//>Thunderball, by Lorc<//>Up card, by Delapouite<//>Cycle, by Lorc<//>High grass, by Delapouite<//>Raspberry, by Delapouite<//>Fluffy trefoil, by Lorc<//>Stars stack by Delapouite</></>feitos pelos <b>Artistas</b>:</></><//>Lorc - http://lorcblog.blogspot.com<//>Delapouite - http://delapouite.com</></><//></></><//>Braz Junior - Região de <b>Pindoh</b> - https://www.facebook.com/PindohRegion/.</>______________________________________________________________</>*http://orteil.dashnet.org/igm/help.html</>**https://game-icons.net</>***https://creativecommons.org/licenses/by/3.0/</>
 	created:04/07/2018
-	updated:19/07/2018
+	updated:03/01/2019
 
 Settings
 	background:http://i.imgur.com/Dnd9gLk.png
@@ -114,6 +114,8 @@ Resources
 			$quarter=random(1,4)
 			$paralysis=0
 			$confusion=0
+			$activeMoveAttempt = 0
+			$enemyMoveAttempt = 0
 			if ($quarter=1)
 				$paralysis=1
 				$confusion=1
@@ -125,12 +127,74 @@ Resources
 				$eparalysis=1
 				$econfusion=1
 			end
+			$protection = 0
+			$reflection = 0
+
+			echo Starting this turn with: \n $quarter=[$quarter]
+			echo Move Data: $activeMoveID = [$activeMoveID]
+			echo Move Data: $activeMoveType = [$activeMoveType]
+			echo Move Data: $activeMoveCategory = [$activeMoveCategory]
+			echo Move Data: $activeMoveClass = [$activeMoveClass]
+			echo Move Data: $activeMoveShape = [$activeMoveShape]
+			echo Move Data: $activeMovePriority = [$activeMovePriority]
+			echo Move Data: $activeMoveCrit = [$activeMoveCrit]
+			echo Move Data: $activeMovePower = [$activeMovePower]
+			echo Move Data: $activeMoveFxChance0 = [$activeMoveFxChance0]
+			echo Move Data: $activeMoveFxCondID0 = [$activeMoveFxCondID0]
+			echo Move Data: $activeMoveFxCondNum0 = [$activeMoveFxCondNum0]
+			echo Move Data: $activeMoveEffect1 = [$activeMoveEffect1]
+			echo Move Data: $activeMoveFxPower1 = [$activeMoveFxPower1]
+			echo Move Data: $activeMoveFxChance1 = [$activeMoveFxChance1]
+			echo Move Data: $activeMoveFxCondID1 = [$activeMoveFxCondID1]
+			echo Move Data: $activeMoveFxCondNum1 = [$activeMoveFxCondNum1]
+			echo Move Data: $activeMoveEffect2 = [$activeMoveEffect2]
+			echo Move Data: $activeMoveFxPower2 = [$activeMoveFxPower2]
+			echo Move Data: $activeMoveFxChance2 = [$activeMoveFxChance2]
+			echo Move Data: $activeMoveFxCondID2 = [$activeMoveFxCondID2]
+			echo Move Data: $activeMoveFxCondNum2 = [$activeMoveFxCondNum2]
+			echo Move Data: $activeMoveEffect3 = [$activeMoveEffect3]
+			echo Move Data: $activeMoveFxPower3 = [$activeMoveFxPower3]
+			echo Move Data: $activeMoveFxChance3 = [$activeMoveFxChance3]
+			echo Move Data: $activeMoveFxCondID3 = [$activeMoveFxCondID3]
+			echo Move Data: $activeMoveFxCondNum3 = [$activeMoveFxCondNum3]
+			echo Move Data: $enemyMoveID = [$enemyMoveID]
+			echo Move Data: $enemyMoveType = [$enemyMoveType]
+			echo Move Data: $enemyMoveCategory = [$enemyMoveCategory]
+			echo Move Data: $enemyMoveClass = [$enemyMoveClass]
+			echo Move Data: $enemyMoveShape = [$enemyMoveShape]
+			echo Move Data: $enemyMovePriority = [$enemyMovePriority]
+			echo Move Data: $enemyMoveCrit = [$enemyMoveCrit]
+			echo Move Data: $enemyMovePower = [$enemyMovePower]
+			echo Move Data: $enemyMoveFxChance0 = [$enemyMoveFxChance0]
+			echo Move Data: $enemyMoveFxCondID0 = [$enemyMoveFxCondID0]
+			echo Move Data: $enemyMoveFxCondNum0 = [$enemyMoveFxCondNum0]
+			echo Move Data: $enemyMoveEffect1 = [$enemyMoveEffect1]
+			echo Move Data: $enemyMoveFxPower1 = [$enemyMoveFxPower1]
+			echo Move Data: $enemyMoveFxChance1 = [$enemyMoveFxChance1]
+			echo Move Data: $enemyMoveFxCondID1 = [$enemyMoveFxCondID1]
+			echo Move Data: $enemyMoveFxCondNum1 = [$enemyMoveFxCondNum1]
+			echo Move Data: $enemyMoveEffect2 = [$enemyMoveEffect2]
+			echo Move Data: $enemyMoveFxPower2 = [$enemyMoveFxPower2]
+			echo Move Data: $enemyMoveFxChance2 = [$enemyMoveFxChance2]
+			echo Move Data: $enemyMoveFxCondID2 = [$enemyMoveFxCondID2]
+			echo Move Data: $enemyMoveFxCondNum2 = [$enemyMoveFxCondNum2]
+			echo Move Data: $enemyMoveEffect3 = [$enemyMoveEffect3]
+			echo Move Data: $enemyMoveFxPower3 = [$enemyMoveFxPower3]
+			echo Move Data: $enemyMoveFxChance3 = [$enemyMoveFxChance3]
+			echo Move Data: $enemyMoveFxCondID3 = [$enemyMoveFxCondID3]
+			echo Move Data: $enemyMoveFxCondNum3 = [$enemyMoveFxCondNum3]
+			echo Checking First Move..........................................
+			echo Active Speed = [activeSpeed] vs [enemySpeed] = Enemy Speed
+			echo Active Move Priority = [$activeMovePriority] vs [$enemyMovePriority ] = Enemy Move Priority
+			echo Active Status = [activeStatus] vs [enemyStatus] = Enemy Status
+
 			log <#3366ff>-----------------------------------</#>
 			[include checkMoveFirst]
 			[include checkMoveFirstUnderStatus %statusID="2" %statusName="paralysis"]
 			[include checkMoveFirstUnderStatus %statusID="7" %statusName="confusion"]
 
-			if (enemyStatus>=0) do enemymove with this
+			if ((enemyStatus>=0) and ($reflection=0) and ($enemyMoveAttempt=0)) do enemymove with this
+			if ((enemyStatus>=0) and ($reflection=1) and ($enemyMoveAttempt=0)) do enemyconfusion with this
 			[include checkEnemyMoveUnderStatus %statusID="2" %statusName="paralysis"]
 			[include checkEnemyMoveUnderStatus %statusID="7" %statusName="confusion"]
 
@@ -142,6 +206,7 @@ Resources
 		end
 
 		on activemove:
+			echo Starting Active Move..........................................
 			[include checkConditions %caster="active" %target="enemy" %number="0"]
 			[include checkConditions %caster="active" %target="enemy" %number="1"]
 			[include checkConditions %caster="active" %target="enemy" %number="2"]
@@ -188,6 +253,16 @@ Resources
 			end
 			[include moveFxIf %caster="active" %number="33" %fxNum="3"]
 				$activeMovePower = $activeMovePower + $activeMoveFxPower3
+			end
+
+			[include moveFxIf %caster="active" %number="37" %fxNum="1"]
+				$activeNoKill = $activeNoKill + $activeMoveFxPower1
+			end
+			[include moveFxIf %caster="active" %number="37" %fxNum="2"]
+				$activeNoKill = $activeNoKill + $activeMoveFxPower2
+			end
+			[include moveFxIf %caster="active" %number="37" %fxNum="3"]
+				$activeNoKill = $activeNoKill + $activeMoveFxPower3
 			end
 
 			[include onMove %caster="active" %target="enemy"]
@@ -308,6 +383,12 @@ Resources
 			[include moveDirectDamageEffect %caster="active" %target="enemy" %number="30" %fxNum="1"]
 			[include moveDirectDamageEffect %caster="active" %target="enemy" %number="30" %fxNum="2"]
 			[include moveDirectDamageEffect %caster="active" %target="enemy" %number="30" %fxNum="3"]
+			[include moveStanceChangeEffect %caster="active" %target="enemy" %number="34" %fxNum="1"]
+			[include moveStanceChangeEffect %caster="active" %target="enemy" %number="34" %fxNum="2"]
+			[include moveStanceChangeEffect %caster="active" %target="enemy" %number="34" %fxNum="3"]
+			[include movePositionChangeEffect %caster="active" %target="enemy" %number="39" %fxNum="1"]
+			[include movePositionChangeEffect %caster="active" %target="enemy" %number="39" %fxNum="2"]
+			[include movePositionChangeEffect %caster="active" %target="enemy" %number="39" %fxNum="3"]
 			[include moveHealStatusEffect %caster="active" %target="active" %number="-4" %fxNum="1"]
 			[include moveHealStatusEffect %caster="active" %target="active" %number="-4" %fxNum="2"]
 			[include moveHealStatusEffect %caster="active" %target="active" %number="-4" %fxNum="3"]
@@ -385,12 +466,18 @@ Resources
 			[include moveTypeChangeEffect %caster="active" %target="active" %number="-28" %fxNum="1"]
 			[include moveTypeChangeEffect %caster="active" %target="active" %number="-28" %fxNum="2"]
 			[include moveTypeChangeEffect %caster="active" %target="active" %number="-28" %fxNum="3"]
-			[include moveAbilityChangeEffect %caster="active" %target="active" %number="-29" %fxNum="1"]
-			[include moveAbilityChangeEffect %caster="active" %target="active" %number="-29" %fxNum="2"]
-			[include moveAbilityChangeEffect %caster="active" %target="active" %number="-29" %fxNum="3"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="active" %number="-29" %fxNum="1"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="active" %number="-29" %fxNum="2"]
+			[include moveAbilityChangeEffect %caster="enemy" %target="active" %number="-29" %fxNum="3"]
 			[include moveDirectDamageEffect %caster="active" %target="active" %number="-30" %fxNum="1"]
 			[include moveDirectDamageEffect %caster="active" %target="active" %number="-30" %fxNum="2"]
 			[include moveDirectDamageEffect %caster="active" %target="active" %number="-30" %fxNum="3"]
+			[include moveStanceChangeEffect %caster="active" %target="active" %number="-34" %fxNum="1"]
+			[include moveStanceChangeEffect %caster="active" %target="active" %number="-34" %fxNum="2"]
+			[include moveStanceChangeEffect %caster="active" %target="active" %number="-34" %fxNum="3"]
+			[include movePositionChangeEffect %caster="active" %target="active" %number="-39" %fxNum="1"]
+			[include movePositionChangeEffect %caster="active" %target="active" %number="-39" %fxNum="2"]
+			[include movePositionChangeEffect %caster="active" %target="active" %number="-39" %fxNum="3"]
 
 			[include multipleHit %caster="active" %target="enemy" %hit="2"]
 			[include multipleHit %caster="active" %target="enemy" %hit="3"]
@@ -399,15 +486,65 @@ Resources
 
 			if (0>=enemyCurHP)
 				enemyStatus=-1
+				echo Attribute Update >> enemyStatus = [enemyStatus]
+			end
+
+			[include moveFxIf %caster="active" %number="35" %fxNum="1"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+			[include moveFxIf %caster="active" %number="35" %fxNum="2"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+			[include moveFxIf %caster="active" %number="35" %fxNum="3"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+
+			[include moveFxIf %caster="active" %number="36" %fxNum="1"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+			[include moveFxIf %caster="active" %number="36" %fxNum="2"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+			[include moveFxIf %caster="active" %number="36" %fxNum="3"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+
+			[include moveFxIf %caster="active" %number="38" %fxNum="1"]
+				enemyStatus=-1
+				echo Attribute Update >> enemyStatus = [enemyStatus]
+				do getname with tag:enemy
+				log foi atingido por um golpe de 1HKO!
+			end
+			[include moveFxIf %caster="active" %number="38" %fxNum="2"]
+				enemyStatus=-1
+				echo Attribute Update >> enemyStatus = [enemyStatus]
+				do getname with tag:enemy
+				log foi atingido por um golpe de 1HKO!
+			end
+			[include moveFxIf %caster="active" %number="38" %fxNum="3"]
+				enemyStatus=-1
+				echo Attribute Update >> enemyStatus = [enemyStatus]
+				do getname with tag:enemy
+				log foi atingido por um golpe de 1HKO!
 			end
 
 			activeLastMoveID = $activeMoveID
 			activeLastMoveShape = $activeMoveShape
+			$activeMoveAttempt = 1
+			echo Attribute Update >> activeLastMoveID = [activeLastMoveID]; activeLastMoveShape = [activeLastMoveShape]; $activeMoveAttempt = [$activeMoveAttempt]
+
 		end
 
 //-------------------------------------------------------------------------------------------------//
 
 		on enemymove:
+			echo Starting Enemy Move..........................................
 			[include checkConditions %caster="enemy" %target="active" %number="0"]
 			[include checkConditions %caster="enemy" %target="active" %number="1"]
 			[include checkConditions %caster="enemy" %target="active" %number="2"]
@@ -454,6 +591,17 @@ Resources
 			[include moveFxIf %caster="enemy" %number="33" %fxNum="3"]
 				$enemyMovePower = $enemyMovePower + $enemyMoveFxPower3
 			end
+
+			[include moveFxIf %caster="enemy" %number="37" %fxNum="1"]
+				$enemyNoKill = $enemyNoKill + $enemyMoveFxPower1
+			end
+			[include moveFxIf %caster="enemy" %number="37" %fxNum="2"]
+				$enemyNoKill = $enemyNoKill + $enemyMoveFxPower2
+			end
+			[include moveFxIf %caster="enemy" %number="37" %fxNum="3"]
+				$enemyNoKill = $enemyNoKill + $enemyMoveFxPower3
+			end
+
 			[include onMove %caster="enemy" %target="active"]
 			[include enemyMoveTypeAdvantage %type="0"]
 			[include enemyMoveTypeAdvantage %type="1"]
@@ -572,6 +720,12 @@ Resources
 			[include moveDirectDamageEffect %caster="enemy" %target="active" %number="30" %fxNum="1"]
 			[include moveDirectDamageEffect %caster="enemy" %target="active" %number="30" %fxNum="2"]
 			[include moveDirectDamageEffect %caster="enemy" %target="active" %number="30" %fxNum="3"]
+			[include moveStanceChangeEffect %caster="enemy" %target="active" %number="34" %fxNum="1"]
+			[include moveStanceChangeEffect %caster="enemy" %target="active" %number="34" %fxNum="2"]
+			[include moveStanceChangeEffect %caster="enemy" %target="active" %number="34" %fxNum="3"]
+			[include movePositionChangeEffect %caster="enemy" %target="active" %number="39" %fxNum="1"]
+			[include movePositionChangeEffect %caster="enemy" %target="active" %number="39" %fxNum="2"]
+			[include movePositionChangeEffect %caster="enemy" %target="active" %number="39" %fxNum="3"]
 			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="-4" %fxNum="1"]
 			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="-4" %fxNum="2"]
 			[include moveHealStatusEffect %caster="enemy" %target="enemy" %number="-4" %fxNum="3"]
@@ -649,12 +803,18 @@ Resources
 			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="-28" %fxNum="1"]
 			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="-28" %fxNum="2"]
 			[include moveTypeChangeEffect %caster="enemy" %target="enemy" %number="-28" %fxNum="3"]
-			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="-29" %fxNum="1"]
-			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="-29" %fxNum="2"]
-			[include moveAbilityChangeEffect %caster="enemy" %target="enemy" %number="-29" %fxNum="3"]
+			[include moveAbilityChangeEffect %caster="active" %target="enemy" %number="-29" %fxNum="1"]
+			[include moveAbilityChangeEffect %caster="active" %target="enemy" %number="-29" %fxNum="2"]
+			[include moveAbilityChangeEffect %caster="active" %target="enemy" %number="-29" %fxNum="3"]
 			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="-30" %fxNum="1"]
 			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="-30" %fxNum="2"]
 			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="-30" %fxNum="3"]
+			[include moveStanceChangeEffect %caster="enemy" %target="enemy" %number="-34" %fxNum="1"]
+			[include moveStanceChangeEffect %caster="enemy" %target="enemy" %number="-34" %fxNum="2"]
+			[include moveStanceChangeEffect %caster="enemy" %target="enemy" %number="-34" %fxNum="3"]
+			[include movePositionChangeEffect %caster="enemy" %target="enemy" %number="-39" %fxNum="1"]
+			[include movePositionChangeEffect %caster="enemy" %target="enemy" %number="-39" %fxNum="2"]
+			[include movePositionChangeEffect %caster="enemy" %target="enemy" %number="-39" %fxNum="3"]
 
 			[include multipleHit %caster="enemy" %target="active" %hit="2"]
 			[include multipleHit %caster="enemy" %target="active" %hit="3"]
@@ -663,19 +823,71 @@ Resources
 
 			if (0>=activeCurHP)
 				activeStatus=-1
+				echo Attribute Update >> activeStatus = [activeStatus]
+			end
+
+			[include moveFxIf %caster="enemy" %number="35" %fxNum="1"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+			[include moveFxIf %caster="enemy" %number="35" %fxNum="2"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+			[include moveFxIf %caster="enemy" %number="35" %fxNum="3"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+
+			[include moveFxIf %caster="enemy" %number="36" %fxNum="1"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+			[include moveFxIf %caster="enemy" %number="36" %fxNum="2"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+			[include moveFxIf %caster="enemy" %number="36" %fxNum="3"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+
+			[include moveFxIf %caster="enemy" %number="38" %fxNum="1"]
+				activeStatus=-1
+				echo Attribute Update >> activeStatus = [activeStatus]
+				do getname with tag:active
+				log foi atingido por um golpe de 1HKO!
+			end
+			[include moveFxIf %caster="enemy" %number="38" %fxNum="2"]
+				activeStatus=-1
+				echo Attribute Update >> activeStatus = [activeStatus]
+				do getname with tag:active
+				log foi atingido por um golpe de 1HKO!
+			end
+			[include moveFxIf %caster="enemy" %number="38" %fxNum="3"]
+				activeStatus=-1
+				echo Attribute Update >> activeStatus = [activeStatus]
+				do getname with tag:active
+				log foi atingido por um golpe de 1HKO!
 			end
 
 			enemyLastMoveID = $enemyMoveID
 			enemyLastMoveShape = $enemyMoveShape
+			$enemyMoveAttempt = 1
+			echo Attribute Update >> enemyLastMoveID = [enemyLastMoveID]; enemyLastMoveShape = [enemyLastMoveShape]; $enemyMoveAttempt = [$enemyMoveAttempt]
+
 		end
 
 //-------------------------------------------------------------------------------------------------//
 
 		on activeconfusion:
-			activeStatus = 0
+			if ((activeStatus=-7) and ($reflection=0))
+				activeStatus = 0
+				echo Attribute Update >> activeStatus = [activeStatus]
+			end
 
 			do getname with tag:active
-			log se atacou por conta da confusão!
+			log teve seu golpe virado contra si!
 			
 			[include setFxToAbsValue %caster="active" %fxNum="1"]
 			[include setFxToAbsValue %caster="active" %fxNum="2"]
@@ -727,6 +939,17 @@ Resources
 			[include moveFxIf %caster="active" %number="33" %fxNum="3"]
 				$activeMovePower = $activeMovePower + $activeMoveFxPower3
 			end
+
+			[include moveFxIf %caster="active" %number="37" %fxNum="1"]
+				$activeNoKill = $activeNoKill + $activeMoveFxPower1
+			end
+			[include moveFxIf %caster="active" %number="37" %fxNum="2"]
+				$activeNoKill = $activeNoKill + $activeMoveFxPower2
+			end
+			[include moveFxIf %caster="active" %number="37" %fxNum="3"]
+				$activeNoKill = $activeNoKill + $activeMoveFxPower3
+			end
+
 			[include onMove %caster="active" %target="active"]
 			[include activeMoveTypeAdvantage %type="0"]
 			[include activeMoveTypeAdvantage %type="1"]
@@ -845,6 +1068,12 @@ Resources
 			[include moveDirectDamageEffect %caster="active" %target="active" %number="30" %fxNum="1"]
 			[include moveDirectDamageEffect %caster="active" %target="active" %number="30" %fxNum="2"]
 			[include moveDirectDamageEffect %caster="active" %target="active" %number="30" %fxNum="3"]
+			[include moveStanceChangeEffect %caster="active" %target="active" %number="34" %fxNum="1"]
+			[include moveStanceChangeEffect %caster="active" %target="active" %number="34" %fxNum="2"]
+			[include moveStanceChangeEffect %caster="active" %target="active" %number="34" %fxNum="3"]
+			[include movePositionChangeEffect %caster="active" %target="active" %number="39" %fxNum="1"]
+			[include movePositionChangeEffect %caster="active" %target="active" %number="39" %fxNum="2"]
+			[include movePositionChangeEffect %caster="active" %target="active" %number="39" %fxNum="3"]
 
 			[include multipleHit %caster="active" %target="active" %hit="2"]
 			[include multipleHit %caster="active" %target="active" %hit="3"]
@@ -853,22 +1082,71 @@ Resources
 
 			if (0>=activeCurHP)
 				activeStatus=-1
+				echo Attribute Update >> activeStatus = [activeStatus]
 			end
 
-			do getname with tag:active
-			log não está mais confuso.
+			[include moveFxIf %caster="active" %number="35" %fxNum="1"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+			[include moveFxIf %caster="active" %number="35" %fxNum="2"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+			[include moveFxIf %caster="active" %number="35" %fxNum="3"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+
+			[include moveFxIf %caster="active" %number="36" %fxNum="1"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+			[include moveFxIf %caster="active" %number="36" %fxNum="2"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+			[include moveFxIf %caster="active" %number="36" %fxNum="3"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+
+			[include moveFxIf %caster="active" %number="38" %fxNum="1"]
+				activeStatus=-1
+				echo Attribute Update >> activeStatus = [activeStatus]
+				do getname with tag:active
+				log foi atingido por um golpe de 1HKO!
+			end
+			[include moveFxIf %caster="active" %number="38" %fxNum="2"]
+				activeStatus=-1
+				echo Attribute Update >> activeStatus = [activeStatus]
+				do getname with tag:active
+				log foi atingido por um golpe de 1HKO!
+			end
+			[include moveFxIf %caster="active" %number="38" %fxNum="3"]
+				activeStatus=-1
+				echo Attribute Update >> activeStatus = [activeStatus]
+				do getname with tag:active
+				log foi atingido por um golpe de 1HKO!
+			end
 
 			activeLastMoveID = $activeMoveID
 			activeLastMoveShape = $activeMoveShape
+			$activeMoveAttempt = 1
+			echo Attribute Update >> activeLastMoveID = [activeLastMoveID]; activeLastMoveShape = [activeLastMoveShape]; $activeMoveAttempt = [$activeMoveAttempt]
+
 		end
 
 //-------------------------------------------------------------------------------------------------//
 
 		on enemyconfusion:
-			enemyStatus = 0
+			if ((enemyStatus=-7) and ($reflection=0))
+				enemyStatus = 0
+				echo Attribute Update >> enemyStatus = [enemyStatus]
+			end
 
 			do getname with tag:enemy
-			log se atacou por conta da confusão!
+			log teve seu golpe virado contra si!
 
 			[include setFxToAbsValue %caster="enemy" %fxNum="1"]
 			[include setFxToAbsValue %caster="enemy" %fxNum="2"]
@@ -920,6 +1198,17 @@ Resources
 			[include moveFxIf %caster="enemy" %number="33" %fxNum="3"]
 				$enemyMovePower = $enemyMovePower + $enemyMoveFxPower3
 			end
+
+			[include moveFxIf %caster="enemy" %number="37" %fxNum="1"]
+				$enemyNoKill = $enemyNoKill + $enemyMoveFxPower1
+			end
+			[include moveFxIf %caster="enemy" %number="37" %fxNum="2"]
+				$enemyNoKill = $enemyNoKill + $enemyMoveFxPower2
+			end
+			[include moveFxIf %caster="enemy" %number="37" %fxNum="3"]
+				$enemyNoKill = $enemyNoKill + $enemyMoveFxPower3
+			end
+
 			[include onMove %caster="enemy" %target="enemy"]
 			[include enemyMoveTypeAdvantage %type="0"]
 			[include enemyMoveTypeAdvantage %type="1"]
@@ -1038,6 +1327,12 @@ Resources
 			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="30" %fxNum="1"]
 			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="30" %fxNum="2"]
 			[include moveDirectDamageEffect %caster="enemy" %target="enemy" %number="30" %fxNum="3"]
+			[include moveStanceChangeEffect %caster="enemy" %target="enemy" %number="34" %fxNum="1"]
+			[include moveStanceChangeEffect %caster="enemy" %target="enemy" %number="34" %fxNum="2"]
+			[include moveStanceChangeEffect %caster="enemy" %target="enemy" %number="34" %fxNum="3"]
+			[include movePositionChangeEffect %caster="enemy" %target="enemy" %number="39" %fxNum="1"]
+			[include movePositionChangeEffect %caster="enemy" %target="enemy" %number="39" %fxNum="2"]
+			[include movePositionChangeEffect %caster="enemy" %target="enemy" %number="39" %fxNum="3"]
 
 			[include multipleHit %caster="enemy" %target="enemy" %hit="2"]
 			[include multipleHit %caster="enemy" %target="enemy" %hit="3"]
@@ -1046,13 +1341,59 @@ Resources
 
 			if (0>=enemyCurHP)
 				enemyStatus=-1
+				echo Attribute Update >> enemyStatus = [enemyStatus]
 			end
 
-			do getname with tag:enemy
-			log não está mais confuso.
+			[include moveFxIf %caster="enemy" %number="35" %fxNum="1"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+			[include moveFxIf %caster="enemy" %number="35" %fxNum="2"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+			[include moveFxIf %caster="enemy" %number="35" %fxNum="3"]
+				$reflection = 1
+				echo Variable Update >> $reflection = [$reflection]
+			end
+
+			[include moveFxIf %caster="enemy" %number="36" %fxNum="1"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+			[include moveFxIf %caster="enemy" %number="36" %fxNum="2"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+			[include moveFxIf %caster="enemy" %number="36" %fxNum="3"]
+				$protection = 1
+				echo Variable Update >> $protection = [$protection]
+			end
+
+			[include moveFxIf %caster="enemy" %number="38" %fxNum="1"]
+				enemyStatus=-1
+				echo Attribute Update >> enemyStatus = [enemyStatus]
+				do getname with tag:enemy
+				log foi atingido por um golpe de 1HKO!
+			end
+			[include moveFxIf %caster="enemy" %number="38" %fxNum="2"]
+				enemyStatus=-1
+				echo Attribute Update >> enemyStatus = [enemyStatus]
+				do getname with tag:enemy
+				log foi atingido por um golpe de 1HKO!
+			end
+			[include moveFxIf %caster="enemy" %number="38" %fxNum="3"]
+				enemyStatus=-1
+				echo Attribute Update >> enemyStatus = [enemyStatus]
+				do getname with tag:enemy
+				log foi atingido por um golpe de 1HKO!
+			end
 
 			enemyLastMoveID = $enemyMoveID
 			enemyLastMoveShape = $enemyMoveShape
+			$enemyMoveAttempt = 1
+			echo Attribute Update >> enemyLastMoveID = [enemyLastMoveID]; enemyLastMoveShape = [enemyLastMoveShape]; $enemyMoveAttempt = [$enemyMoveAttempt]
+
 		end
 
 //-------------------------------------------------------------------------------------------------//
@@ -1072,22 +1413,26 @@ Resources
 			do getname with tag:active
 			log usou este turno para se recuperar do esforço e agora está pronto para voltar para o combate!
 			activeStatus = 0
+			echo Attribute Update >> activeStatus = [activeStatus]
 		end
 		on enemyready:
 			do getname with tag:enemy
 			log usou este turno para se recuperar do esforço e agora está pronto para voltar para o combate!
-			activeStatus = 0
+			enemyStatus = 0
+			echo Attribute Update >> enemyStatus = [enemyStatus]
 		end
 
 		on activefatigue:
 			do getname with tag:active
 			log está se recuperando do esforço que fez no último golpe!
 			activeStatusTimer = (activeStatusTimer-1)
+			echo Attribute Update >> activeStatusTimer = [activeStatusTimer]
 		end
 		on enemyfatigue:
 			do getname with tag:enemy
 			log está se recuperando do esforço que fez no último golpe!
-			activeStatusTimer = (activeStatusTimer-1)
+			enemyStatusTimer = (enemyStatusTimer-1)
+			echo Attribute Update >> enemyStatusTimer = [enemyStatusTimer]
 		end
 
 		on activeflee:
@@ -1105,22 +1450,26 @@ Resources
 			do getname with tag:active
 			log hesitou em atacar!
 			activeStatus = 0
+			echo Attribute Update >> activeStatus = [activeStatus]
 		end
 		on enemyflinch:
 			do getname with tag:enemy
 			log hesitou em atacar!
-			activeStatus = 0
+			enemyStatus = 0
+			echo Attribute Update >> enemyStatus = [enemyStatus]
 		end
 
 		on activethaw:
 			do getname with tag:active
 			log descongelou!
 			activeStatus = 0
+			echo Attribute Update >> activeStatus = [activeStatus]
 		end
 		on enemythaw:
 			do getname with tag:enemy
 			log descongelou!
-			activeStatus = 0
+			enemyStatus = 0
+			echo Attribute Update >> enemyStatus = [enemyStatus]
 		end
 
 		on activefreeze:
@@ -1136,22 +1485,26 @@ Resources
 			do getname with tag:active
 			log acordou!
 			activeStatus = 0
+			echo Attribute Update >> activeStatus = [activeStatus]
 		end
 		on enemywake:
 			do getname with tag:enemy
 			log acordou!
-			activeStatus = 0
+			enemyStatus = 0
+			echo Attribute Update >> enemyStatus = [enemyStatus]
 		end
 
 		on activesleep:
 			do getname with tag:active
 			log está dormindo!
 			activeStatusTimer = (activeStatusTimer-1)
+			echo Attribute Update >> activeStatusTimer = [activeStatusTimer]
 		end
 		on enemysleep:
 			do getname with tag:enemy
 			log está dormindo!
-			activeStatusTimer = (activeStatusTimer-1)
+			enemyStatusTimer = (enemyStatusTimer-1)
+			echo Attribute Update >> enemyStatusTimer = [enemyStatusTimer]
 		end
 
 		on activeparalysis:
@@ -1166,12 +1519,14 @@ Resources
 		on activepoison:
 			$activePoisonDamage = round(min((activeMaxHP/8),activeCurHP))
 			lose $activePoisonDamage activeCurHP
+			echo Attribute Update >> activeCurHP = [activeCurHP] (It was damaged by the poison that deals [activeMaxHP/8], the activeMaxHP/8, capped at [activeCurHP], the activeCurHP)
 			do getname with tag:active
 			log tomou [$activePoisonDamage] dano por envenenamento!
 		end
 		on enemypoison:
 			$enemyPoisonDamage = round(min((enemyMaxHP/8),enemyCurHP))
 			lose $enemyPoisonDamage enemyCurHP
+			echo Attribute Update >> enemyCurHP = [enemyCurHP] (It was damaged by the poison that deals [enemyMaxHP/8], the enemyMaxHP/8, capped at [enemyCurHP], the enemyCurHP)
 			do getname with tag:enemy
 			log tomou [$enemyPoisonDamage] dano por envenenamento!
 		end
@@ -1179,12 +1534,14 @@ Resources
 		on activebadpoison:
 			$activePoisonDamage = round(min((activeBadPoison*activeMaxHP/16),activeCurHP))
 			lose $activePoisonDamage activeCurHP
+			echo Attribute Update >> activeCurHP = [activeCurHP] (It was damaged by the poison that deals [activeMaxHP/16], the activeMaxHP/16, times [activeBadPoison], the activeBadPoison, capped at [activeCurHP], the activeCurHP)
 			do getname with tag:active
 			log tomou [$activePoisonDamage] dano por intoxicação!
 		end
 		on enemybadpoison:
 			$enemyPoisonDamage = round(min((enemyBadPoison*enemyMaxHP/8),enemyCurHP))
 			lose $enemyPoisonDamage enemyCurHP
+			echo Attribute Update >> enemyCurHP = [enemyCurHP] (It was damaged by the poison that deals [enemyMaxHP/16], the enemyMaxHP/16, times [enemyBadPoison], the enemyBadPoison, capped at [enemyCurHP], the enemyCurHP)
 			do getname with tag:enemy
 			log tomou [$enemyPoisonDamage] dano por intoxicação!
 		end
@@ -1192,12 +1549,14 @@ Resources
 		on activeburn:
 			$activePoisonDamage = round(min((activeMaxHP/16),activeCurHP))
 			lose $activePoisonDamage activeCurHP
+			echo Attribute Update >> activeCurHP = [activeCurHP] (It was damaged by its burn that deals [activeMaxHP/16], the activeMaxHP/16, capped at [activeCurHP], the activeCurHP)
 			do getname with tag:active
 			log tomou [$activePoisonDamage] dano por queimadura!
 		end
 		on enemyburn:
 			$enemyPoisonDamage = round(min((enemyMaxHP/16),enemyCurHP))
 			lose $enemyPoisonDamage enemyCurHP
+			echo Attribute Update >> enemyCurHP = [enemyCurHP] (It was damaged by its burn that deals [enemyMaxHP/16], the enemyMaxHP/16, capped at [enemyCurHP], the enemyCurHP)
 			do getname with tag:enemy
 			log tomou [$enemyPoisonDamage] dano por queimadura!
 		end
@@ -1228,6 +1587,9 @@ Resources
 			if (enemyStatus=(-5)) do enemyflinch with this
 			if (activeStatus=(-6)) do activeflee with this
 			if (enemyStatus=(-6)) do enemyflee with this
+
+			[include triggerPeriodicAbilities %caster="active" %target="enemy"]
+			[include triggerPeriodicAbilities %caster="enemy" %target="active"]
 
 			[include defModByStage %stage="(-6)" %mod="0.25"]
 			[include defModByStage %stage="(-5)" %mod="0.2857"]
@@ -1270,9 +1632,6 @@ Resources
 			if ((enemyBerry=11) and (!(enemyStatus=(-1))) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER11
 			if ((enemyBerry=12) and (!(enemyStatus=(-1))) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER12
 			if ((enemyBerry=13) and (!(enemyStatus=(-1))) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER13
-
-			[include triggerPeriodicAbilities %caster="active" %target="enemy"]
-			[include triggerPeriodicAbilities %caster="enemy" %target="active"]
 
 			if ((activeStatus=(-1)) or (0>=round(activeCurHP))) do activefaint with this
 			if ((enemyStatus=(-1)) or (0>=round(enemyCurHP))) do enemyfaint with this
@@ -1502,6 +1861,10 @@ Resources
 			name:Evasão (Modificador)
 		*activeCriticalStage
 			name:Crítico (Modificador)
+		*activeStance
+			name:Postura
+		*activePosition
+			name:Posição
 	*TEMPLATE
 		tags:status modifierEnemy hidden
 		on reset:
@@ -1555,6 +1918,10 @@ Resources
 			name:Evasão (Estágio) Inimigo
 		*enemyCriticalStage
 			name:Crítico (Estágio) Inimigo
+		*enemyStance
+			name:Postura do Inimigo
+		*enemyPosition
+			name:Posição do Inimigo
 		*enemyBerry
 			name:Fruto do inimigo
 		*enemyAbility
@@ -1625,20 +1992,20 @@ Resources
 			end
 		*activeAbility
 			name:Habilidade
-			text:Habilidade<t>[?this=0|-|][?this=1|Frutífero|]</t>
-			desc:A habilidade de seu pokémon[?this=1| dá 50% de chance de criar uma [n:BER8] no final de cada turno|].
+			text:Habilidade<t>[?this=0|-|][?this=1|Frutífero|][?this=2|Levar na Esportiva|][?this=3|Tagarela|][?this=4|Insômnia|][?this=5|Vetor de Doenças|]</t>
+			desc:A habilidade de seu pokémon [?this=1|dá 50% de chance de criar uma [n:BER8] no final de cada turno|][?this=2|aumenta precisão, defesa e velocidade ao errar um golpe|][?this=3|cura 12,5% da vida máxima ao usar uma habilidade sonora|][?this=4|o acorda no final de cada turno se estiver dormindo|][?this=5|prolifera o status dele para o adversário|].
 			tags:status modifier
 			icon:https://i.imgur.com/TFTnz1p.png
 		*activePtype
 			name:Tipo Primário
-			text:Tipo Prim.<t>[?this=0|Normal|][?this=1|Lutador|][?this=2|Voador|][?this=3|Veneno|][?this=4|Terra|][?this=5|Pedra|][?this=6|Inseto|][?this=7|Fantasma|][?this=8|Metal|][?this=9|Fogo|][?this=10|Água|][?this=11|Grama|][?this=12|Elétrico|][?this=13|Psíquico|][?this=14|Gelo|][?this=15|Dragão|][?this=16|Noturno|][?this=17|Fada|]</t>
-			desc:<t>[?this=0|Normal|][?this=1|Lutador|][?this=2|Voador|][?this=3|Veneno|][?this=4|Terra|][?this=5|Pedra|][?this=6|Inseto|][?this=7|Fantasma|][?this=8|Metal|][?this=9|Fogo|][?this=10|Água|][?this=11|Grama|][?this=12|Elétrico|][?this=13|Psíquico|][?this=14|Gelo|][?this=15|Dragão|][?this=16|Noturno|][?this=17|Fada|]</t></></><//>Super efetivo contra: [?this=1|Normal, Pedra, Metal, Gelo e Noturno|][?this=2|Lutador, Inseto e Grama|][?this=3|Grama e Fada|][?this=4|Veneno, Pedra, Metal, Fogo e Elétrico|][?this=5|Voador, Inseto, Fogo e Gelo|][?this=6|Grama, Psíquico e Noturno|][?this=7|Fantasma e Psíquico|][?this=8|Pedra, Gelo e Fada|][?this=9|Inseto, Metal, Grama e Gelo|][?this=10|Terra, Pedra e Fogo|][?this=11|Terra, Pedra e Água|][?this=12|Voador e Água|][?this=13|Lutador e Veneno|][?this=14|Voador, Terra, Água e Dragão|][?this=15|Dragão|][?this=16|Fantasma e Psíquico|][?this=17|Lutador, Dragão e Noturno|].</></><//>Pouco efetivo contra: [?this=0|Pedra e Metal|][?this=1|Voador, Veneno, Inseto, Psíquico e Fada|][?this=2|Pedra, Metal e Elétrico|][?this=3|Veneno, Terra, Pedra e Fantasma|][?this=4|Inseto e Grama|][?this=5|Lutador, Pedra e Metal|][?this=6|Lutador, Voador, Veneno, Fantasma, Metal, Fogo e Fada|][?this=7|Noturno|][?this=8|Metal, Fogo, Água e Elétrico|][?this=9|Pedra, Fogo, Água e Dragão|][?this=10|Água, Grama e Dragão|][?this=11|Voador, Veneno, Inseto, Metal, Fogo, Grama e Dragão|][?this=12|Grama, Elétrico e Dragão|][?this=13|Metal e Psíquico|][?this=14|Metal, Fogo, Água e Gelo|][?this=15|Metal|][?this=16|Lutador, Noturno e Fada|][?this=17|Veneno, Metal e Fogo|].</></><//>Inefetivo contra: [?this=0|Fantasma|][?this=1|Fantasma|][?this=3|Metal|][?this=4|Voador|][?this=7|Normal|][?this=12|Terra|][?this=13|Noturno|][?this=15|Fada|].</></><//>Resistente contra: [?this=1|Pedra, Inseto e Noturno|][?this=2|Lutador, Inseto e Grama|][?this=3|Lutador, Veneno, Inseto, Grama e Fada|][?this=4|Veneno e Pedra|][?this=5|Normal, Voador, Veneno e Fogo|][?this=6|Lutador, Terra e Grama|][?this=7|Veneno e Inseto|][?this=8|Normal, Voador, Pedra, Inseto, Metal, Grama, Psíquico, Gelo, Dragão e Fada|][?this=9|Inseto, Metal, Fogo, Grama, Gelo e Fada|][?this=10|Metal, Fogo, Água e Gelo|][?this=11|Terra, Água, Grama e Elétrico|][?this=12|Voador, Metal e Elétrico|][?this=13|Lutador e Psíquico|][?this=14|Gelo|][?this=15|Fogo, Água, Grama e Elétrico|][?this=16|Fantasma e Noturno|][?this=17|Lutador, Inseto e Noturno|].</></><//>Frágil contra: [?this=0|Lutador|][?this=1|Voador, Psíquico e Fada|][?this=2|Pedra, Elétrico e Gelo|][?this=3|Terra e Psíquico|][?this=4|Água, Grama e Gelo|][?this=5|Lutador, Pedra, Metal, Água e Grama|][?this=6|Voador, Pedra e Fogo|][?this=7|Fantasma e Noturno|][?this=8|Lutador, Terra e Fogo|][?this=9|Terra, Pedra e Água|][?this=10|Grama e Elétrico|][?this=11|Voador, Veneno, Inseto, Fogo e Gelo|][?this=12|Terra|][?this=13|Inseto, Fantasma e Noturno|][?this=14|Lutador, Pedra, Metal e Fogo|][?this=15|Gelo, Dragão e Fada|][?this=16|Lutador, Inseto e Fada|][?this=17|Veneno e Metal|].</></><//>Imune a: [?this=0|Fantasma|][?this=2|Terra|][?this=4|Elétrico|][?this=7|Normal e Lutador|][?this=8|Veneno|][?this=16|Psíquico|][?this=17|Dragão|].
+			text:Tipo Prim.<t>[?this=0|😶</>Normal|][?this=1|👊</>Lutador|][?this=2|🌪️</>Voador|][?this=3|☠️</>Veneno|][?this=4|🌕</>Terra|][?this=5|⛰️</>Pedra|][?this=6|🦗</>Inseto|][?this=7|👻</>Fantasma|][?this=8|⚙️</>Metal|][?this=9|🔥</>Fogo|][?this=10|💧</>Água|][?this=11|🍃</>Grama|][?this=12|⚡</>Elétrico|][?this=13|🔮</>Psíquico|][?this=14|❄️</>Gelo|][?this=15|🐲</>Dragão|][?this=16|🕳️</>Noturno|][?this=17|🌸</>Fada|]</t>
+			desc:<t>[?this=0|😶Normal😶|][?this=1|👊Lutador👊|][?this=2|🌪️Voador🌪️|][?this=3|☠️Veneno☠️|][?this=4|🌕Terra🌕|][?this=5|⛰️Pedra⛰️|][?this=6|🦗Inseto🦗|][?this=7|👻Fantasma👻|][?this=8|⚙️Metal⚙️|][?this=9|🔥Fogo🔥|][?this=10|💧Água💧|][?this=11|🍃Grama🍃|][?this=12|⚡Elétrico⚡|][?this=13|🔮Psíquico🔮|][?this=14|❄️Gelo❄️|][?this=15|🐲Dragão🐲|][?this=16|🕳️Noturno🕳️|][?this=17|🌸Fada🌸|]</t></></><//>🗡️<#00cc00>Super efetivo</#> contra: [?this=1|😶Normal, ⛰️Pedra, ⚙️Metal, ❄️Gelo e 🕳️Noturno|][?this=2|👊Lutador, 🦗Inseto e 🍃Grama|][?this=3|🍃Grama e 🌸Fada|][?this=4|☠️Veneno, ⛰️Pedra, ⚙️Metal, 🔥Fogo e ⚡Elétrico|][?this=5|🌪️Voador, 🦗Inseto, 🔥Fogo e ❄️Gelo|][?this=6|🍃Grama, 🔮Psíquico e 🕳️Noturno|][?this=7|👻Fantasma e 🔮Psíquico|][?this=8|⛰️Pedra, ❄️Gelo e 🌸Fada|][?this=9|🦗Inseto, ⚙️Metal, 🍃Grama e ❄️Gelo|][?this=10|🌕Terra, ⛰️Pedra e 🔥Fogo|][?this=11|🌕Terra, ⛰️Pedra e 💧Água|][?this=12|🌪️Voador e 💧Água|][?this=13|👊Lutador e ☠️Veneno|][?this=14|🌪️Voador, 🌕Terra, 💧Água e 🐲Dragão|][?this=15|🐲Dragão|][?this=16|👻Fantasma e 🔮Psíquico|][?this=17|👊Lutador, 🐲Dragão e 🕳️Noturno|].</></><//>🗡️<#ff0000>Pouco efetivo</#> contra: [?this=0|⛰️Pedra e ⚙️Metal|][?this=1|🌪️Voador, ☠️Veneno, 🦗Inseto, 🔮Psíquico e 🌸Fada|][?this=2|⛰️Pedra, ⚙️Metal e ⚡Elétrico|][?this=3|☠️Veneno, 🌕Terra, ⛰️Pedra e 👻Fantasma|][?this=4|🦗Inseto e 🍃Grama|][?this=5|👊Lutador, ⛰️Pedra e ⚙️Metal|][?this=6|👊Lutador, 🌪️Voador, ☠️Veneno, 👻Fantasma, ⚙️Metal, 🔥Fogo e 🌸Fada|][?this=7|🕳️Noturno|][?this=8|⚙️Metal, 🔥Fogo, 💧Água e ⚡Elétrico|][?this=9|⛰️Pedra, 🔥Fogo, 💧Água e 🐲Dragão|][?this=10|💧Água, 🍃Grama e 🐲Dragão|][?this=11|🌪️Voador, ☠️Veneno, 🦗Inseto, ⚙️Metal, 🔥Fogo, 🍃Grama e 🐲Dragão|][?this=12|🍃Grama, ⚡Elétrico e 🐲Dragão|][?this=13|⚙️Metal e 🔮Psíquico|][?this=14|⚙️Metal, 🔥Fogo, 💧Água e ❄️Gelo|][?this=15|⚙️Metal|][?this=16|👊Lutador, 🕳️Noturno e 🌸Fada|][?this=17|☠️Veneno, ⚙️Metal e 🔥Fogo|].</></><//>Inefetivo contra: [?this=0|👻Fantasma|][?this=1|👻Fantasma|][?this=3|⚙️Metal|][?this=4|🌪️Voador|][?this=7|😶Normal|][?this=12|🌕Terra|][?this=13|🕳️Noturno|][?this=15|🌸Fada|].</></><//>🛡️<#00cc00>Resistente</#> contra: [?this=1|⛰️Pedra, 🦗Inseto e 🕳️Noturno|][?this=2|👊Lutador, 🦗Inseto e 🍃Grama|][?this=3|👊Lutador, ☠️Veneno, 🦗Inseto, 🍃Grama e 🌸Fada|][?this=4|☠️Veneno e ⛰️Pedra|][?this=5|😶Normal, 🌪️Voador, ☠️Veneno e 🔥Fogo|][?this=6|👊Lutador, 🌕Terra e 🍃Grama|][?this=7|☠️Veneno e 🦗Inseto|][?this=8|😶Normal, 🌪️Voador, ⛰️Pedra, 🦗Inseto, ⚙️Metal, 🍃Grama, 🔮Psíquico, ❄️Gelo, 🐲Dragão e 🌸Fada|][?this=9|🦗Inseto, ⚙️Metal, 🔥Fogo, 🍃Grama, ❄️Gelo e 🌸Fada|][?this=10|⚙️Metal, 🔥Fogo, 💧Água e ❄️Gelo|][?this=11|🌕Terra, 💧Água, 🍃Grama e ⚡Elétrico|][?this=12|🌪️Voador, ⚙️Metal e ⚡Elétrico|][?this=13|👊Lutador e 🔮Psíquico|][?this=14|❄️Gelo|][?this=15|🔥Fogo, 💧Água, 🍃Grama e ⚡Elétrico|][?this=16|👻Fantasma e 🕳️Noturno|][?this=17|👊Lutador, 🦗Inseto e 🕳️Noturno|].</></><//>🛡️<#ff0000>Frágil</#> contra: [?this=0|👊Lutador|][?this=1|🌪️Voador, 🔮Psíquico e 🌸Fada|][?this=2|⛰️Pedra, ⚡Elétrico e ❄️Gelo|][?this=3|🌕Terra e 🔮Psíquico|][?this=4|💧Água, 🍃Grama e ❄️Gelo|][?this=5|👊Lutador, ⛰️Pedra, ⚙️Metal, 💧Água e 🍃Grama|][?this=6|🌪️Voador, ⛰️Pedra e 🔥Fogo|][?this=7|👻Fantasma e 🕳️Noturno|][?this=8|👊Lutador, 🌕Terra e 🔥Fogo|][?this=9|🌕Terra, ⛰️Pedra e 💧Água|][?this=10|🍃Grama e ⚡Elétrico|][?this=11|🌪️Voador, ☠️Veneno, 🦗Inseto, 🔥Fogo e ❄️Gelo|][?this=12|🌕Terra|][?this=13|🦗Inseto, 👻Fantasma e 🕳️Noturno|][?this=14|👊Lutador, ⛰️Pedra, ⚙️Metal e 🔥Fogo|][?this=15|❄️Gelo, 🐲Dragão e 🌸Fada|][?this=16|👊Lutador, 🦗Inseto e 🌸Fada|][?this=17|☠️Veneno e ⚙️Metal|].</></><//>Imune a: [?this=0|👻Fantasma|][?this=2|🌕Terra|][?this=4|⚡Elétrico|][?this=7|😶Normal e 👊Lutador|][?this=8|☠️Veneno|][?this=16|🔮Psíquico|][?this=17|🐲Dragão|].
 			tags:status modifier
 			icon:https://i.imgur.com/DoIRyae.png
 		*activeStype
 			name:Tipo Secundário
-			text:Tipo Sec.<t>[?this=0|Normal|][?this=1|Lutador|][?this=2|Voador|][?this=3|Veneno|][?this=4|Terra|][?this=5|Pedra|][?this=6|Inseto|][?this=7|Fantasma|][?this=8|Metal|][?this=9|Fogo|][?this=10|Água|][?this=11|Grama|][?this=12|Elétrico|][?this=13|Psíquico|][?this=14|Gelo|][?this=15|Dragão|][?this=16|Noturno|][?this=17|Fada|]</t>
-			desc:<t>[?this=0|Normal|][?this=1|Lutador|][?this=2|Voador|][?this=3|Veneno|][?this=4|Terra|][?this=5|Pedra|][?this=6|Inseto|][?this=7|Fantasma|][?this=8|Metal|][?this=9|Fogo|][?this=10|Água|][?this=11|Grama|][?this=12|Elétrico|][?this=13|Psíquico|][?this=14|Gelo|][?this=15|Dragão|][?this=16|Noturno|][?this=17|Fada|]</t></></><//>Super efetivo contra: [?this=1|Normal, Pedra, Metal, Gelo e Noturno|][?this=2|Lutador, Inseto e Grama|][?this=3|Grama e Fada|][?this=4|Veneno, Pedra, Metal, Fogo e Elétrico|][?this=5|Voador, Inseto, Fogo e Gelo|][?this=6|Grama, Psíquico e Noturno|][?this=7|Fantasma e Psíquico|][?this=8|Pedra, Gelo e Fada|][?this=9|Inseto, Metal, Grama e Gelo|][?this=10|Terra, Pedra e Fogo|][?this=11|Terra, Pedra e Água|][?this=12|Voador e Água|][?this=13|Lutador e Veneno|][?this=14|Voador, Terra, Água e Dragão|][?this=15|Dragão|][?this=16|Fantasma e Psíquico|][?this=17|Lutador, Dragão e Noturno|].</></><//>Pouco efetivo contra: [?this=0|Pedra e Metal|][?this=1|Voador, Veneno, Inseto, Psíquico e Fada|][?this=2|Pedra, Metal e Elétrico|][?this=3|Veneno, Terra, Pedra e Fantasma|][?this=4|Inseto e Grama|][?this=5|Lutador, Pedra e Metal|][?this=6|Lutador, Voador, Veneno, Fantasma, Metal, Fogo e Fada|][?this=7|Noturno|][?this=8|Metal, Fogo, Água e Elétrico|][?this=9|Pedra, Fogo, Água e Dragão|][?this=10|Água, Grama e Dragão|][?this=11|Voador, Veneno, Inseto, Metal, Fogo, Grama e Dragão|][?this=12|Grama, Elétrico e Dragão|][?this=13|Metal e Psíquico|][?this=14|Metal, Fogo, Água e Gelo|][?this=15|Metal|][?this=16|Lutador, Noturno e Fada|][?this=17|Veneno, Metal e Fogo|].</></><//>Inefetivo contra: [?this=0|Fantasma|][?this=1|Fantasma|][?this=3|Metal|][?this=4|Voador|][?this=7|Normal|][?this=12|Terra|][?this=13|Noturno|][?this=15|Fada|].</></><//>Resistente contra: [?this=1|Pedra, Inseto e Noturno|][?this=2|Lutador, Inseto e Grama|][?this=3|Lutador, Veneno, Inseto, Grama e Fada|][?this=4|Veneno e Pedra|][?this=5|Normal, Voador, Veneno e Fogo|][?this=6|Lutador, Terra e Grama|][?this=7|Veneno e Inseto|][?this=8|Normal, Voador, Pedra, Inseto, Metal, Grama, Psíquico, Gelo, Dragão e Fada|][?this=9|Inseto, Metal, Fogo, Grama, Gelo e Fada|][?this=10|Metal, Fogo, Água e Gelo|][?this=11|Terra, Água, Grama e Elétrico|][?this=12|Voador, Metal e Elétrico|][?this=13|Lutador e Psíquico|][?this=14|Gelo|][?this=15|Fogo, Água, Grama e Elétrico|][?this=16|Fantasma e Noturno|][?this=17|Lutador, Inseto e Noturno|].</></><//>Frágil contra: [?this=0|Lutador|][?this=1|Voador, Psíquico e Fada|][?this=2|Pedra, Elétrico e Gelo|][?this=3|Terra e Psíquico|][?this=4|Água, Grama e Gelo|][?this=5|Lutador, Pedra, Metal, Água e Grama|][?this=6|Voador, Pedra e Fogo|][?this=7|Fantasma e Noturno|][?this=8|Lutador, Terra e Fogo|][?this=9|Terra, Pedra e Água|][?this=10|Grama e Elétrico|][?this=11|Voador, Veneno, Inseto, Fogo e Gelo|][?this=12|Terra|][?this=13|Inseto, Fantasma e Noturno|][?this=14|Lutador, Pedra, Metal e Fogo|][?this=15|Gelo, Dragão e Fada|][?this=16|Lutador, Inseto e Fada|][?this=17|Veneno e Metal|].</></><//>Imune a: [?this=0|Fantasma|][?this=2|Terra|][?this=4|Elétrico|][?this=7|Normal e Lutador|][?this=8|Veneno|][?this=16|Psíquico|][?this=17|Dragão|].
+			text:Tipo Sec.<t>[?this=0|😶</>Normal|][?this=1|👊</>Lutador|][?this=2|🌪️</>Voador|][?this=3|☠️</>Veneno|][?this=4|🌕</>Terra|][?this=5|⛰️</>Pedra|][?this=6|🦗</>Inseto|][?this=7|👻</>Fantasma|][?this=8|⚙️</>Metal|][?this=9|🔥</>Fogo|][?this=10|💧</>Água|][?this=11|🍃</>Grama|][?this=12|⚡</>Elétrico|][?this=13|🔮</>Psíquico|][?this=14|❄️</>Gelo|][?this=15|🐲</>Dragão|][?this=16|🕳️</>Noturno|][?this=17|🌸</>Fada|]</t>
+			desc:<t>[?this=0|😶Normal😶|][?this=1|👊Lutador👊|][?this=2|🌪️Voador🌪️|][?this=3|☠️Veneno☠️|][?this=4|🌕Terra🌕|][?this=5|⛰️Pedra⛰️|][?this=6|🦗Inseto🦗|][?this=7|👻Fantasma👻|][?this=8|⚙️Metal⚙️|][?this=9|🔥Fogo🔥|][?this=10|💧Água💧|][?this=11|🍃Grama🍃|][?this=12|⚡Elétrico⚡|][?this=13|🔮Psíquico🔮|][?this=14|❄️Gelo❄️|][?this=15|🐲Dragão🐲|][?this=16|🕳️Noturno🕳️|][?this=17|🌸Fada🌸|]</t></></><//>🗡️<#00cc00>Super efetivo</#> contra: [?this=1|😶Normal, ⛰️Pedra, ⚙️Metal, ❄️Gelo e 🕳️Noturno|][?this=2|👊Lutador, 🦗Inseto e 🍃Grama|][?this=3|🍃Grama e 🌸Fada|][?this=4|☠️Veneno, ⛰️Pedra, ⚙️Metal, 🔥Fogo e ⚡Elétrico|][?this=5|🌪️Voador, 🦗Inseto, 🔥Fogo e ❄️Gelo|][?this=6|🍃Grama, 🔮Psíquico e 🕳️Noturno|][?this=7|👻Fantasma e 🔮Psíquico|][?this=8|⛰️Pedra, ❄️Gelo e 🌸Fada|][?this=9|🦗Inseto, ⚙️Metal, 🍃Grama e ❄️Gelo|][?this=10|🌕Terra, ⛰️Pedra e 🔥Fogo|][?this=11|🌕Terra, ⛰️Pedra e 💧Água|][?this=12|🌪️Voador e 💧Água|][?this=13|👊Lutador e ☠️Veneno|][?this=14|🌪️Voador, 🌕Terra, 💧Água e 🐲Dragão|][?this=15|🐲Dragão|][?this=16|👻Fantasma e 🔮Psíquico|][?this=17|👊Lutador, 🐲Dragão e 🕳️Noturno|].</></><//>🗡️<#ff0000>Pouco efetivo</#> contra: [?this=0|⛰️Pedra e ⚙️Metal|][?this=1|🌪️Voador, ☠️Veneno, 🦗Inseto, 🔮Psíquico e 🌸Fada|][?this=2|⛰️Pedra, ⚙️Metal e ⚡Elétrico|][?this=3|☠️Veneno, 🌕Terra, ⛰️Pedra e 👻Fantasma|][?this=4|🦗Inseto e 🍃Grama|][?this=5|👊Lutador, ⛰️Pedra e ⚙️Metal|][?this=6|👊Lutador, 🌪️Voador, ☠️Veneno, 👻Fantasma, ⚙️Metal, 🔥Fogo e 🌸Fada|][?this=7|🕳️Noturno|][?this=8|⚙️Metal, 🔥Fogo, 💧Água e ⚡Elétrico|][?this=9|⛰️Pedra, 🔥Fogo, 💧Água e 🐲Dragão|][?this=10|💧Água, 🍃Grama e 🐲Dragão|][?this=11|🌪️Voador, ☠️Veneno, 🦗Inseto, ⚙️Metal, 🔥Fogo, 🍃Grama e 🐲Dragão|][?this=12|🍃Grama, ⚡Elétrico e 🐲Dragão|][?this=13|⚙️Metal e 🔮Psíquico|][?this=14|⚙️Metal, 🔥Fogo, 💧Água e ❄️Gelo|][?this=15|⚙️Metal|][?this=16|👊Lutador, 🕳️Noturno e 🌸Fada|][?this=17|☠️Veneno, ⚙️Metal e 🔥Fogo|].</></><//>Inefetivo contra: [?this=0|👻Fantasma|][?this=1|👻Fantasma|][?this=3|⚙️Metal|][?this=4|🌪️Voador|][?this=7|😶Normal|][?this=12|🌕Terra|][?this=13|🕳️Noturno|][?this=15|🌸Fada|].</></><//>🛡️<#00cc00>Resistente</#> contra: [?this=1|⛰️Pedra, 🦗Inseto e 🕳️Noturno|][?this=2|👊Lutador, 🦗Inseto e 🍃Grama|][?this=3|👊Lutador, ☠️Veneno, 🦗Inseto, 🍃Grama e 🌸Fada|][?this=4|☠️Veneno e ⛰️Pedra|][?this=5|😶Normal, 🌪️Voador, ☠️Veneno e 🔥Fogo|][?this=6|👊Lutador, 🌕Terra e 🍃Grama|][?this=7|☠️Veneno e 🦗Inseto|][?this=8|😶Normal, 🌪️Voador, ⛰️Pedra, 🦗Inseto, ⚙️Metal, 🍃Grama, 🔮Psíquico, ❄️Gelo, 🐲Dragão e 🌸Fada|][?this=9|🦗Inseto, ⚙️Metal, 🔥Fogo, 🍃Grama, ❄️Gelo e 🌸Fada|][?this=10|⚙️Metal, 🔥Fogo, 💧Água e ❄️Gelo|][?this=11|🌕Terra, 💧Água, 🍃Grama e ⚡Elétrico|][?this=12|🌪️Voador, ⚙️Metal e ⚡Elétrico|][?this=13|👊Lutador e 🔮Psíquico|][?this=14|❄️Gelo|][?this=15|🔥Fogo, 💧Água, 🍃Grama e ⚡Elétrico|][?this=16|👻Fantasma e 🕳️Noturno|][?this=17|👊Lutador, 🦗Inseto e 🕳️Noturno|].</></><//>🛡️<#ff0000>Frágil</#> contra: [?this=0|👊Lutador|][?this=1|🌪️Voador, 🔮Psíquico e 🌸Fada|][?this=2|⛰️Pedra, ⚡Elétrico e ❄️Gelo|][?this=3|🌕Terra e 🔮Psíquico|][?this=4|💧Água, 🍃Grama e ❄️Gelo|][?this=5|👊Lutador, ⛰️Pedra, ⚙️Metal, 💧Água e 🍃Grama|][?this=6|🌪️Voador, ⛰️Pedra e 🔥Fogo|][?this=7|👻Fantasma e 🕳️Noturno|][?this=8|👊Lutador, 🌕Terra e 🔥Fogo|][?this=9|🌕Terra, ⛰️Pedra e 💧Água|][?this=10|🍃Grama e ⚡Elétrico|][?this=11|🌪️Voador, ☠️Veneno, 🦗Inseto, 🔥Fogo e ❄️Gelo|][?this=12|🌕Terra|][?this=13|🦗Inseto, 👻Fantasma e 🕳️Noturno|][?this=14|👊Lutador, ⛰️Pedra, ⚙️Metal e 🔥Fogo|][?this=15|❄️Gelo, 🐲Dragão e 🌸Fada|][?this=16|👊Lutador, 🦗Inseto e 🌸Fada|][?this=17|☠️Veneno e ⚙️Metal|].</></><//>Imune a: [?this=0|👻Fantasma|][?this=2|🌕Terra|][?this=4|⚡Elétrico|][?this=7|😶Normal e 👊Lutador|][?this=8|☠️Veneno|][?this=16|🔮Psíquico|][?this=17|🐲Dragão|].
 			tags:status modifier
 			icon:https://i.imgur.com/lbeRY3G.png
 		*xp
@@ -1780,7 +2147,8 @@ Buttons
 			end
 		end
 
-	[include placeNoIcon %id="0" %region="0" %name="Rota 1" %desc="Rota Inicial de Pindoh!" %common1Lvl="3" %common1Range="1" %common1PkmNum="10" %common1PkmVar="0" %common2Lvl="4" %common2Range="1" %common2PkmNum="10" %common2PkmVar="0" %common3Lvl="2" %common3Range="0" %common3PkmNum="10" %common3PkmVar="0" %uncommonLvl="5" %uncommonRange="1" %uncommonPkmNum="10" %uncommonPkmVar="0" %rareLvl="7" %rareRange="2" %rarePkmNum="10" %rarePkmVar="0" %exoticLvl="8" %exoticRange="3" %exoticPkmNum="10" %exoticPkmVar="0" %legendLvl="20" %legendRange="5" %legendPkmNum="10" %legendPkmVar="0"]
+	[include placeNoIcon %id="0" %region="0" %name="Rota 1" %desc="Rota Inicial de Pindoh!" %common1Lvl="3" %common1Range="1" %common1PkmNum="10" %common1PkmVar="0" %common2Lvl="4" %common2Range="1" %common2PkmNum="10" %common2PkmVar="0" %common3Lvl="2" %common3Range="0" %common3PkmNum="10" %common3PkmVar="0" %uncommonLvl="5" %uncommonRange="1" %uncommonPkmNum="10" %uncommonPkmVar="0" %rareLvl="7" %rareRange="2" %rarePkmNum="10" %rarePkmVar="0" %exoticLvl="8" %exoticRange="3" %exoticPkmNum="11" %exoticPkmVar="0" %legendLvl="20" %legendRange="5" %legendPkmNum="12" %legendPkmVar="0"]
+	[include placeNoIcon %id="1" %region="0" %name="Laboratório" %desc="Laboratório do Professor Pkm de Pindoh!" %common1Lvl="5" %common1Range="0" %common1PkmNum="1" %common1PkmVar="0" %common2Lvl="5" %common2Range="0" %common2PkmNum="4" %common2PkmVar="0" %common3Lvl="5" %common3Range="0" %common3PkmNum="7" %common3PkmVar="0" %uncommonLvl="16" %uncommonRange="5" %uncommonPkmNum="2" %uncommonPkmVar="0" %rareLvl="16" %rareRange="5" %rarePkmNum="5" %rarePkmVar="0" %exoticLvl="16" %exoticRange="5" %exoticPkmNum="8" %exoticPkmVar="0" %legendLvl="32" %legendRange="0" %legendPkmNum="9" %legendPkmVar="0"]
     *TEMPLATE
 
 //-----------------------------------------------SECTION:MOVES---------------------------------------------------------------//
@@ -1800,15 +2168,99 @@ Upgrades
 		end
 
 	[include move %id="0" %key="tackle" %name="Investida" %type="0" %category="0" %class="0" %shape="1" %priority="0" %crit="6.25" %power="30" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="0" %fxPower="0" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um ataque físico onde o usuário investe contra o alvo com todo seu corpo."]
-	[include move %id="1" %key="bite" %name="Mordida" %type="16" %category="0" %class="0" %shape="5" %priority="0" %crit="6.25" %power="45" %accuracy="95" %moveCondID="0" %moveCondNum="0" %effect="3" %fxPower="-5" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Uma mordida feita com dentes afiados. Pode fazer o adversário hesitar."]
+
+	[include move %id="1" %key="tailWhip" %name="Chicote de Cauda" %type="0" %category="-1" %class="-1" %shape="3" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="6" %fxPower="1" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário tira a atenção do oponente balançando o rabo. Diminui a defesa do adversário."]
+
 	[include move %id="2" %key="bulletSeed" %name="Metralhadora de Sementes" %type="11" %category="0" %class="5" %shape="2" %priority="0" %crit="6.25" %power="10" %accuracy="75" %moveCondID="0" %moveCondNum="0" %effect="0" %fxPower="0" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário dispara uma rajada de sementes contra o adversário. O ataque pode se repetir de 2 a 5 vezes."]
+
 	[include move %id="3" %key="juiceShot" %name="Tiro de Suco" %type="10" %category="1" %class="0" %shape="7" %priority="0" %crit="6.25" %power="45" %accuracy="90" %moveCondID="1" %moveCondNum="0" %effect="-26" %fxPower="0" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário espreme um fruto, lançando o suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói."]
-	[include move %id="4" %key="agility" %name="Agilidade" %type="13" %category="-1" %class="-1" %shape="0" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="-19" %fxPower="2" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário relaxa, deixando seu corpo mais leve para se mover mais rápido."]
-	[include move %id="5" %key="crunch" %name="Mastigada" %type="16" %category="0" %class="0" %shape="5" %priority="0" %crit="6.25" %power="40" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="6" %fxPower="1" %fxChance="20" %fxCondID="0" %fxCondNum="0" %effect2="33" %fxPower2="40" %fxChance2="100" %fxCondID2="3" %fxCondNum2="5" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário pressiona suas presas contra o adversário, mastigando-o. Pode diminuir a defesa do adversário. Tem o dobro do poder se usado depois de algum golpe realizado com os dentes."]
+
+	[include move %id="4" %key="bite" %name="Mordida" %type="16" %category="0" %class="0" %shape="5" %priority="0" %crit="6.25" %power="45" %accuracy="95" %moveCondID="0" %moveCondNum="0" %effect="3" %fxPower="-5" %fxChance="30" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Uma mordida feita com dentes afiados. Pode fazer o adversário hesitar."]
+
+	[include move %id="5" %key="agility" %name="Agilidade" %type="13" %category="-1" %class="-1" %shape="14" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="-19" %fxPower="2" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário relaxa, deixando seu corpo mais leve para se mover mais rápido."]
+
 	[include move %id="6" %key="juiceCannon" %name="Canhão de Suco" %type="10" %category="1" %class="0" %shape="7" %priority="0" %crit="6.25" %power="120" %accuracy="90" %moveCondID="1" %moveCondNum="0" %effect="-3" %fxPower="-8" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="-26" %fxPower2="0" %fxChance2="100" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um disparo altamente pressurizado de suco contra o adversário. Só funciona se estiver carregando um fruto e o destrói. O usuário fica fadigado depois de usar."]
-	[include move %id="7" %key="coffePump" %name="Bomba de Café" %type="10" %category="1" %class="0" %shape="7" %priority="0" %crit="6.25" %power="120" %accuracy="85" %moveCondID="1" %moveCondNum="0" %effect="-26" %fxPower="0" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="3" %fxPower2="3" %fxChance2="30" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um disparo de café quente contra o adversário. Só funciona se estiver carregando um fruto e o destrói. Pode deixar o adversário em chamas."]
+
+	[include move %id="7" %key="crunch" %name="Mastigada" %type="16" %category="0" %class="0" %shape="5" %priority="0" %crit="6.25" %power="40" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="6" %fxPower="1" %fxChance="20" %fxCondID="0" %fxCondNum="0" %effect2="33" %fxPower2="40" %fxChance2="100" %fxCondID2="3" %fxCondNum2="5" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário pressiona suas presas contra o adversário, mastigando-o. Pode diminuir a defesa do adversário. Tem o dobro do poder se usado depois de algum golpe realizado com os dentes."]
+
 	[include move %id="8" %key="coffeSeed" %name="Semente de Café" %type="11" %category="-1" %class="-1" %shape="2" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="29" %fxPower="4" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Dispara uma semente de café no alvo, trocando sua habilidade para Insômnia."]
-	[include move %id="9" %key="bugBite" %name="Mordida de Inseto" %type="6" %category="0" %class="0" %shape="5" %priority="0" %crit="6.25" %power="60" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="27" %fxPower="0" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Uma mordida contra o alvo. Se ele tiver um fruto, o usuário come este fruto."]
+
+	[include move %id="9" %key="coffePump" %name="Bomba de Café" %type="10" %category="1" %class="0" %shape="7" %priority="0" %crit="6.25" %power="120" %accuracy="85" %moveCondID="1" %moveCondNum="0" %effect="-26" %fxPower="0" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="3" %fxPower2="3" %fxChance2="30" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um disparo de café quente contra o adversário. Só funciona se estiver carregando um fruto e o destrói. Pode deixar o adversário em chamas."]
+
+	[include move %id="10" %key="rapidSpin" %name="Giro Rápido" %type="0" %category="0" %class="0" %shape="8" %priority="0" %crit="6.25" %power="20" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="0" %fxPower="0" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário gira rapidamente, atingindo o adversário."]
+
+	[include move %id="11" %key="defenseCurl" %name="Enrolar" %type="0" %category="-1" %class="-1" %shape="8" %priority="0" %crit="6.25" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="-16" %fxPower="1" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="-34" %fxPower2="8" %fxChance2="100" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário se enrola para se proteger. Aumenta a defesa e muda a postura para rotatória."]
+
+	[include move %id="12" %key="flameWheel" %name="Roda de Fogo" %type="9" %category="0" %class="0" %shape="8" %priority="0" %crit="6.25" %power="45" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="3" %fxPower="3" %fxChance="10" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Envolto em chamas, o usuário rola contra o adversário. Pode deixar o adversário em chamas."]
+
+	[include move %id="13" %key="rollout" %name="Rolagem" %type="5" %category="0" %class="1" %shape="8" %priority="0" %crit="6.25" %power="15" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="0" %fxPower="0" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário investe rolando, crescente e continuamente, contra o adversário. Causa o dobro de dano por vez que é usada em sequência."]
+
+	[include move %id="14" %key="gyroBall" %name="Girobola" %type="8" %category="0" %class="0" %shape="8" %priority="-1" %crit="6.25" %power="50" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="0" %fxPower="0" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário esmaga o adversário, rolando por cima dele com seu peso. Geralmente ataca depois do adversário."]
+
+	[include move %id="15" %key="steamRoller" %name="Rolo Compressor" %type="6" %category="0" %class="1" %shape="8" %priority="0" %crit="6.25" %power="10" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="3" %fxPower="-5" %fxChance="30" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário passa por cima do adversário rolando, crescente e continuamente. Causa o dobro de dano por vez que é usada em sequência. Pode deixar o adversário hesitante."]
+
+	[include move %id="16" %key="firePunch" %name="Soco de Fogo" %type="9" %category="0" %class="0" %shape="1" %priority="0" %crit="6.25" %power="30" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="3" %fxPower="3" %fxChance="20" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um soco com o punho envolto em chamas."]
+
+	[include move %id="17" %key="bulletPunch" %name="Soco Bala" %type="8" %category="0" %class="0" %shape="4" %priority="1" %crit="6.25" %power="40" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="0" %fxPower="0" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um soco rápido como uma bala. Geralmente ataca antes do adversário."]
+
+	[include move %id="18" %key="ballPlay" %name="Brincar de Bola" %type="1" %category="-1" %class="-1" %shape="15" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="34" %fxPower="8" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário zoa o adversário, forçando ele a se enrolar feito uma bola. Muda a postura do adversário para rotatória."]
+
+	[include move %id="19" %key="taunt" %name="Provocação" %type="16" %category="-1" %class="-1" %shape="10" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="3" %fxPower="4" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Provoca o adversário, deixando-o furioso. Impede o adversário de usar golpes de status."]
+
+	[include move %id="20" %key="athletesKick" %name="Chute de Atleta" %type="1" %category="-1" %class="-1" %shape="9" %priority="2" %crit="0" %power="0" %accuracy="95" %moveCondID="0" %moveCondNum="0" %effect="35" %fxPower="0" %fxChance="100" %fxCondID="4" %fxCondNum="8" %effect2="35" %fxPower2="0" %fxChance2="100" %fxCondID2="4" %fxCondNum2="2" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Chuta qualquer coisa esférica lançada em sua direção, arremessando-a longe. Reflete golpes de projétil ou rolagem."]
+
+	[include move %id="21" %key="swagger" %name="Arrogância" %type="0" %category="-1" %class="-1" %shape="10" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="3" %fxPower="-7" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="15" %fxPower2="2" %fxChance2="100" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Esnoba o adversário, fazendo-o ficar furioso. Deixa o adversário confuso, mas aumenta seu ataque."]
+
+	[include move %id="22" %key="championShot" %name="Tacada do Campeão" %type="9" %category="0" %class="0" %shape="2" %priority="0" %crit="6.25" %power="90" %accuracy="80" %moveCondID="0" %moveCondNum="0" %effect="3" %fxPower="3" %fxChance="20" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Uma forte tacada contra o adversário, que faz a bola pegar fogo por causa da velocidade. Pode deixar o adversário em chamas."]
+
+	[include move %id="23" %key="ironHead" %name="Cabeça de Ferro" %type="8" %category="0" %class="0" %shape="11" %priority="0" %crit="6.25" %power="80" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="16" %fxPower="1" %fxChance="30" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário endurece a cabeça para investí-la contra o adversário. Pode aumentar a defesa do usuário."]
+
+	[include move %id="24" %key="scratch" %name="Arranhão" %type="0" %category="0" %class="0" %shape="6" %priority="0" %crit="12.5" %power="20" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="0" %fxPower="0" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um corte feito com garras ou unhas. Golpes críticos são mais comuns."]
+
+	[include move %id="25" %key="entrainment" %name="Entrosar" %type="0" %category="-1" %class="-1" %shape="10" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="29" %fxPower="-1" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário faz amizade com o inimigo, fazendo-o aprender sua habilidade."]
+
+	[include move %id="26" %key="bubble" %name="Bolhas" %type="10" %category="1" %class="0" %shape="2" %priority="0" %crit="6.25" %power="40" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="9" %fxPower="1" %fxChance="20" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um cuspe de bolhas d'água. Pode diminuir a velocidade do adversário."]
+
+	[include move %id="27" %key="gossip" %name="Fofocar" %type="0" %category="-1" %class="-1" %shape="10" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="-13" %fxPower="1" %fxChance="33" %fxCondID="0" %fxCondNum="0" %effect2="-21" %fxPower2="1" %fxChance2="33" %fxCondID2="0" %fxCondNum2="0" %effect3="13" %fxPower3="1" %fxChance3="33" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário conversa com o adversário sobre os outros. Pode aumentar ou diminuir qualquer atributo do usuário. Pode diminuir qualquer atributo do adversário."]
+
+	[include move %id="28" %key="falseSwipe" %name="Corte Falso" %type="0" %category="0" %class="0" %shape="6" %priority="0" %crit="12.5" %power="40" %accuracy="95" %moveCondID="0" %moveCondNum="0" %effect="37" %fxPower="1" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um corte superficial que não pode reduzir a vida do adversário a menos de 1. Golpes críticos são mais comuns."]
+
+	[include move %id="29" %key="rolePlay" %name="Jogo Teatral" %type="13" %category="-1" %class="-1" %shape="10" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="-29" %fxPower="-1" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário se finge, imitando o inimigo e aprendendo sua habilidade."]
+
+	[include move %id="30" %key="copyCat" %name="Imitador" %type="0" %category="-1" %class="-1" %shape="15" %priority="-1" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="31" %fxPower="0" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Uma imitação perfeita. Utiliza o golpe usado pelo inimigo no turno. Geralmente ataca depois do adversário."]
+
+	[include move %id="31" %key="fakeVow" %name="Juramento Falso" %type="0" %category="-1" %class="-1" %shape="10" %priority="0" %crit="0" %power="0" %accuracy="85" %moveCondID="5" %moveCondNum="31" %effect="36" %fxPower="0" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Com falsas promessas, o usuário se protege do golpe do adversário."]
+
+	[include move %id="32" %key="bubbleBeam" %name="Jato de Bolhas" %type="10" %category="1" %class="0" %shape="2" %priority="0" %crit="6.25" %power="65" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="9" %fxPower="2" %fxChance="20" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Uma forte rajada de bolhas d'água. Pode diminuir a velocidade do adversário."]
+
+	[include move %id="33" %key="echoedVoice" %name="Voz Ecoante" %type="0" %category="1" %class="1" %shape="10" %priority="0" %crit="6.25" %power="20" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="0" %fxPower="0" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um grito que soma sua intensidade aos ecos dos gritos anteriores. Causa o dobro de dano por vez que é usada em sequência."]
+
+	[include move %id="34" %key="annoyingSpeech" %name="Discurso Entediante" %type="0" %category="-1" %class="-1" %shape="10" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="3" %fxPower="-3" %fxChance="50" %fxCondID="0" %fxCondNum="0" %effect2="-17" %fxPower2="1" %fxChance2="100" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário realiza um discurso importante, mas muito cansativo. Aumenta o ataque especial do usuário. Pode fazer o adversário cair no sono."]
+
+	[include move %id="35" %key="bugBite" %name="Mordida de Inseto" %type="6" %category="0" %class="0" %shape="5" %priority="0" %crit="6.25" %power="60" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="27" %fxPower="0" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Uma mordida contra o alvo. Se ele tiver um fruto, o usuário come este fruto."]
+
+	[include move %id="36" %key="leechLife" %name="Suga-Vidas" %type="6" %category="0" %class="0" %shape="12" %priority="0" %crit="6.25" %power="20" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="1" %fxPower="50" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário chupa a essência de vida do adversário, curando-se na metade do dano que causar."]
+
+	[include move %id="37" %key="stringShot" %name="Tiro de Estilingue" %type="0" %category="-1" %class="-1" %shape="7" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="9" %fxPower="1" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Um disparo de seda que se emaranha no adversário. Reduz a velocidade do adversário."]
+
+	[include move %id="38" %key="poisonSting" %name="Picada Venenosa" %type="3" %category="0" %class="0" %shape="12" %priority="0" %crit="6.25" %power="20" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="3" %fxPower="1" %fxChance="30" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Uma picada infectada. Pode envenenar o adversário."]
+
+	[include move %id="39" %key="harden" %name="Endurecer" %type="0" %category="-1" %class="-1" %shape="1" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="-16" %fxPower="2" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário endurece seu corpo. Aumenta a defesa do usuário."]
+
+	[include move %id="40" %key="bloodDrain" %name="Dreno de Sangue" %type="6" %category="0" %class="0" %shape="12" %priority="0" %crit="6.25" %power="60" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="1" %fxPower="100" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário chupa o sangue do adversário, curando-se em todo o dano que causar."]
+
+	[include move %id="41" %key="abduct" %name="Abduzir" %type="16" %category="0" %class="-1" %shape="13" %priority="0" %crit="0" %power="0" %accuracy="25" %moveCondID="0" %moveCondNum="0" %effect="38" %fxPower="0" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Suga o adversário para dentro de si. Tira o adversário de combate instantaneamente."]
+
+	[include move %id="42" %key="peck" %name="Bicada" %type="2" %category="0" %class="2" %shape="12" %priority="0" %crit="6.25" %power="10" %accuracy="95" %moveCondID="0" %moveCondNum="0" %effect="0" %fxPower="0" %fxChance="0" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Duas perfurações com a ponta de um bico. Ataca duas vezes."]
+
+	[include move %id="43" %key="gust" %name="Rajada de Vento" %type="2" %category="1" %class="0" %shape="13" %priority="0" %crit="6.25" %power="40" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="40" %fxPower="1" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="O usuário lança vento com suas asas. Pode atingir quem estiver no ar."]
+
+	[include move %id="44" %key="fly" %name="Voar" %type="2" %category="-1" %class="-1" %shape="1" %priority="0" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="39" %fxPower="1" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="41" %fxPower2="1" %fxChance2="100" %fxCondID2="0" %fxCondNum2="0" %effect3="39" %fxPower3="0" %fxChance3="100" %fxCondID3="6" %fxCondNum3="1" %desc="Um levantamento de voo com asas. Altera a posição do usuário para o ar. Se já estiver no ar, volta ao normal. Pode ser usado no ar."]
+
+	[include move %id="45" %key="babyDollEyes" %name="Olhos Ternos" %type="17" %category="-1" %class="-1" %shape="15" %priority="1" %crit="0" %power="0" %accuracy="100" %moveCondID="0" %moveCondNum="0" %effect="5" %fxPower="1" %fxChance="100" %fxCondID="0" %fxCondNum="0" %effect2="0" %fxPower2="0" %fxChance2="0" %fxCondID2="0" %fxCondNum2="0" %effect3="0" %fxPower3="0" %fxChance3="0" %fxCondID3="0" %fxCondNum3="0" %desc="Olha ternamente para o adversário, deixando-o com dó. Reduz o ataque do adversário."]
+
+	[include move %id="46" %key="wingAttack" %name="Ataque de Asas" %type="2" %category="0" %class="0" %shape="1" %priority="0" %crit="6.25" %power="30" %accuracy="90" %moveCondID="0" %moveCondNum="0" %effect="39" %fxPower="0" %fxChance="100" %fxCondID="6" %fxCondNum="1" %effect2="41" %fxPower2="1" %fxChance2="100" %fxCondID2="0" %fxCondNum2="0" %effect3="33" %fxPower3="30" %fxChance3="100" %fxCondID3="6" %fxCondNum3="1" %desc="Uma pancada com as asas. Pode ser usado no ar. Tem o dobro do poder se usado no ar, mas retorna para a terra depois do golpe."]
+
 
     *TEMPLATE
     *aMOVnone
@@ -1881,31 +2333,31 @@ Upgrades
 		no text
 		hidden when 0
 
-	[include battler %number="1" %region="0" %variation="0" %name="Guarimple" %sprite="https://i.imgur.com/Kco4d9D.png" %baseHP="70" %baseAtk="49" %baseDfs="30" %baseSpAtk="54" %baseSpDfs="32" %baseSpeed="75" %pType="11" %sType="11" %ability="1" %move1="tackle" %move2="bulletSeed" %move3="juiceShot" %move4="agility" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceCannon" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="1" %region="0" %variation="0" %name="Guarimple" %sprite="https://i.imgur.com/Kco4d9D.png" %baseHP="70" %baseAtk="49" %baseDfs="30" %baseSpAtk="54" %baseSpDfs="32" %baseSpeed="75" %pType="11" %sType="11" %ability="1" %move1="tackle" %move2="tailWhip" %move3="bulletSeed" %move4="juiceShot" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="agility" %move3Up="bulletSeed" %move4Up="juiceCannon" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="2" %region="0" %variation="0" %name="Geeckoke" %sprite="https://i.imgur.com/bE8k0kG.png" %baseHP="90" %baseAtk="59" %baseDfs="40" %baseSpAtk="64" %baseSpDfs="42" %baseSpeed="110" %pType="11" %sType="12" %ability="1" %move1="bite" %move2="bulletSeed" %move3="juiceShot" %move4="agility" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceCannon" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="2" %region="0" %variation="0" %name="Geeckoke" %sprite="https://i.imgur.com/bE8k0kG.png" %baseHP="90" %baseAtk="59" %baseDfs="40" %baseSpAtk="64" %baseSpDfs="42" %baseSpeed="110" %pType="11" %sType="12" %ability="1" %move1="bite" %move2="bulletSeed" %move3="juiceShot" %move4="agility" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="crunch" %move2Up="bulletSeed" %move3Up="juiceCannon" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="3" %region="0" %variation="0" %name="Coffegineer" %sprite="https://i.imgur.com/qmMts25.png" %baseHP="135" %baseAtk="69" %baseDfs="68" %baseSpAtk="74" %baseSpDfs="69" %baseSpeed="120" %pType="11" %sType="12" %ability="1" %move1="tackle" %move2="juiceShot" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="3" %region="0" %variation="0" %name="Coffegineer" %sprite="https://i.imgur.com/qmMts25.png" %baseHP="135" %baseAtk="69" %baseDfs="68" %baseSpAtk="74" %baseSpDfs="69" %baseSpeed="120" %pType="11" %sType="12" %ability="1" %move1="bite" %move2="juiceShot" %move3="juiceCannon" %move4="coffeSeed" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="crunch" %move2Up="coffePump" %move3Up="juiceCannon" %move4Up="coffeSeed" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="4" %region="0" %variation="0" %name="Balldillo" %sprite="https://i.imgur.com/FNP4vop.png" %baseHP="58" %baseAtk="23" %baseDfs="81" %baseSpAtk="19" %baseSpDfs="84" %baseSpeed="45" %pType="9" %sType="9" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="4" %region="0" %variation="0" %name="Balldillo" %sprite="https://i.imgur.com/FNP4vop.png" %baseHP="58" %baseAtk="23" %baseDfs="81" %baseSpAtk="19" %baseSpDfs="84" %baseSpeed="45" %pType="9" %sType="9" %ability="2" %move1="rapidSpin" %move2="defenseCurl" %move3="flameWheel" %move4="rollout" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="gyroBall" %move2Up="defenseCurl" %move3Up="flameWheel" %move4Up="steamRoller" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="5" %region="0" %variation="0" %name="Bullyllo" %sprite="https://i.imgur.com/arHzR2D.png" %baseHP="68" %baseAtk="83" %baseDfs="81" %baseSpAtk="39" %baseSpDfs="84" %baseSpeed="50" %pType="9" %sType="8" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="5" %region="0" %variation="0" %name="Bullyllo" %sprite="https://i.imgur.com/arHzR2D.png" %baseHP="68" %baseAtk="83" %baseDfs="81" %baseSpAtk="39" %baseSpDfs="84" %baseSpeed="50" %pType="9" %sType="8" %ability="2" %move1="firePunch" %move2="bulletPunch" %move3="ballPlay" %move4="taunt" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="firePunch" %move2Up="athletesKick" %move3Up="ballPlay" %move4Up="swagger" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="6" %region="0" %variation="0" %name="Jockadillo" %sprite="https://i.imgur.com/44OlD2e.png" %baseHP="98" %baseAtk="113" %baseDfs="111" %baseSpAtk="47" %baseSpDfs="94" %baseSpeed="72" %pType="9" %sType="8" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="6" %region="0" %variation="0" %name="Jockadillo" %sprite="https://i.imgur.com/44OlD2e.png" %baseHP="98" %baseAtk="113" %baseDfs="111" %baseSpAtk="47" %baseSpDfs="94" %baseSpeed="72" %pType="9" %sType="8" %ability="2" %move1="firePunch" %move2="athletesKick" %move3="ballPlay" %move4="swagger" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="championShot" %move2Up="athletesKick" %move3Up="ballPlay" %move4Up="ironHead" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="7" %region="0" %variation="0" %name="Gossipavy" %sprite="https://i.imgur.com/xDNs4ss.png" %baseHP="76" %baseAtk="44" %baseDfs="40" %baseSpAtk="51" %baseSpDfs="37" %baseSpeed="63" %pType="10" %sType="10" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="7" %region="0" %variation="0" %name="Gossipavy" %sprite="https://i.imgur.com/xDNs4ss.png" %baseHP="76" %baseAtk="44" %baseDfs="40" %baseSpAtk="51" %baseSpDfs="37" %baseSpeed="63" %pType="10" %sType="10" %ability="3" %move1="scratch" %move2="entrainment" %move3="bubble" %move4="gossip" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="falseSwipe" %move2Up="rolePlay" %move3Up="bubbleBeam" %move4Up="copyCat" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="8" %region="0" %variation="0" %name="Capymise" %sprite="https://i.imgur.com/wdT7GJn.png" %baseHP="86" %baseAtk="59" %baseDfs="60" %baseSpAtk="71" %baseSpDfs="67" %baseSpeed="63" %pType="10" %sType="0" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="8" %region="0" %variation="0" %name="Capymise" %sprite="https://i.imgur.com/wdT7GJn.png" %baseHP="86" %baseAtk="59" %baseDfs="60" %baseSpAtk="71" %baseSpDfs="67" %baseSpeed="63" %pType="10" %sType="0" %ability="3" %move1="falseSwipe" %move2="rolePlay" %move3="bubbleBeam" %move4="copyCat" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="echoedVoice" %move2Up="fakeVow" %move3Up="bubbleBeam" %move4Up="copyCat" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="9" %region="0" %variation="0" %name="Tapident" %sprite="https://i.imgur.com/5swE23I.png" %baseHP="116" %baseAtk="84" %baseDfs="85" %baseSpAtk="96" %baseSpDfs="92" %baseSpeed="63" %pType="10" %sType="0" %ability="0" %move1="tackle" %move2="tackle" %move3="tackle" %move4="tackle" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="9" %region="0" %variation="0" %name="Tapident" %sprite="https://i.imgur.com/5swE23I.png" %baseHP="116" %baseAtk="84" %baseDfs="85" %baseSpAtk="96" %baseSpDfs="92" %baseSpeed="63" %pType="10" %sType="0" %ability="3" %move1="echoedVoice" %move2="fakeVow" %move3="bubbleBeam" %move4="annoyingSpeech" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="echoedVoice" %move2Up="fakeVow" %move3Up="copyCat" %move4Up="annoyingSpeech" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="10" %region="0" %variation="0" %name="Dengorm" %sprite="https://i.imgur.com/9Ehfwgo.png" %baseHP="23" %baseAtk="57" %baseDfs="27" %baseSpAtk="32" %baseSpDfs="27" %baseSpeed="19" %pType="6" %sType="10" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="3" %move3lvl="5" %move4lvl="7" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="10" %region="0" %variation="0" %name="Dengorm" %sprite="https://i.imgur.com/9Ehfwgo.png" %baseHP="23" %baseAtk="57" %baseDfs="27" %baseSpAtk="32" %baseSpDfs="27" %baseSpeed="19" %pType="6" %sType="10" %ability="5" %move1="leechLife" %move2="stringShot" %move3="bubble" %move4="bugBite" %move2lvl="3" %move3lvl="5" %move4lvl="7" %move1Up="leechLife" %move2Up="stringShot" %move3Up="bubbleBeam" %move4Up="bugBite" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="11" %region="0" %variation="0" %name="Chikukoon" %sprite="https://i.imgur.com/YvnsJ8L.png" %baseHP="25" %baseAtk="25" %baseDfs="49" %baseSpAtk="22" %baseSpDfs="50" %baseSpeed="19" %pType="6" %sType="10" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="11" %region="0" %variation="0" %name="Chikukoon" %sprite="https://i.imgur.com/YvnsJ8L.png" %baseHP="25" %baseAtk="25" %baseDfs="49" %baseSpAtk="22" %baseSpDfs="50" %baseSpeed="19" %pType="6" %sType="10" %ability="5" %move1="leechLife" %move2="stringShot" %move3="harden" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bloodDrain" %move2Up="bubbleBeam" %move3Up="harden" %move4Up="bugBite" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="12" %region="0" %variation="0" %name="Aedarrier" %sprite="https://i.imgur.com/jFPFWeG.png" %baseHP="148" %baseAtk="147" %baseDfs="37" %baseSpAtk="32" %baseSpDfs="37" %baseSpeed="79" %pType="6" %sType="16" %ability="0" %move1="bugBite" %move2="tackle" %move3="tackle" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="12" %region="0" %variation="0" %name="Aedarrier" %sprite="https://i.imgur.com/jFPFWeG.png" %baseHP="148" %baseAtk="147" %baseDfs="37" %baseSpAtk="32" %baseSpDfs="37" %baseSpeed="79" %pType="6" %sType="16" %ability="5" %move1="bloodDrain" %move2="poisonSting" %move3="bugBite" %move4="abduct" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bloodDrain" %move2Up="poisonSting" %move3Up="bugBite" %move4Up="abduct" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
 
-	[include battler %number="13" %region="0" %variation="0" %name="Birdeggy" %sprite="https://i.imgur.com/eRTuAex.png" %baseHP="28" %baseAtk="37" %baseDfs="37" %baseSpAtk="22" %baseSpDfs="37" %baseSpeed="39" %pType="2" %sType="0" %ability="0" %move1="tackle" %move2="bugBite" %move3="bugBite" %move4="bugBite" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="bite" %move2Up="bulletSeed" %move3Up="juiceShot" %move4Up="agility" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
+	[include battler %number="13" %region="0" %variation="0" %name="Birdeggy" %sprite="https://i.imgur.com/eRTuAex.png" %baseHP="28" %baseAtk="37" %baseDfs="37" %baseSpAtk="22" %baseSpDfs="37" %baseSpeed="39" %pType="2" %sType="0" %ability="0" %move1="peck" %move2="babyDollEyes" %move3="agility" %move4="copyCat" %move2lvl="7" %move3lvl="12" %move4lvl="16" %move1Up="peck" %move2Up="babyDollEyes" %move3Up="agility" %move4Up="copyCat" %move1UpLvl="20" %move2UpLvl="25" %move3UpLvl="31" %move4UpLvl="38"]
     *TEMPLATE
 
 //------------------------------------------SECTION:FOUND------------------------------------------------------------//
@@ -1978,31 +2430,31 @@ Achievements
 	*TEMPLATE
 		tags:enemyMove hidden
 	*BER1
-		name:Ereja
+		name:🍒Ereja
 		[include statusHealingBerry %name="Ereja" %status="-2" %log="... e se curou da paralisia!"]
 		desc:Ao ser consumida, cura <b>paralisia</b>.
 	*BER2
-		name:Catanha
+		name:🌰Catanha
 		[include statusHealingBerry %name="Catanha" %status="-3" %log="... e acordou!"]
 		desc:Ao ser consumida, <b>acorda</b> o pokémon.
 	*BER3
-		name:Pêsso
+		name:🍑Pêsso
 		[include statusHealingBerry %name="Pêsso" %status="1" %log="... e se curou do envenenamento!"]
 		desc:Ao ser consumida, cura <b>envenenamento</b>.
 	*BER4
-		name:Orango
+		name:🍓Orango
 		[include statusHealingBerry %name="Orango" %status="3" %log="... e se curou das chamas!"]
 		desc:Ao ser consumida, tira o pokémon <b>das chamas</b>.
 	*BER5
-		name:Aspêra
+		name:🍐Aspêra
 		[include statusHealingBerry %name="Aspêra" %status="-4" %log="... e se curou do congelamento!"]
 		desc:Ao ser consumida, cura <b>congelamento</b>.
 	*BER6
-		name:Caquí
+		name:🍅Caquí
 		[include statusHealingBerry %name="Caquí" %status="-7" %log="... e se curou da confusão!"]
 		desc:Ao ser consumida, cura <b>confusão</b>.
 	*BER7
-		name:Meixa
+		name:🍇Meixa
 		on activeeatactive:
 			do getname with tag:active
 			log consumiu uma <#e65c00><b>Meixa</b></#> ...
@@ -2037,27 +2489,27 @@ Achievements
 		end
 		desc:Ao ser consumida, cura <b>qualquer status</b>.
 	*BER8
-		name:Figue
+		name:🍌Figue
 		[include hpHealingBerry %name="Figue" %heal="6.25"]
 		desc:Ao ser consumida, cura <b>6.25%</b> da vida.
 	*BER9
-		name:Quiui
+		name:🥝Quiui
 		[include hpHealingBerry %name="Quiui" %heal="12.5"]
 		desc:Ao ser consumida, cura <b>12.5%</b> da vida.
 	*BER10
-		name:Mága
+		name:🍍Mága
 		[include hpHealingBerry %name="Mága" %heal="25"]
 		desc:Ao ser consumida, cura <b>25%</b> da vida.
 	*BER11
-		name:Goia
+		name:🍉Goia
 		[include hpHealingBerry %name="Goia" %heal="50"]
 		desc:Ao ser consumida, cura <b>50%</b> da vida.
 	*BER12
-		name:Paiapa
+		name:🥑Paiapa
 		[include hpHealingBerry %name="Paiapa" %heal="75"]
 		desc:Ao ser consumida, cura <b>75%</b> da vida.
 	*BER13
-		name:Cítrus
+		name:🍋Cítrus
 		[include hpHealingBerry %name="Cítrus" %heal="100"]
 		desc:Ao ser consumida, cura <b>100%</b> da vida.
 	
@@ -2213,6 +2665,7 @@ Includes
 			do reset with tag:modifierEnemy
 			enemyMaxHP = round((([%baseHP]*frandom(0.9,1.1)*enemyLvl)/50)+enemyLvl+10)
 			enemyCurHP = enemyMaxHP
+			enemyStatus = 0
 			enemyBaseAttack = ((([%baseAtk]*frandom(0.9,1.1)*enemyLvl)/50)+5)
 			enemyBaseDefense = ((([%baseDfs]*frandom(0.9,1.1)*enemyLvl)/50)+5)
 			enemyBaseSpAttack = ((([%baseSpAtk]*frandom(0.9,1.1)*enemyLvl)/50)+5)
@@ -2278,7 +2731,10 @@ Includes
 		do type[%type]advantage with this
 	end
 *include multipleHit %caster %target %hit
-	$[%caster]Aim = chance($[%caster]MoveFxChance0*[%caster]AccuracyMod*[%target]EvasionMod)
+	if (($[%caster]MoveClass>=[%hit]) and ($numberOfHits>=[%hit]))
+		$[%caster]Aim = chance($[%caster]MoveFxChance0*[%caster]AccuracyMod*[%target]EvasionMod)
+		echo hit [%hit]: Variable Update >> $[%caster]Aim [?$[%caster]Aim|✔️|❌]. [$[%caster]MoveFxChance0*[%caster]AccuracyMod*[%target]EvasionMod]% chance, from $[%caster]MoveFxChance0 ([$[%caster]MoveFxChance0]) * [%caster]AccuracyMod ([[%caster]AccuracyMod*100]) * [%target]EvasionMod ([[%target]EvasionMod*100]])
+	end
 	if (($[%caster]Aim=0) and ($numberOfHits>=[%hit]) and ($[%caster]MoveClass>=[%hit]))
 		do getname with tag:[%caster]
 		log errou o [%hit]º golpe!
@@ -2297,8 +2753,9 @@ Includes
 	end
 	if (([%caster]CurHP>0) and ([%target]CurHP>0) and ($[%caster]MoveClass>=[%hit]) and ($numberOfHits>=[%hit]) and ($[%caster]Aim = 1))
 		$[%caster]DamageMods = $[%caster]TypeAdvg*$[%caster]RandomVar*$[%caster]STAB*$[%caster]Crit*$[%caster]StatusMod*$[%caster]ShapeMod
-		$[%caster]EffectiveDamage = round(min([%target]CurHP,($[%caster]RawDamage*$[%caster]DamageMods)))
+		$[%caster]EffectiveDamage = round(min(([%target]CurHP + $[%caster]NoKill),($[%caster]RawDamage*$[%caster]DamageMods)))
 		lose $[%caster]EffectiveDamage [%target]CurHP
+		echo hit [%hit]: Variable Update >> $[%caster]EffectiveDamage = [$[%caster]EffectiveDamage]. Capped at [%target]CurHP ([[%target]CurHP]) - $[%caster]NoKill ([$[%caster]NoKill]). From $[%caster]RawDamage and $[%caster]DamageMods = [$[%caster]DamageMods*100]%, which is $[%caster]TypeAdvg ([$[%caster]TypeAdvg*100]) * $[%caster]RandomVar ([$[%caster]RandomVar*100]) * $[%caster]STAB ([$[%caster]STAB*100]) * $[%caster]Crit ([$[%caster]Crit*100]) * $[%caster]StatusMod ([$[%caster]StatusMod*100]) * $[%caster]ShapeMod ([$[%caster]ShapeMod*100])
 		do getname with tag:[%target]
 		log tomou [$[%caster]EffectiveDamage] dano!
 		log <#3366ff>-----------------------------------</#>
@@ -2325,6 +2782,33 @@ Includes
 		[%caster]Berry = 8
 		do getname with tag:[%caster]
 		log ativou sua habilidade <#00bfff><b>Frutífero</b></#> e brotou uma <#e65c00><b>[n:BER8]</b></#>!
+		log <#3366ff>-----------------------------------</#>
+	end
+	if (([%caster]Ability=2) and ($[%caster]Aim=0))
+		[%caster]AccuracyStage=min(([%caster]AccuracyStage + 1),6)
+		[%caster]DefenseStage=min(([%caster]DefenseStage + 1),6)
+		[%caster]SpeedStage=min(([%caster]SpeedStage + 1),6)
+		do getname with tag:[%caster]
+		log ativou sua habilidade <#00bfff><b>Levar na Esportiva</b></#> e aumentou sua precisão, defesa e velocidade!
+		log <#3366ff>-----------------------------------</#>
+	end
+	if (([%caster]Ability=3) and ($[%caster]MoveShape=10))
+		gain ceil(min(([%caster]MaxHP/8),([%caster]MaxHP-[%caster]CurHP))) [%caster]CurHP
+		do getname with tag:[%caster]
+		log ativou sua habilidade <#00bfff><b>Tagarela</b></#> e se curou em 12,5% de sua vida máxima!
+		log <#3366ff>-----------------------------------</#>
+	end
+	if (([%caster]Ability=4) and ([%caster]Status=-3))
+		[%caster]Status=0
+		[%caster]StatusTimer=0
+		do getname with tag:[%caster]
+		log ativou sua habilidade <#00bfff><b>Insômnia</b></#> e acordou!
+		log <#3366ff>-----------------------------------</#>
+	end
+	if (([%caster]Ability=5) and ($[%caster]Aim=1) and !(([%caster]Status=0) or ([%caster]Status=-1)) and ([%target]Status=0))
+		[%target]Status=[%caster]Status
+		do getname with tag:[%caster]
+		log ativou sua habilidade <#00bfff><b>Vetor de Doenças</b></#> e proliferou seus status para o adversário!
 		log <#3366ff>-----------------------------------</#>
 	end
 *include capturedNoIcon %name %number %region %variation %evoLvl %evoNumber
@@ -2382,6 +2866,7 @@ Includes
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		$[%caster]EffectiveHeal = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower[%fxNum]),([%caster]MaxHP-[%caster]CurHP)))
 		gain $[%caster]EffectiveHeal [%caster]CurHP
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%caster]CurHP = [[%caster]CurHP] (It was healed by [$[%caster]MoveFxPower[%fxNum]]% of [$[%caster]EffectiveDamage], the $[%caster]EffectiveDamage, capped at [[%caster]MaxHP-[%caster]CurHP], the [%caster]MaxHP-[%caster]CurHP)
 		do getname with tag:[%caster]
 		log drenou [$[%caster]EffectiveHeal] pontos de vida!
 		log <#3366ff>-----------------------------------</#>
@@ -2390,6 +2875,7 @@ Includes
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		$[%caster]EffectiveRecoil = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower[%fxNum]),[%caster]CurHP))
 		lose $[%caster]EffectiveRecoil [%caster]CurHP
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%caster]CurHP = [[%caster]CurHP] (It was damaged by [$[%caster]MoveFxPower[%fxNum]]% of [$[%caster]EffectiveDamage], the $[%caster]EffectiveDamage, capped at [[%caster]CurHP], the [%caster]CurHP)
 		do getname with tag:[%caster]
 		log também se feriu, tomando [$[%caster]EffectiveRecoil] dano!
 		log <#3366ff>-----------------------------------</#>
@@ -2402,6 +2888,7 @@ Includes
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ([%target]Status = 0) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]Status = $[%caster]MoveFxPower[%fxNum]
 		[%target]StatusTimer = $timer[%fxNum]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Status = [[%target]Status]; [%target]StatusTimer =[[%target]StatusTimer]
 		do getname with tag:[%target]
 		log [?([%target]Status=1)|foi envenenado!|][?([%target]Status=2)|foi intoxicado!|][?([%target]Status=3)|está em chamas!|][?([%target]Status=(-2))|foi paralisado!|][?([%target]Status=(-3))|caiu no sono!|][?([%target]Status=(-4))|foi congelado!|][?([%target]Status=(-5))|ficou hesitante!|][?([%target]Status=(-6))|se prepara para fugir!|][?([%target]Status=(-7))|ficou confuso!|][?([%target]Status=(-8))|ficou fadigado!|]
 		log <#3366ff>-----------------------------------</#>
@@ -2412,6 +2899,7 @@ Includes
 	end
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ([%target]Status=$[%caster]MoveFxPower[%fxNum]) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]Status = 0
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Status = [[%target]Status]
 		do getname with tag:[%target]
 		log foi curado de sua condição!
 		log <#3366ff>-----------------------------------</#>
@@ -2423,6 +2911,7 @@ Includes
 		[%target]SpAttackStage = max((-6),([%target]SpAttackStage-$[%caster]MoveFxPower[%fxNum]))
 		[%target]SpDefenseStage = max((-6),([%target]SpDefenseStage-$[%caster]MoveFxPower[%fxNum]))
 		[%target]SpeedStage = max((-6),([%target]SpeedStage-$[%caster]MoveFxPower[%fxNum]))
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]AttackStage  = [[%target]AttackStage]; [%target]DefenseStage = [[%target]DefenseStage]; [%target]SpAttackStage = [[%target]SpAttackStage]; [%target]SpDefenseStage = [[%target]SpDefenseStage]; [%target]SpeedStage = [[%target]SpeedStage]
 		do getname with tag:[%target]
 		log teve todos os seus atributos reduzidos em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
@@ -2434,6 +2923,7 @@ Includes
 		[%target]SpAttackStage = min(6,([%target]SpAttackStage+$[%caster]MoveFxPower[%fxNum]))
 		[%target]SpDefenseStage = min(6,([%target]SpDefenseStage+$[%caster]MoveFxPower[%fxNum]))
 		[%target]SpeedStage = min(6,([%target]SpeedStage+$[%caster]MoveFxPower[%fxNum]))
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]AttackStage  = [[%target]AttackStage]; [%target]DefenseStage = [[%target]DefenseStage]; [%target]SpAttackStage = [[%target]SpAttackStage]; [%target]SpDefenseStage = [[%target]SpDefenseStage]; [%target]SpeedStage = [[%target]SpeedStage]
 		do getname with tag:[%target]
 		log teve todos os seus atributos aumentados em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
@@ -2441,6 +2931,7 @@ Includes
 *include moveDebuffEffect %caster %target %number %statusKey %statusName %gender %gender2 %fxNum
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target][%statusKey]Stage = max((-6),([%target][%statusKey]Stage-$[%caster]MoveFxPower[%fxNum]))
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target][%statusKey]Stage = [[%target][%statusKey]Stage]
 		do getname with tag:[%target]
 		log teve [%gender2] [%statusName] reduzid[%gender] em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
@@ -2448,6 +2939,7 @@ Includes
 *include moveBuffEffect %caster %target %number %statusKey %amount %statusName %gender %gender2 %fxNum
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target][%statusKey]Stage = min(6,([%target][%statusKey]Stage+$[%caster]MoveFxPower[%fxNum]))
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target][%statusKey]Stage = [[%target][%statusKey]Stage]
 		do getname with tag:[%target]
 		log teve [%gender2] [%statusName] aumentad[%gender] em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
@@ -2477,7 +2969,7 @@ Includes
 	if (($[%caster]MovePower[%fxNum]=8) or ($[%caster]MovePower[%fxNum]=0))
 		$crtReset = 1
 	end
-	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]AttackStage = [%target]AttackStage*(1-$atkReset)
 		[%target]DefenseStage = [%target]DefenseStage*(1-$dfsReset)
 		[%target]SpAttackStage = [%target]SpAttackStage*(1-$spatkReset)
@@ -2486,6 +2978,7 @@ Includes
 		[%target]AccuracyStage = [%target]AccuracyStage*(1-$acuReset)
 		[%target]EvasionStage = [%target]EvasionStage*(1-$evsReset)
 		[%target]CriticalStage = [%target]CriticalStage*(1-$crtReset)
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]AttackStage = [[%target]AttackStage]; [%target]DefenseStage = [[%target]DefenseStage]; [%target]SpAttackStage = [[%target]SpAttackStage]; [%target]SpDefenseStage = [[%target]SpDefenseStage]; [%target]SpeedStage = [[%target]SpeedStage]; [%target]AccuracyStage = [[%target]AccuracyStage]; [%target]EvasionStage = [[%target]EvasionStage]; [%target]CriticalStage = [[%target]CriticalStage]
 		do getname with tag:[%target]
 		log teve o modificador de [?($[%caster]MovePower[%fxNum]=0)|todos os atributos|][?($[%caster]MovePower[%fxNum]=1)|Ataque|][?($[%caster]MovePower[%fxNum]=2)|Defesa|][?($[%caster]MovePower[%fxNum]=3)|Ataque Especial|][?($[%caster]MovePower[%fxNum]=4)|Defesa Especial|][?($[%caster]MovePower[%fxNum]=5)|Velocidade|][?($[%caster]MovePower[%fxNum]=6)|Precisão|][?($[%caster]MovePower[%fxNum]=7)|Evasão|][?($[%caster]MovePower[%fxNum]=8)|Chance de Crítico|] zerado! 
 		log <#3366ff>-----------------------------------</#>
@@ -2493,6 +2986,7 @@ Includes
 *include moveDirectDamageEffect %caster %target %number %fxNum
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		$[%caster]EffectiveFxDamage = round(min([%target]CurHP,$[%caster]MoveFxPower[%fxNum]))
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️, condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️ and $[%caster]Aim hit ✔️. Attribute Update >> [%target]CurHP = [[%target]CurHP] ([$[%caster]MoveFxPower[%fxNum]] direct damage, capped at [[%target]CurHP], the [%target]CurHP)
 		lose $[%caster]EffectiveFxDamage [%target]CurHP
 		do getname with tag:[%target]
 		log tomou [$[%caster]EffectiveFxDamage] dano!
@@ -2519,6 +3013,7 @@ Includes
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]Ptype = $[%caster]MoveFxPower[%fxNum]
 		[%target]Stype = $[%caster]MoveFxPower[%fxNum]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Ptype = [[%target]Ptype]; [%target]Stype = [[%target]Stype]
 		do getname with tag:[%target]
 		log mudou de tipo, agora ele é [?[%target]Ptype=0|Normal|][?[%target]Ptype=1|Lutador|][?[%target]Ptype=2|Voador|][?[%target]Ptype=3|Venenoso|][?[%target]Ptype=4|Terrestre|][?[%target]Ptype=5|de Pedra|][?[%target]Ptype=6|Inseto|][?[%target]Ptype=7|Fantasma|][?[%target]Ptype=8|Metálico|][?[%target]Ptype=9|de Fogo|][?[%target]Ptype=10|Aquático|][?[%target]Ptype=11|Planta|][?[%target]Ptype=12|Elétrico|][?[%target]Ptype=13|Psíquico|][?[%target]Ptype=14|de Gelo|][?[%target]Ptype=15|Dragão|][?[%target]Ptype=16|Noturno|][?[%target]Ptype=17|Fada|]
 		log <#3366ff>-----------------------------------</#>
@@ -2532,8 +3027,37 @@ Includes
 	end
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]Ability = $[%caster]MoveFxPower[%fxNum]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Ability = [[%target]Ability]
 		do getname with tag:[%target]
-		log mudou de habilidade, agora ele tem [?[%target]Ability=0|Nenhuma|][?[%target]Ability=1|Frutífero|][?[%target]Ability=3|Insômnia|]!
+		log mudou de habilidade, agora ele tem [?[%target]Ability=0|Nenhuma|][?[%target]Ability=1|Frutífero|][?[%target]Ability=2|Levar na Esportiva|][?[%target]Ability=3|Tagarela|][?[%target]Ability=4|Insômnia|][?[%target]Ability=5|Vetor de Doenças|]!
+		log <#3366ff>-----------------------------------</#>
+	end
+*include moveStanceChangeEffect %caster %target %number %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and ($[%caster]MoveFxPower[%fxNum]=(-1)) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		$[%caster]MoveFxPower[%fxNum] = [%caster]Stance
+	end
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and ($[%caster]MoveFxPower[%fxNum]=(-2)) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		$[%caster]MoveFxPower[%fxNum] = [%target]Stance
+	end
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		[%target]Stance = $[%caster]MoveFxPower[%fxNum]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Stance = [[%target]Stance]
+		do getname with tag:[%target]
+		log mudou de postura, agora ele está [?[%target]Stance=0|sem postura|][?[%target]Stance=1|em postura corporal|][?[%target]Stance=2|em postura de atirador|][?[%target]Stance=3|em postura de chicoteador|][?[%target]Stance=4|em postura de boxeador|][?[%target]Stance=5|em postura de mordedor|][?[%target]Stance=6|em postura de arranhador|][?[%target]Stance=7|em postura de lançador de rajadas|][?[%target]Stance=8|em postura rotatória|][?[%target]Stance=9|em postura para chutar|][?[%target]Stance=10|em postura sonora|][?[%target]Stance=11|em postura de cabeceador|][?[%target]Stance=12|em postura de perfurador|][?[%target]Stance=13|em postura esparsa|][?[%target]Stance=14|em postura de concentração|][?[%target]Stance=15|em postura ativa|]!
+		log <#3366ff>-----------------------------------</#>
+	end
+*include movePositionChangeEffect %caster %target %number %fxNum
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and ($[%caster]MoveFxPower[%fxNum]=(-1)) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		$[%caster]MoveFxPower[%fxNum] = [%caster]Position
+	end
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and ($[%caster]MoveFxPower[%fxNum]=(-2)) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		$[%caster]MoveFxPower[%fxNum] = [%target]Position
+	end
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		[%target]Position = $[%caster]MoveFxPower[%fxNum]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Position = [[%target]Position]
+		do getname with tag:[%target]
+		log mudou de posição, agora ele está [?[%target]Position=0|no campo de batalha|][?[%target]Position=1|voando no céu|][?[%target]Position=2|cavando debaixo da terra|][?[%target]Position=3|nadando debaixo d'água|]!
 		log <#3366ff>-----------------------------------</#>
 	end
 *include moveMetaEffects %caster %fxNum
@@ -2545,6 +3069,7 @@ Includes
 	end
 *include moveFxIf %caster %number %fxNum
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]FxCondSuccess[%fxNum]=1))
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️.
 *include moveCoreCopy %caster %target
 		$[%caster]MoveID = $[%target]MoveID
 		$[%caster]MoveType = $[%target]MoveType
@@ -2577,19 +3102,29 @@ Includes
 	if (($[%caster]MoveFxCondID[%number] = 3) and ([%caster]LastMoveShape=$[%caster]MoveFxCondNum[%number]))
 		$[%caster]FxCondSuccess[%number] = 1
 	end
-	$[%caster]MoveFxChance[%number] = ($[%caster]MoveFxChance[%number]*$[%caster]FxCondSuccess[%number])
+	if (($[%caster]MoveFxCondID[%number] = 4) and ($[%target]MoveShape=$[%caster]MoveFxCondNum[%number]))
+		$[%caster]FxCondSuccess[%number] = 1
+	end
+	echo [%caster] Move Effect [%number] Condition (#[$[%caster]MoveFxCondID[%number]]) was [?$[%caster]FxCondSuccess[%number]=0|❌ not|✔️] satisfied.
 *include onMove %caster %target
 	$[%caster]STAB = 1
 	$[%caster]Crit = 1
-	$[%caster]Aim = 1
 	$[%caster]StatusMod = 1
 	$[%caster]ShapeMod = 1
-	if ($[%caster]MoveFxChance0>=0)
+	if ($[%caster]FxCondSuccess0=1)
 		$[%caster]Aim = chance($[%caster]MoveFxChance0*[%caster]AccuracyMod*[%target]EvasionMod)
+		echo Variable Update >> $[%caster]Aim [?$[%caster]Aim|✔️|❌]. [$[%caster]MoveFxChance0*[%caster]AccuracyMod*[%target]EvasionMod]% chance, from $[%caster]MoveFxChance0 ([$[%caster]MoveFxChance0]) * [%caster]AccuracyMod ([[%caster]AccuracyMod*100]) * [%target]EvasionMod ([[%target]EvasionMod*100]])
+	end
+	if ($protection=1)
+		$[%caster]Aim = 0
+		echo Variable Update >> $[%caster]Aim ❌. Enemy has Protection.
+		do getname with tag:[%target]
+		log está protegido!
 	end
 	if ($[%caster]MoveClass>=2)
 		do getname with tag:[%caster]
 		$numberOfHits = random(2,$[%caster]MoveClass)
+		echo Variable Update >> $numberOfHits = [$numberOfHits]. Random between 2 and [$[%caster]MoveClass] ($[%caster]MoveClass).
 		log ... irá atacar [$numberOfHits] vezes neste turno ...
 		log <#3366ff>-----------------------------------</#>
 	end
@@ -2605,6 +3140,7 @@ Includes
 	if ((!($[%caster]MoveID=[%caster]LastMoveID)) and ($[%caster]Aim = 1))
 		[%caster]MovesInARow = 1
 	end
+	echo Attribute Update >> [%caster]MovesInARow [?[%caster]MovesInARow=1|❌|✔️] = [[%caster]MovesInARow].
 	if ((0>$[%caster]MoveClass) and ($[%caster]Aim = 1))
 		do getname with tag:[%caster]
 		log usou seu golpe ...
@@ -2615,15 +3151,30 @@ Includes
 	end
 	if (($[%caster]MoveClass=1) and ($[%caster]Aim = 1))
 		$[%caster]MovePower = ($[%caster]MovePower*(min(5,[%caster]MovesInARow)))
+		echo Variable Update >> $[%caster]MovePower = [$[%caster]MovePower]. Consecutive move empowerment.
 		log ... com um poder acumulado de [[%caster]MovesInARow] golpes seguidos ...
 	end
+	echo Type Checking: [%caster]Ptype = [[%caster]Ptype]; [%caster]Stype = [[%caster]Stype]; $[%caster]Movetype = [$[%caster]Movetype]
 	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClass=(-3))) and ([%caster]Ptype=$[%caster]Movetype) and ($[%caster]Aim = 1))
 		$[%caster]STAB = $[%caster]STAB + 0.5
+		echo Variable Update >> $[%caster]STAB = [$[%caster]STAB]. Move type equal to the user's primary type ✔️.
 		log ... o golpe foi fortalecido pelo seu tipo principal ...
 	end
 	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClass=(-3))) and ([%caster]Stype=$[%caster]Movetype) and ($[%caster]Aim = 1))
 		$[%caster]STAB = $[%caster]STAB + 0.5
+		echo Variable Update >> $[%caster]STAB = [$[%caster]STAB]. Move type equal to the user's secondary type ✔️.
 		log ... o golpe foi fortalecido pelo seu tipo secundário ...
+	end
+	echo Stance-Shape Checking: [%caster]Stance = [[%caster]Stance]; $[%caster]MoveShape = [$[%caster]MoveShape].
+	if (!([%caster]Stance=0) and ([%caster]Stance=$[%caster]MoveShape))
+		$[%caster]ShapeMod = 2
+		echo Variable Update >> $[%caster]ShapeMod = 2. Move shape equal to the user's stance ✔️.
+		log ... o golpe foi fortalecido pela sua postura ...
+	end
+	if (!([%caster]Stance=0) and !([%caster]Stance=$[%caster]MoveShape))
+		$[%caster]ShapeMod = 0.5
+		echo Variable Update >> $[%caster]ShapeMod = 0.5. Move shape not equal to the user's stance ❌.
+		log ... o golpe foi enfraquecido pela sua postura ...
 	end
 	if (($[%caster]MoveClass=(-3)) and ($[%caster]Aim = 1))
 		$[%caster]Heal = round(min(([%caster]MaxHP-[%caster]CurHP),(([%caster]MaxHP/100)*$[%caster]MovePower*$[%caster]STAB)))
@@ -2632,6 +3183,7 @@ Includes
 	end
 	if (($[%caster]MoveClass>=0) and (chance($[%caster]MoveCrit*pow(2,[%caster]CriticalStage))) and ($[%caster]Aim = 1))
 		$[%caster]Crit = 1.5
+		echo Variable Update >> $[%caster]Crit ✔️. [$[%caster]MoveCrit*pow(2,[%caster]CriticalStage)]% chance, from $[%caster]MoveCrit ([$[%caster]MoveCrit]) * 2^[%caster]CriticalStage ([[%caster]CriticalStage])
 		log ... e realizou um golpe crítico!
 	end
 	$auxMtype = $[%caster]MoveType
@@ -2671,27 +3223,35 @@ Includes
 		$[%caster]StatusMod = 0.5
 	end
 	$[%caster]RawDamage = ((((0.4*[%caster]Lvl + 2)*$[%caster]MovePower*($aA/$aD))/50)+2)
+	echo Variable Update >> $[%caster]RawDamage = [$[%caster]RawDamage]. From ((((0.4*[%caster]Lvl + 2)*$[%caster]MovePower*($aA/$aD))/50)+2), where [%caster]Lvl = [[%caster]Lvl], $[%caster]MovePower = [$[%caster]MovePower], $aA = [$aA] ([?$[%caster]MoveCategory|[%caster]SpAttack|[%caster]Attack]), $aD = [$aD] ([?$[%caster]MoveCategory|[%target]SpDefense|[%target]Defense])
 	if (($[%caster]MoveClass>=0) and ($[%caster]Aim = 1))
 		$[%caster]DamageMods = $[%caster]TypeAdvg*$[%caster]RandomVar*$[%caster]STAB*$[%caster]Crit*$[%caster]StatusMod*$[%caster]ShapeMod
-		$[%caster]EffectiveDamage = round(min([%target]CurHP,($[%caster]RawDamage*$[%caster]DamageMods)))
+		$[%caster]EffectiveDamage = round(min(([%target]CurHP - $[%caster]NoKill),($[%caster]RawDamage*$[%caster]DamageMods)))
+		echo Variable Update >> $[%caster]EffectiveDamage = [$[%caster]EffectiveDamage]. Capped at [%target]CurHP ([[%target]CurHP]) - $[%caster]NoKill ([$[%caster]NoKill]). From $[%caster]RawDamage and $[%caster]DamageMods = [$[%caster]DamageMods*100]%, which is $[%caster]TypeAdvg ([$[%caster]TypeAdvg*100]) * $[%caster]RandomVar ([$[%caster]RandomVar*100]) * $[%caster]STAB ([$[%caster]STAB*100]) * $[%caster]Crit ([$[%caster]Crit*100]) * $[%caster]StatusMod ([$[%caster]StatusMod*100]) * $[%caster]ShapeMod ([$[%caster]ShapeMod*100])
 		lose $[%caster]EffectiveDamage [%target]CurHP
+		echo Attribute Update >> [%target]CurHP = [[%target]CurHP]
 		do getname with tag:[%target]
 		log tomou [$[%caster]EffectiveDamage] dano!
 		log <#3366ff>-----------------------------------</#>
 	end
 *include checkMoveFirst
-	if (((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000)) and (activeStatus>=0)) do activemove with this
+	if (((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000)) and (activeStatus>=0) and ($reflection=0) and ($activeMoveAttempt=0)) do activemove with this
+	if (((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000)) and (activeStatus>=0) and ($reflection=1) and ($activeMoveAttempt=0)) do activeconfusion with this
 *include checkMoveFirstUnderStatus %statusID %statusName
-	if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=0)) do activemove with this
-	if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=1)) do active[%statusName] with this
+	if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=0) and ($reflection=0) and ($activeMoveAttempt=0)) do activemove with this
+	if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=0) and ($reflection=1) and ($activeMoveAttempt=0)) do activeconfusion with this
+	if ((activeSpeed+$activeMovePriority*10000)>=(enemySpeed+$enemyMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=1) and ($activeMoveAttempt=0)) do active[%statusName] with this
 *include checkEnemyMoveUnderStatus %statusID %statusName
-	if ((enemyStatus=(-[%statusID])) and ($e[%statusName]=0)) do enemymove with this
+	if ((enemyStatus=(-[%statusID])) and ($e[%statusName]=0) and ($reflection=0) and ($enemyMoveAttempt=0)) do enemymove with this
+	if ((enemyStatus=(-[%statusID])) and ($e[%statusName]=0) and ($reflection=1) and ($enemyMoveAttempt=0)) do enemyconfusion with this
 	if ((enemyStatus=(-[%statusID])) and ($e[%statusName]=1)) do enemy[%statusName] with this
 *include checkMoveSecond
-	if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus>=0)) do activemove with this
+	if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus>=0) and ($reflection=0) and ($activeMoveAttempt=0)) do activemove with this
+	if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus>=0) and ($reflection=1) and ($activeMoveAttempt=0)) do activeconfusion with this
 *include checkMoveSecondUnderStatus %statusID %statusName
-	if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=0)) do activemove with this
-	if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=1)) do active[%statusName] with this
+	if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=0) and ($reflection=0) and ($activeMoveAttempt=0)) do activemove with this
+	if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=0) and ($reflection=1) and ($activeMoveAttempt=0)) do activeconfusion with this
+	if ((enemySpeed+$enemyMovePriority*10000)>(activeSpeed+$activeMovePriority*10000) and (activeStatus=(-[%statusID])) and ($[%statusName]=1) and ($activeMoveAttempt=0)) do active[%statusName] with this
 *include statusHealingBerry %name %status %log
 	on activeeatactive:
 		do getname with tag:active
