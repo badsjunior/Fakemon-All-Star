@@ -1,17 +1,17 @@
 Let's make a game!
 	name:	Fakemon All-Star v0.5 (ALPHA)
 	by:	Braz Araujo da Silva Junior
-	desc:	Bem vindo ao projeto <b>Fakemon All-Stars</b>! Agradecimentos especiais ao <b>Iddle Game Maker</b>*, por possibilitar a criação deste jogo. Ao projeto <b>Game-Icons</b>**, por possibilitar a criação dos ícones utilizados no jogo, sob a licença <b>CC BY 3.0</b>***. Foram utilizados os </></><b>Ícones</b>:</></><//>Magnifying glass, by Lorc<//>Pokecog, by Lorc<//>Treasure map, by Lorc<//>Trophy cup, by Delapouite<//>Chart, by Delapouite<//>Shining heart, by Lorc<//>Punch Blast, by Lorc<//>Checked Shield, by Lorc<//>Hypersonic bolt, by Lorc<//>Ball glow, by Lorc<//>Thunderball, by Lorc<//>Up card, by Delapouite<//>Cycle, by Lorc<//>High grass, by Delapouite<//>Raspberry, by Delapouite<//>Fluffy trefoil, by Lorc<//>Stars stack by Delapouite</></>feitos pelos <b>Artistas</b>:</></><//>Lorc - http://lorcblog.blogspot.com<//>Delapouite - http://delapouite.com</></><//></></><//>Braz Junior - Região de <b>Pindoh</b> - https://www.facebook.com/PindohRegion/.</>______________________________________________________________</>*http://orteil.dashnet.org/igm/help.html</>**https://game-icons.net</>***https://creativecommons.org/licenses/by/3.0/</>
+	desc:	Bem vindo ao projeto <b>Fakemon All-Stars</b>! Agradecimentos especiais ao <b>Iddle Game Maker</b>*, por possibilitar a criação deste jogo. Ao projeto <b>Game-Icons</b>**, por possibilitar a criação dos ícones utilizados no jogo, sob a licença <b>CC BY 3.0</b>***. Foram utilizados os </></><b>Ícones</b>:</></><//>Magnifying glass, by Lorc<//>Pokecog, by Lorc<//>Treasure map, by Lorc<//>Trophy cup, by Delapouite<//>Chart, by Delapouite<//>Shining heart, by Lorc<//>Punch Blast, by Lorc<//>Checked Shield, by Lorc<//>Hypersonic bolt, by Lorc<//>Ball glow, by Lorc<//>Thunderball, by Lorc<//>Up card, by Delapouite<//>Cycle, by Lorc<//>High grass, by Delapouite<//>Raspberry, by Delapouite<//>Fluffy trefoil, by Lorc<//>Stars stack by Delapouite<//>Village, by Delapouite<//> Mountain cave, by Delapouite<//>Battleship, by Cathelineau<//>Desert, by Delapouite<//>River, by Delapouite<//>Forest, by Delapouite<//>Oasis, by Delapouite<//>Swamp, by Delapouite<//>Waterfall, by Delapouite</></>feitos pelos <b>Artistas</b>:</></><//>Lorc - http://lorcblog.blogspot.com<//>Delapouite - http://delapouite.com</></></><b>Pokémon</b>:</></><//>Braz Junior - Região de <b>Pindoh</b> - https://www.facebook.com/PindohRegion/.</>______________________________________________________________</>*http://orteil.dashnet.org/igm/help.html</>**https://game-icons.net</>***https://creativecommons.org/licenses/by/3.0/</>
 	created:04/07/2018
-	updated:03/01/2019
+	updated:12/01/2019
 
 Settings
 	background:http://i.imgur.com/Dnd9gLk.png
-    spritesheet:pType, 128 by 128, https://i.imgur.com/1rvvX5Q.png
-    spritesheet:sType, 128 by 128, https://i.imgur.com/gRRkLwO.png
-    spritesheet:filter, 128 by 128, https://i.imgur.com/WUzoOZB.png
-    spritesheet:exploration, 128 by 128, https://i.imgur.com/5TDMKUS.png
-    spritesheet:pindohDex, 128 by 128, https://i.imgur.com/F5He5Ae.png
+	spritesheet:pType, 128 by 128, https://i.imgur.com/6gPyWq7.png
+	spritesheet:sType, 128 by 128, https://i.imgur.com/U0C45fG.png
+	spritesheet:filter, 128 by 128, https://i.imgur.com/WUzoOZB.png
+	spritesheet:exploration, 128 by 128, https://i.imgur.com/ScmLxAJ.png
+	spritesheet:pindohDex, 128 by 128, https://i.imgur.com/kV2L1tU.png
 	stylesheet:https://pastebin.com/zcLE68K1
 
 Layout
@@ -1401,11 +1401,15 @@ Resources
 		on activefaint:
 			do getname with tag:active
 			log está fora de batalha!
+			gain 1 wildLose
+			echo Battle Update >> Active Pokemon Fainting (activeStatus = [activeStatus]). Statistic Update >> wildLoses = [wildLoses]
 			do return with tag:active
 		end
 		on enemyfaint:
 			do getname with tag:enemy
 			log está fora de batalha!
+			gain 1 wildWin
+			echo Battle Update >> Enemy Pokemon Fainting (enemyStatus = [enemyStatus]). Statistic Update >> wildWins = [wildWins]
 			do faint with tag:enemy
 		end
 
@@ -1413,36 +1417,38 @@ Resources
 			do getname with tag:active
 			log usou este turno para se recuperar do esforço e agora está pronto para voltar para o combate!
 			activeStatus = 0
-			echo Attribute Update >> activeStatus = [activeStatus]
+			echo Attribute Update >> activeStatus = [activeStatus]. From turn ending.
 		end
 		on enemyready:
 			do getname with tag:enemy
 			log usou este turno para se recuperar do esforço e agora está pronto para voltar para o combate!
 			enemyStatus = 0
-			echo Attribute Update >> enemyStatus = [enemyStatus]
+			echo Attribute Update >> enemyStatus = [enemyStatus]. From turn ending.
 		end
 
 		on activefatigue:
 			do getname with tag:active
 			log está se recuperando do esforço que fez no último golpe!
 			activeStatusTimer = (activeStatusTimer-1)
-			echo Attribute Update >> activeStatusTimer = [activeStatusTimer]
+			echo Attribute Update >> activeStatusTimer = [activeStatusTimer]. From turn ending.
 		end
 		on enemyfatigue:
 			do getname with tag:enemy
 			log está se recuperando do esforço que fez no último golpe!
 			enemyStatusTimer = (enemyStatusTimer-1)
-			echo Attribute Update >> enemyStatusTimer = [enemyStatusTimer]
+			echo Attribute Update >> enemyStatusTimer = [enemyStatusTimer]. From turn ending.
 		end
 
 		on activeflee:
 			do getname with tag:active
 			log deixou a batalha!
+			echo Battle Update >> Active Pokemon Fleeing (activeStatus = [activeStatus]).
 			do return with tag:active
 		end
 		on enemyflee:
 			do getname with tag:enemy
 			log deixou a batalha!
+			echo Battle Update >> Enemy Pokemon Fainting (enemyStatus = [enemyStatus]).
 			lose tag:enemy
 		end
 
@@ -1450,26 +1456,26 @@ Resources
 			do getname with tag:active
 			log hesitou em atacar!
 			activeStatus = 0
-			echo Attribute Update >> activeStatus = [activeStatus]
+			echo Attribute Update >> activeStatus = [activeStatus]. From turn ending.
 		end
 		on enemyflinch:
 			do getname with tag:enemy
 			log hesitou em atacar!
 			enemyStatus = 0
-			echo Attribute Update >> enemyStatus = [enemyStatus]
+			echo Attribute Update >> enemyStatus = [enemyStatus]. From turn ending.
 		end
 
 		on activethaw:
 			do getname with tag:active
 			log descongelou!
 			activeStatus = 0
-			echo Attribute Update >> activeStatus = [activeStatus]
+			echo Attribute Update >> activeStatus = [activeStatus]. From turn ending.
 		end
 		on enemythaw:
 			do getname with tag:enemy
 			log descongelou!
 			enemyStatus = 0
-			echo Attribute Update >> enemyStatus = [enemyStatus]
+			echo Attribute Update >> enemyStatus = [enemyStatus]. From turn ending.
 		end
 
 		on activefreeze:
@@ -1485,26 +1491,26 @@ Resources
 			do getname with tag:active
 			log acordou!
 			activeStatus = 0
-			echo Attribute Update >> activeStatus = [activeStatus]
+			echo Attribute Update >> activeStatus = [activeStatus]. From turn ending.
 		end
 		on enemywake:
 			do getname with tag:enemy
 			log acordou!
 			enemyStatus = 0
-			echo Attribute Update >> enemyStatus = [enemyStatus]
+			echo Attribute Update >> enemyStatus = [enemyStatus]. From turn ending.
 		end
 
 		on activesleep:
 			do getname with tag:active
 			log está dormindo!
 			activeStatusTimer = (activeStatusTimer-1)
-			echo Attribute Update >> activeStatusTimer = [activeStatusTimer]
+			echo Attribute Update >> activeStatusTimer = [activeStatusTimer]. From turn ending.
 		end
 		on enemysleep:
 			do getname with tag:enemy
 			log está dormindo!
 			enemyStatusTimer = (enemyStatusTimer-1)
-			echo Attribute Update >> enemyStatusTimer = [enemyStatusTimer]
+			echo Attribute Update >> enemyStatusTimer = [enemyStatusTimer]. From turn ending.
 		end
 
 		on activeparalysis:
@@ -1519,14 +1525,14 @@ Resources
 		on activepoison:
 			$activePoisonDamage = round(min((activeMaxHP/8),activeCurHP))
 			lose $activePoisonDamage activeCurHP
-			echo Attribute Update >> activeCurHP = [activeCurHP] (It was damaged by the poison that deals [activeMaxHP/8], the activeMaxHP/8, capped at [activeCurHP], the activeCurHP)
+			echo Attribute Update >> activeCurHP = [activeCurHP]. From turn ending with poison, that deals the activeMaxHP/8 ([activeMaxHP/8]), capped at the activeCurHP ([activeCurHP])
 			do getname with tag:active
 			log tomou [$activePoisonDamage] dano por envenenamento!
 		end
 		on enemypoison:
 			$enemyPoisonDamage = round(min((enemyMaxHP/8),enemyCurHP))
 			lose $enemyPoisonDamage enemyCurHP
-			echo Attribute Update >> enemyCurHP = [enemyCurHP] (It was damaged by the poison that deals [enemyMaxHP/8], the enemyMaxHP/8, capped at [enemyCurHP], the enemyCurHP)
+			echo Attribute Update >> enemyCurHP = [enemyCurHP]. From turn ending with poison, that deals the enemyMaxHP/8 ([enemyMaxHP/8]), capped at the enemyCurHP ([enemyCurHP])
 			do getname with tag:enemy
 			log tomou [$enemyPoisonDamage] dano por envenenamento!
 		end
@@ -1534,14 +1540,14 @@ Resources
 		on activebadpoison:
 			$activePoisonDamage = round(min((activeBadPoison*activeMaxHP/16),activeCurHP))
 			lose $activePoisonDamage activeCurHP
-			echo Attribute Update >> activeCurHP = [activeCurHP] (It was damaged by the poison that deals [activeMaxHP/16], the activeMaxHP/16, times [activeBadPoison], the activeBadPoison, capped at [activeCurHP], the activeCurHP)
+			echo Attribute Update >> activeCurHP = [activeCurHP]. From turn ending with bad poison, that deals activeMaxHP/16 ([activeMaxHP/16]), times activeBadPoison ([activeBadPoison]), capped at activeCurHP ([activeCurHP])
 			do getname with tag:active
 			log tomou [$activePoisonDamage] dano por intoxicação!
 		end
 		on enemybadpoison:
 			$enemyPoisonDamage = round(min((enemyBadPoison*enemyMaxHP/8),enemyCurHP))
 			lose $enemyPoisonDamage enemyCurHP
-			echo Attribute Update >> enemyCurHP = [enemyCurHP] (It was damaged by the poison that deals [enemyMaxHP/16], the enemyMaxHP/16, times [enemyBadPoison], the enemyBadPoison, capped at [enemyCurHP], the enemyCurHP)
+			echo Attribute Update >> enemyCurHP = [enemyCurHP]. From turn ending with bad poison, that deals enemyMaxHP/16 ([enemyMaxHP/16]), times enemyBadPoison ([enemyBadPoison]), capped at enemyCurHP ([enemyCurHP])
 			do getname with tag:enemy
 			log tomou [$enemyPoisonDamage] dano por intoxicação!
 		end
@@ -1549,25 +1555,38 @@ Resources
 		on activeburn:
 			$activePoisonDamage = round(min((activeMaxHP/16),activeCurHP))
 			lose $activePoisonDamage activeCurHP
-			echo Attribute Update >> activeCurHP = [activeCurHP] (It was damaged by its burn that deals [activeMaxHP/16], the activeMaxHP/16, capped at [activeCurHP], the activeCurHP)
+			echo Attribute Update >> activeCurHP = [activeCurHP]. From turn ending with burn, that deals the activeMaxHP/16 ([activeMaxHP/16]), capped at the activeCurHP ([activeCurHP])
 			do getname with tag:active
 			log tomou [$activePoisonDamage] dano por queimadura!
 		end
 		on enemyburn:
 			$enemyPoisonDamage = round(min((enemyMaxHP/16),enemyCurHP))
 			lose $enemyPoisonDamage enemyCurHP
-			echo Attribute Update >> enemyCurHP = [enemyCurHP] (It was damaged by its burn that deals [enemyMaxHP/16], the enemyMaxHP/16, capped at [enemyCurHP], the enemyCurHP)
+			echo Attribute Update >> enemyCurHP = [enemyCurHP]. From turn ending with burn, that deals the enemyMaxHP/16 ([enemyMaxHP/16]), capped at the enemyCurHP ([enemyCurHP])
 			do getname with tag:enemy
 			log tomou [$enemyPoisonDamage] dano por queimadura!
 		end
 
+		on activetaunt:
+			do getname with tag:active
+			log está enfurecido pelas provocações do oponente!
+		end
+		on enemytaunt:
+			do getname with tag:enemy
+			log está enfurecido pelas provocações do oponente!
+		end
+
+
 		on endturn:
+			echo Post-move phase: Verifying Status Updates...
 			if (activeStatus=1) do activepoison with this
 			if (enemyStatus=1) do enemypoison with this
 			if (activeStatus=2) do activebadpoison with this
 			if (enemyStatus=2) do enemybadpoison with this
 			if (activeStatus=3) do activeburn with this
 			if (enemyStatus=3) do enemyburn with this
+			if (activeStatus=4) do activetaunt with this
+			if (enemyStatus=4) do enemytaunt with this
 			if ((activeStatus=(-3)) and (0>=activeStatusTimer)) do activewake with this
 			if ((enemyStatus=(-3)) and (0>=enemyStatusTimer)) do enemywake with this
 			if ((activeStatus=(-3)) and (activeStatusTimer>0)) do activesleep with this
@@ -1576,21 +1595,24 @@ Resources
 			if ((enemyStatus=(-8)) and (0>=enemyStatusTimer)) do enemyready with this
 			if ((activeStatus=(-8)) and (activeStatusTimer>0)) do activefatigue with this
 			if ((enemyStatus=(-8)) and (enemyStatusTimer>0)) do enemyfatigue with this
-			$fifth = random(1,5)
-			$thaw = 0
-			if ($fifth=1) $thaw=1
-			if ((activeStatus=(-4)) and ($thaw=0)) do activefreeze with this
-			if ((enemyStatus=(-4)) and ($thaw=0)) do enemyfreeze with this
-			if ((activeStatus=(-4)) and ($thaw=1)) do activethaw with this
-			if ((enemyStatus=(-4)) and ($thaw=1)) do enemythaw with this
+			$activeThaw = 0
+			$enemyThaw = 0
+			if (chance(20)) $activeThaw = 1
+			if (chance(20)) $enemyThaw = 1
+			if ((activeStatus=(-4)) and ($activeThaw=0)) do activefreeze with this
+			if ((enemyStatus=(-4)) and ($enemyThaw=0)) do enemyfreeze with this
+			if ((activeStatus=(-4)) and ($activeThaw=1)) do activethaw with this
+			if ((enemyStatus=(-4)) and ($enemyThaw=1)) do enemythaw with this
 			if (activeStatus=(-5)) do activeflinch with this
 			if (enemyStatus=(-5)) do enemyflinch with this
 			if (activeStatus=(-6)) do activeflee with this
 			if (enemyStatus=(-6)) do enemyflee with this
 
+			echo Post-move phase: Verifying Ability Effects...
 			[include triggerPeriodicAbilities %caster="active" %target="enemy"]
 			[include triggerPeriodicAbilities %caster="enemy" %target="active"]
 
+			echo Post-move phase: Adjusting Attribute Modifiers to fit their Stages...
 			[include defModByStage %stage="(-6)" %mod="0.25"]
 			[include defModByStage %stage="(-5)" %mod="0.2857"]
 			[include defModByStage %stage="(-4)" %mod="0.3333"]
@@ -1619,6 +1641,7 @@ Resources
 			[include defAcEvModByStage %stage="5" %mod="2.6666"]
 			[include defAcEvModByStage %stage="6" %mod="3"]
 
+			echo Post-move phase: Verifying Berry Triggers...
 			if ((enemyBerry=1) and (enemyStatus=(-2))) do enemyeat with BER1
 			if ((enemyBerry=2) and (enemyStatus=(-3))) do enemyeat with BER2
 			if ((enemyBerry=3) and (enemyStatus=1)) do enemyeat with BER3
@@ -1633,6 +1656,7 @@ Resources
 			if ((enemyBerry=12) and (!(enemyStatus=(-1))) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER12
 			if ((enemyBerry=13) and (!(enemyStatus=(-1))) and ((enemyMaxHP/4)>=enemyCurHP)) do enemyeat with BER13
 
+			echo Post-move phase: Ensuring faintings...
 			if ((activeStatus=(-1)) or (0>=round(activeCurHP))) do activefaint with this
 			if ((enemyStatus=(-1)) or (0>=round(enemyCurHP))) do enemyfaint with this
 		end
@@ -2037,6 +2061,50 @@ Resources
 	*secondPlayed|secondsPlayed
 		name:Segundos Jogados
 		desc:O tempo que você gastou jogando este jogo.
+
+	*ballThrown|ballsThrown
+		name:Pokébolas Jogadas
+		desc:Quantas pokébolas você já jogou neste jogo.
+
+	*wildEncounter|wildEncounters
+		name:Pokémon Selvagens Encontrados
+		desc:Quantos pokémon selvagens você já encontrou neste jogo.
+
+	*commonEncounter|commonEncounters
+		name:Encontros Comuns
+		desc:Quantos pokémon comuns você já encontrou neste jogo.
+
+	*uncommonEncounter|uncommonEncounters
+		name:Encontros Incomuns
+		desc:Quantos pokémon incomuns você já encontrou neste jogo.
+
+	*rareEncounter|rareEncounters
+		name:Encontros Raros
+		desc:Quantos pokémon raros você já encontrou neste jogo.
+
+	*exoticEncounter|exoticEncounters
+		name:Encontros Exóticos
+		desc:Quantos pokémon exóticos você já encontrou neste jogo.
+
+	*legendEncounter|legendEncounters
+		name:Encontros Lendários
+		desc:Quantos pokémon lendários você já encontrou neste jogo.
+
+	*wildWin|wildWins
+		name:Vitórias contra Pokémon Selvagens
+		desc:Quantos pokémon selvagens você já derrotou neste jogo.
+
+	*wildLose|wildLoses
+		name:Derrotas contra Pokémon Selvagens
+		desc:Quantos pokémon selvagens já derrotaram você neste jogo.
+
+	*wildRunAway
+		name:Fugas de Pokémon Selvagens
+		desc:Quantos pokémon selvagens já fugiram de você neste jogo.
+
+	*activeReturn
+		name:Recuos
+		desc:Quantas vezes você já retornou seus pokémon para pokébola neste jogo.
     *TEMPLATE
 
 //----------------------------------------------------UI------------------------------------------------------------------//
@@ -2095,21 +2163,21 @@ Buttons
     *chooseGrass
 		name:Guarimple
 		text:<t>[n:this]</><#e67300>Pindoh</#></><#00b300>Grama</#>
-		icon:pindohDex[1,0] pType[5,1] sType[5,1]
+		icon:pindohDex[1,0] pType[11,0] sType[11,0]
 		on click:
 			CPT1from0var0 = 5
 		end
     *chooseFire
 		name:Balldillo
 		text:<t>[n:this]</><#e67300>Pindoh</#></><#ff6600>Fogo</#>
-		icon:pindohDex[4,0] pType[3,1] sType[3,1]
+		icon:pindohDex[4,0] pType[9,0] sType[9,0]
 		on click:
 			CPT4from0var0 = 5
 		end
     *chooseWater
 		name:Gossipavy
 		text:<t>[n:this]</><#e67300>Pindoh</#></><#008ae6>Água</#>
-		icon:pindohDex[7,0] pType[4,1] sType[4,1]
+		icon:pindohDex[7,0] pType[10,0] sType[10,0]
 		on click:
 			CPT7from0var0 = 5
 		end
@@ -2125,30 +2193,44 @@ Buttons
 			$rand = random(2)
 			if (chance(0.1%))
 				toast <#ff9900><b>LENDÁRIO!</b></#>
+				gain 1 legendEncounter
+				echo Statistic Update >> legendEncounter = [legendEncounter] ([(legendEncounter*10000)/(wildEncounter+1)]/10000)
 				do legend with this
 			else if (chance(1%))
 				toast <#cc33ff><b>EXÓTICO!</b></#>
+				gain 1 exoticEncounter
+				echo Statistic Update >> exoticEncounter = [exoticEncounter] ([(exoticEncounter*10000)/(exoticEncounter+1)]/10000)
 				do exotic with this
 			else if (chance(10%))
 				toast <#00cccc><b>RARO!</b></#>
+				gain 1 rareEncounter
+				echo Statistic Update >> rareEncounter = [rareEncounter] ([(rareEncounter*10000)/(rareEncounter+1)]/10000)
 				do rare with this
 			else if (chance(40%))
 				toast <#4dffa6><b>INCOMUM!</b></#>
+				gain 1 uncommonEncounter
+				echo Statistic Update >> uncommonEncounter = [uncommonEncounter] ([(uncommonEncounter*10000)/(uncommonEncounter+1)]/10000)
 				do uncommon with this
 			else if ($rand=0) 
 				toast <#999999><b>COMUM!</b></#>
+				gain 1 commonEncounter
+				echo Statistic Update >> commonEncounter= [commonEncounter] ([(commonEncounter*10000)/(commonEncounter+1)]/10000)
 				do common1 with this
 			else if ($rand=1) 
 				toast <#999999><b>COMUM!</b></#>
+				gain 1 commonEncounter
+				echo Statistic Update >> commonEncounter= [commonEncounter] ([(commonEncounter*10000)/(commonEncounter+1)]/10000)
 				do common2 with this
 			else if ($rand=2) 
 				toast <#999999><b>COMUM!</b></#>
+				gain 1 commonEncounter
+				echo Statistic Update >> commonEncounter= [commonEncounter] ([(commonEncounter*10000)/(commonEncounter+1)]/10000)
 				do common3 with this
 			end
 		end
 
-	[include placeNoIcon %id="0" %region="0" %name="Rota 1" %desc="Rota Inicial de Pindoh!" %common1Lvl="3" %common1Range="1" %common1PkmNum="10" %common1PkmVar="0" %common2Lvl="4" %common2Range="1" %common2PkmNum="10" %common2PkmVar="0" %common3Lvl="2" %common3Range="0" %common3PkmNum="10" %common3PkmVar="0" %uncommonLvl="5" %uncommonRange="1" %uncommonPkmNum="10" %uncommonPkmVar="0" %rareLvl="7" %rareRange="2" %rarePkmNum="10" %rarePkmVar="0" %exoticLvl="8" %exoticRange="3" %exoticPkmNum="11" %exoticPkmVar="0" %legendLvl="20" %legendRange="5" %legendPkmNum="12" %legendPkmVar="0"]
-	[include placeNoIcon %id="1" %region="0" %name="Laboratório" %desc="Laboratório do Professor Pkm de Pindoh!" %common1Lvl="5" %common1Range="0" %common1PkmNum="1" %common1PkmVar="0" %common2Lvl="5" %common2Range="0" %common2PkmNum="4" %common2PkmVar="0" %common3Lvl="5" %common3Range="0" %common3PkmNum="7" %common3PkmVar="0" %uncommonLvl="16" %uncommonRange="5" %uncommonPkmNum="2" %uncommonPkmVar="0" %rareLvl="16" %rareRange="5" %rarePkmNum="5" %rarePkmVar="0" %exoticLvl="16" %exoticRange="5" %exoticPkmNum="8" %exoticPkmVar="0" %legendLvl="32" %legendRange="0" %legendPkmNum="9" %legendPkmVar="0"]
+	[include place %id="0" %region="0" %icon="0" %name="Rota 1" %desc="Rota Inicial de Pindoh!" %common1Lvl="3" %common1Range="1" %common1PkmNum="10" %common1PkmVar="0" %common2Lvl="4" %common2Range="1" %common2PkmNum="10" %common2PkmVar="0" %common3Lvl="2" %common3Range="0" %common3PkmNum="10" %common3PkmVar="0" %uncommonLvl="5" %uncommonRange="1" %uncommonPkmNum="10" %uncommonPkmVar="0" %rareLvl="7" %rareRange="2" %rarePkmNum="10" %rarePkmVar="0" %exoticLvl="8" %exoticRange="3" %exoticPkmNum="11" %exoticPkmVar="0" %legendLvl="20" %legendRange="5" %legendPkmNum="12" %legendPkmVar="0"]
+	[include place %id="1" %region="0" %icon="3" %name="Laboratório" %desc="Laboratório do Professor Pkm de Pindoh!" %common1Lvl="5" %common1Range="0" %common1PkmNum="1" %common1PkmVar="0" %common2Lvl="5" %common2Range="0" %common2PkmNum="4" %common2PkmVar="0" %common3Lvl="5" %common3Range="0" %common3PkmNum="7" %common3PkmVar="0" %uncommonLvl="16" %uncommonRange="5" %uncommonPkmNum="2" %uncommonPkmVar="0" %rareLvl="16" %rareRange="5" %rarePkmNum="5" %rarePkmVar="0" %exoticLvl="16" %exoticRange="5" %exoticPkmNum="8" %exoticPkmVar="0" %legendLvl="32" %legendRange="0" %legendPkmNum="9" %legendPkmVar="0"]
     *TEMPLATE
 
 //-----------------------------------------------SECTION:MOVES---------------------------------------------------------------//
@@ -2279,44 +2361,31 @@ Buildings
 		tag:capturedTab
 		hidden when 0
 
-	[include capturedNoIcon %name="Guarimple" %number="1" %region="0" %variation="0" %evoLvl="16" %evoNumber="2"]
-		icon:pindohDex[1,0] pType[5,1] sType[5,1]
+	[include captured %name="Guarimple" %number="1" %dexName="pindoh" %region="0" %variation="0" %evoLvl="16" %evoNumber="2" %evoVar="0" %pType="11" %sType="11"]
 
-	[include capturedNoIcon %name="Geeckoke" %number="2" %region="0" %variation="0" %evoLvl="32" %evoNumber="3"]
-		icon:pindohDex[2,0] pType[5,1] sType[0,2]
+	[include captured %name="Geeckoke" %number="2" %dexName="pindoh" %region="0" %variation="0" %evoLvl="32" %evoNumber="3" %evoVar="0" %pType="11" %sType="12"]
 
-	[include capturedNoIcon %name="Coffegineer" %number="3" %region="0" %variation="0" %evoLvl="0" %evoNumber="1"]
-		icon:pindohDex[3,0] pType[5,1] sType[0,2]
+	[include captured %name="Coffegineer" %number="3" %dexName="pindoh" %region="0" %variation="0" %evoLvl="0" %evoNumber="1" %evoVar="0" %pType="11" %sType="12"]
 
-	[include capturedNoIcon %name="Balldillo" %number="4" %region="0" %variation="0" %evoLvl="16" %evoNumber="5"]
-		icon:pindohDex[4,0] pType[3,1] sType[3,1]
+	[include captured %name="Balldillo" %number="4" %dexName="pindoh" %region="0" %variation="0" %evoLvl="16" %evoNumber="5" %evoVar="0" %pType="9" %sType="9"]
 
-	[include capturedNoIcon %name="Bullyllo" %number="5" %region="0" %variation="0" %evoLvl="32" %evoNumber="6"]
-		icon:pindohDex[5,0] pType[3,1] sType[2,1]
+	[include captured %name="Bullyllo" %number="5" %dexName="pindoh" %region="0" %variation="0" %evoLvl="32" %evoNumber="6" %evoVar="0" %pType="9" %sType="8"]
 
-	[include capturedNoIcon %name="Jockadillo" %number="6" %region="0" %variation="0" %evoLvl="0" %evoNumber="1"]
-		icon:pindohDex[6,0] pType[3,1] sType[2,1]
+	[include captured %name="Jockadillo" %number="6" %dexName="pindoh" %region="0" %variation="0" %evoLvl="0" %evoNumber="1" %evoVar="0" %pType="9" %sType="8"]
 
-	[include capturedNoIcon %name="Gossipavy" %number="7" %region="0" %variation="0" %evoLvl="16" %evoNumber="8"]
-		icon:pindohDex[7,0] pType[4,1] sType[4,1]
+	[include captured %name="Gossipavy" %number="7" %dexName="pindoh" %region="0" %variation="0" %evoLvl="16" %evoNumber="8" %evoVar="0" %pType="10" %sType="10"]
 
-	[include capturedNoIcon %name="Capymise" %number="8" %region="0" %variation="0" %evoLvl="32" %evoNumber="9"]
-		icon:pindohDex[8,0] pType[4,1] sType[0,0]
+	[include captured %name="Capymise" %number="8" %dexName="pindoh" %region="0" %variation="0" %evoLvl="32" %evoNumber="9" %evoVar="0" %pType="10" %sType="0"]
 
-	[include capturedNoIcon %name="Tapident" %number="9" %region="0" %variation="0" %evoLvl="0" %evoNumber="1"]
-		icon:pindohDex[9,0] pType[4,1] sType[0,0]
+	[include captured %name="Tapident" %number="9" %dexName="pindoh" %region="0" %variation="0" %evoLvl="0" %evoNumber="1" %evoVar="0" %pType="10" %sType="0"]
 
-	[include capturedNoIcon %name="Dengorm" %number="10" %region="0" %variation="0" %evoLvl="7" %evoNumber="11"]
-		icon:pindohDex[0,1] pType[0,1] sType[4,1]
+	[include captured %name="Dengorm" %number="10" %dexName="pindoh" %region="0" %variation="0" %evoLvl="7" %evoNumber="11" %evoVar="0" %pType="6" %sType="10"]
 
-	[include capturedNoIcon %name="Chikukoon" %number="11" %region="0" %variation="0" %evoLvl="10" %evoNumber="12"]
-		icon:pindohDex[1,1] pType[0,1] sType[4,1]
+	[include captured %name="Chikukoon" %number="11" %dexName="pindoh" %region="0" %variation="0" %evoLvl="10" %evoNumber="12" %evoVar="0" %pType="6" %sType="10"]
 
-	[include capturedNoIcon %name="Aedarrier" %number="12" %region="0" %variation="0" %evoLvl="0" %evoNumber="1"]
-		icon:pindohDex[2,1] pType[0,1] sType[4,2]
+	[include captured %name="Aedarrier" %number="12" %dexName="pindoh" %region="0" %variation="0" %evoLvl="0" %evoNumber="1" %evoVar="0" %pType="6" %sType="16"]
 
-	[include capturedNoIcon %name="Birdeggy" %number="13" %region="0" %variation="0" %evoLvl="0" %evoNumber="1"]
-		icon:pindohDex[3,1] pType[1,0] sType[0,0]
+	[include captured %name="Birdeggy" %number="13" %dexName="pindoh" %region="0" %variation="0" %evoLvl="0" %evoNumber="1" %evoVar="0" %pType="1" %sType="0"]
 
     *TEMPLATE
 
@@ -2409,19 +2478,19 @@ Achievements
 	*FND10from0var0
 		name:Dengorm
 		desc:Encontrado na <b>Rota 1</b> de <b>Pindoh</b>.
-		icon:pindohDex[0,1]
+		icon:pindohDex[10,0]
 	*FND11from0var0
 		name:Chikukoon
 		desc:Encontrado na <b>Rota 1</b> de <b>Pindoh</b>. Evolução de <b>[n:FND10from0var0]</b>.
-		icon:pindohDex[1,1]
+		icon:pindohDex[11,0]
 	*FND12from0var0
 		name:Aedarrier
 		desc:Encontrado na <b>Rota 1</b> de <b>Pindoh</b>. Evolução de <b>[n:FND11from0var0]</b>.
-		icon:pindohDex[2,1]
+		icon:pindohDex[12,0]
 	*FND13from0var0
 		name:Birdeggy
 		desc:Encontrado na <b>Rota 1</b> de <b>Pindoh</b>.
-		icon:pindohDex[3,1]
+		icon:pindohDex[13,0]
 //	*FND[number]from[region]var[variation]
 	*TEMPLATE
 
@@ -2595,6 +2664,8 @@ Includes
 		no tooltip
 		tag:active
 		on click:
+			gain 1 activeReturn
+			echo returning... Statistic Update >> activeReturn = [activeReturn]
 			do return with this
 		end
 		on return:
@@ -2606,7 +2677,6 @@ Includes
 		end
 		on earn:
 			gain activePkm
-			activeCurHP = round(activeCurHP)
 			do reset with tag:modifier
 			if (have enemyPkm) gain inBattle
 			activeMaxHP = round((([%baseHP]*activeLvl)/50)+activeLvl+10)
@@ -2619,6 +2689,7 @@ Includes
 			activePtype = [%pType]
 			activeStype = [%sType]
 			activeAbility = [%ability]
+			echo Attribute Update >> activeMaxHP = [activeMaxHP]; activeCurHP = [activeCurHP]; activeBaseAttack = [activeBaseAttack]; activeBaseDefense = [activeBaseDefense]; activeBaseSpAttack = [activeBaseSpAttack]; activeBaseSpDefense = [activeBaseSpDefense]; activeBaseSpeed = [activeBaseSpeed]; activePtype = [activePtype]; activeStype = [activeStype]; activeAbility = [activeAbility];
 			if ([%move1UpLvl]>activeLvl) gain aMOV[%move1]
 			if ((activeLvl>=[%move2lvl]) and ([%move2UpLvl]>activeLvl)) gain aMOV[%move2]
 			if ((activeLvl>=[%move3lvl]) and ([%move3UpLvl]>activeLvl)) gain aMOV[%move3]
@@ -2636,6 +2707,7 @@ Includes
 			do reset with tag:base
 			activeMaxHP = 0
 			activeCurHP = 0
+			echo ❌ Lose ❌ Attribute Update >> activeMaxHP = [activeMaxHP]; activeCurHP = [activeCurHP].
 		end
 		on getname:
 			if (have this) log <#00cc00><b>[n:this]</b></#>
@@ -2648,13 +2720,18 @@ Includes
 		on click:
 			if (1>pokeballs)
 				toast Você <#ff3300>não tem pokébolas</#> para capturar!
+				echo ❌ pokeballs = [pokeballs] < 1.
 			else if (chance((enemyMaxHP*5)/(enemyCurHP)))
 				pokeball = (pokeballs-1)
+				gain 1 ballThrown
+				echo Attribute Update >> pokeball = [pokeball]. Lost 1 by capturing this. ([(enemyMaxHP*5)/(enemyCurHP)])% chance ✔. Statistic Update >> ballsThrown = [ballsThrown]
 				toast Você capturou <#00cc00>[n:this]</#> lvl [enemyLvl]!
 				do capture with this
 				lose this
 			else
 				pokeball = (pokeballs-1)
+				gain 1 ballThrown
+				echo Attribute Update >> pokeball = [pokeball]. Lost 1 by failing to capture this. ([(enemyMaxHP*5)/(enemyCurHP)])% chance ❌. Statistic Update >> ballsThrown = [ballsThrown]
 				toast Você falhou em capturar <#ff3300>[n:this]</#> e ele fugiu da batalha!
 				lose this
 			end
@@ -2675,6 +2752,8 @@ Includes
 			enemyStype = [%sType]
 			enemyBerry = random(13)
 			enemyAbility = [%ability]
+			gain 1 wildEncounter
+			echo Attribute Update >> enemyMaxHP = [enemyMaxHP]; enemyCurHP = [enemyCurHP]; enemyStatus = [enemyStatus]; enemyBaseAttack = [enemyBaseAttack]; enemyBaseDefense = [enemyBaseDefense]; enemyBaseSpAttack = [enemyBaseSpAttack]; enemyBaseSpDefense = [enemyBaseSpDefense]; enemyBaseSpeed = [enemyBaseSpeed]; enemyPtype = [enemyPtype]; enemyStype = [enemyStype]; enemyBerry = [enemyBerry]; enemyAbility = [enemyAbility]. Statistic Update >> wildEncounter = [wildEncounter]
 		end
 		on capture:
 			CPT[%number]from[%region]var[%variation] = max(enemyLvl,CPT[%number]from[%region]var[%variation])
@@ -2706,6 +2785,7 @@ Includes
 				toast <#00cc00>Vitória!</#>
 				log <#ff3300><b>[n:this]</b></#> foi derrotado, você ganhou [$expEarned] xp.
 				gain $expEarned xp
+				echo ❌ Faint ❌ Attribute Update >> xp = [xp]. You earned [$expEarned], enemyMaxHP ([enemyMaxHP]) + enemyBaseAttack ([enemyBaseAttack]) + enemyBaseDefense ([enemyBaseDefense]) + enemyBaseSpAttack ([enemyBaseSpAttack]) + enemyBaseSpDefense ([enemyBaseSpDefense]) + enemyBaseSpeed ([enemyBaseSpeed]), powered by 2, over 100, then times 2 * enemyLvl ([enemyLvl]) over enemyLvl ([enemyLvl]) + activeLvl ([activeLvl]), also powered by 2. Which is ([(enemyMaxHP + enemyBaseAttack + enemyBaseDefense + enemyBaseSpAttack + enemyBaseSpDefense + enemyBaseSpeed)]^2 / 100) * ([enemyLvl] / [(enemyLvl + activeLvl)])^2
 				lose this
 			end
 		end
@@ -2777,23 +2857,25 @@ Includes
 	if (enemyAccuracyStage=[%stage]) enemyAccuracyMod = [%mod]
 	if (enemyEvasionStage=(-[%stage])) enemyEvasionMod = [%mod]
 *include triggerPeriodicAbilities %caster %target
-	$half = random(1,2)
-	if (([%caster]Ability=1) and ($half=1))
+	if (([%caster]Ability=1) and (chance(25)) and !([%caster]Status=-1))
 		[%caster]Berry = 8
+		echo Attribute Update >> [%caster]Berry = [[%caster]Berry]. From [%caster]Ability (#[[%caster]Ability]): 25% chance ✔️
 		do getname with tag:[%caster]
 		log ativou sua habilidade <#00bfff><b>Frutífero</b></#> e brotou uma <#e65c00><b>[n:BER8]</b></#>!
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (([%caster]Ability=2) and ($[%caster]Aim=0))
+	if (([%caster]Ability=2) and ($[%caster]Aim=0) and !([%caster]Status=-1))
 		[%caster]AccuracyStage=min(([%caster]AccuracyStage + 1),6)
 		[%caster]DefenseStage=min(([%caster]DefenseStage + 1),6)
 		[%caster]SpeedStage=min(([%caster]SpeedStage + 1),6)
+		echo Attribute Update >> [%caster]AccuracyStage = [[%caster]AccuracyStage]; [%caster]DefenseStage = [[%caster]DefenseStage]; [%caster]SpeedStage = [[%caster]SpeedStage]. From [%caster]Ability (#[[%caster]Ability]): $[%caster]Aim = [$[%caster]Aim] ✔️
 		do getname with tag:[%caster]
 		log ativou sua habilidade <#00bfff><b>Levar na Esportiva</b></#> e aumentou sua precisão, defesa e velocidade!
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (([%caster]Ability=3) and ($[%caster]MoveShape=10))
+	if (([%caster]Ability=3) and ($[%caster]MoveShape=10) and !([%caster]Status=-1))
 		gain ceil(min(([%caster]MaxHP/8),([%caster]MaxHP-[%caster]CurHP))) [%caster]CurHP
+		echo Attribute Update >> [%caster]CurHP = [[%caster]CurHP]. It was healed by [%caster]MaxHP/8 ([[%caster]MaxHP/8]), capped at [%caster]MaxHP-[%caster]CurHP ([[%caster]MaxHP-[%caster]CurHP]). From [%caster]Ability (#[[%caster]Ability]): $[%caster]MoveShape = [$[%caster]MoveShape] ✔️
 		do getname with tag:[%caster]
 		log ativou sua habilidade <#00bfff><b>Tagarela</b></#> e se curou em 12,5% de sua vida máxima!
 		log <#3366ff>-----------------------------------</#>
@@ -2801,25 +2883,28 @@ Includes
 	if (([%caster]Ability=4) and ([%caster]Status=-3))
 		[%caster]Status=0
 		[%caster]StatusTimer=0
+		echo Attribute Update >> [%caster]Status = [[%caster]Status]; [%caster]StatusTimer = [[%caster]StatusTimer]. From [%caster]Ability (#[[%caster]Ability]): Previous [%caster]Status = -3 ✔️
 		do getname with tag:[%caster]
 		log ativou sua habilidade <#00bfff><b>Insômnia</b></#> e acordou!
 		log <#3366ff>-----------------------------------</#>
 	end
-	if (([%caster]Ability=5) and ($[%caster]Aim=1) and !(([%caster]Status=0) or ([%caster]Status=-1)) and ([%target]Status=0))
+	if (([%caster]Ability=5) and !(([%caster]Status=0) or ([%caster]Status=-1)) and ([%target]Status=0))
 		[%target]Status=[%caster]Status
+		echo Attribute Update >> [%target]Status = [[%target]Status]. From [%caster]Ability (#[[%caster]Ability]): [%caster]Status = [[%caster]Status] != 0 nor -1 ✔️ and previous [%target]Status = 0 ✔️
 		do getname with tag:[%caster]
 		log ativou sua habilidade <#00bfff><b>Vetor de Doenças</b></#> e proliferou seus status para o adversário!
 		log <#3366ff>-----------------------------------</#>
 	end
-*include capturedNoIcon %name %number %region %variation %evoLvl %evoNumber
+*include captured %name %number %dexName %region %variation %evoLvl %evoNumber %evoVar %pType %sType
 	*CPT[%number]from[%region]var[%variation]
 		name:[%name]
+		icon:[%dexName]Dex[[%number],0] pType[[%pType],0] sType[[%sType],0]
 		on click:
 			if (([%evoLvl]>0) and (this>=[%evoLvl]) and (CPT[%evoNumber]from[%region]var[%variation]=0))
-				toast <#00cc00><b>[n:this]</b></#> evoluiu para <#00cc00><b>[n:CPT[%evoNumber]from[%region]var[%variation]]</b></#>!
-				gain FND[%evoNumber]from[%region]var[%variation]
-				hide FND[%evoNumber]from[%region]var[%variation]
-				CPT[%evoNumber]from[%region]var[%variation] = this
+				toast <#00cc00><b>[n:this]</b></#> evoluiu para <#00cc00><b>[n:CPT[%evoNumber]from[%region]var[%evoVar]]</b></#>!
+				gain FND[%evoNumber]from[%region]var[%evoVar]
+				hide FND[%evoNumber]from[%region]var[%evoVar]
+				CPT[%evoNumber]from[%region]var[%evoVar] = this
 				this = 0
 			end
 			if ((this>0) and (no activePkm) and (switches>=1))
@@ -2829,11 +2914,11 @@ Includes
 				toast <#00cc00><b>[n:this]</b></#>, vai!
 			end
 		end
-*include placeNoIcon %id %region %name %desc %common1Lvl %common1Range %common1PkmNum %common1PkmVar %common2Lvl %common2Range %common2PkmNum %common2PkmVar %common3Lvl %common3Range %common3PkmNum %common3PkmVar %uncommonLvl %uncommonRange %uncommonPkmNum %uncommonPkmVar %rareLvl %rareRange %rarePkmNum %rarePkmVar %exoticLvl %exoticRange %exoticPkmNum %exoticPkmVar %legendLvl %legendRange %legendPkmNum %legendPkmVar
+*include place %id %region %icon %name %desc %common1Lvl %common1Range %common1PkmNum %common1PkmVar %common2Lvl %common2Range %common2PkmNum %common2PkmVar %common3Lvl %common3Range %common3PkmNum %common3PkmVar %uncommonLvl %uncommonRange %uncommonPkmNum %uncommonPkmVar %rareLvl %rareRange %rarePkmNum %rarePkmVar %exoticLvl %exoticRange %exoticPkmNum %exoticPkmVar %legendLvl %legendRange %legendPkmNum %legendPkmVar
     *place[%id]from[%region]
 		name:[%name]
 		desc:[%desc]
-		icon:exploration[0,0]
+		icon:exploration[[%icon],0]
 		on common1:
 			enemyLvl = ([%common1Lvl] + random(-[%common1Range],[%common1Range]))
 			gain ENM[%common1PkmNum]from[%region]var[%common1PkmVar]
@@ -2866,7 +2951,7 @@ Includes
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		$[%caster]EffectiveHeal = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower[%fxNum]),([%caster]MaxHP-[%caster]CurHP)))
 		gain $[%caster]EffectiveHeal [%caster]CurHP
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%caster]CurHP = [[%caster]CurHP] (It was healed by [$[%caster]MoveFxPower[%fxNum]]% of [$[%caster]EffectiveDamage], the $[%caster]EffectiveDamage, capped at [[%caster]MaxHP-[%caster]CurHP], the [%caster]MaxHP-[%caster]CurHP)
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%caster]CurHP = [[%caster]CurHP] (It was healed by [$[%caster]MoveFxPower[%fxNum]]% of [$[%caster]EffectiveDamage], the $[%caster]EffectiveDamage, capped at [[%caster]MaxHP-[%caster]CurHP], the [%caster]MaxHP-[%caster]CurHP)
 		do getname with tag:[%caster]
 		log drenou [$[%caster]EffectiveHeal] pontos de vida!
 		log <#3366ff>-----------------------------------</#>
@@ -2875,7 +2960,7 @@ Includes
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		$[%caster]EffectiveRecoil = ceil(min((($[%caster]EffectiveDamage/100)*$[%caster]MoveFxPower[%fxNum]),[%caster]CurHP))
 		lose $[%caster]EffectiveRecoil [%caster]CurHP
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%caster]CurHP = [[%caster]CurHP] (It was damaged by [$[%caster]MoveFxPower[%fxNum]]% of [$[%caster]EffectiveDamage], the $[%caster]EffectiveDamage, capped at [[%caster]CurHP], the [%caster]CurHP)
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%caster]CurHP = [[%caster]CurHP] (It was damaged by [$[%caster]MoveFxPower[%fxNum]]% of [$[%caster]EffectiveDamage], the $[%caster]EffectiveDamage, capped at [[%caster]CurHP], the [%caster]CurHP)
 		do getname with tag:[%caster]
 		log também se feriu, tomando [$[%caster]EffectiveRecoil] dano!
 		log <#3366ff>-----------------------------------</#>
@@ -2888,9 +2973,9 @@ Includes
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ([%target]Status = 0) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]Status = $[%caster]MoveFxPower[%fxNum]
 		[%target]StatusTimer = $timer[%fxNum]
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Status = [[%target]Status]; [%target]StatusTimer =[[%target]StatusTimer]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Status = [[%target]Status]; [%target]StatusTimer =[[%target]StatusTimer]
 		do getname with tag:[%target]
-		log [?([%target]Status=1)|foi envenenado!|][?([%target]Status=2)|foi intoxicado!|][?([%target]Status=3)|está em chamas!|][?([%target]Status=(-2))|foi paralisado!|][?([%target]Status=(-3))|caiu no sono!|][?([%target]Status=(-4))|foi congelado!|][?([%target]Status=(-5))|ficou hesitante!|][?([%target]Status=(-6))|se prepara para fugir!|][?([%target]Status=(-7))|ficou confuso!|][?([%target]Status=(-8))|ficou fadigado!|]
+		log [?([%target]Status=1)|foi envenenado!|][?([%target]Status=2)|foi intoxicado!|][?([%target]Status=3)|está em chamas!|][?([%target]Status=4)|foi provocado!|][?([%target]Status=(-2))|foi paralisado!|][?([%target]Status=(-3))|caiu no sono!|][?([%target]Status=(-4))|foi congelado!|][?([%target]Status=(-5))|ficou hesitante!|][?([%target]Status=(-6))|se prepara para fugir!|][?([%target]Status=(-7))|ficou confuso!|][?([%target]Status=(-8))|ficou fadigado!|]
 		log <#3366ff>-----------------------------------</#>
 	end
 *include moveHealStatusEffect %caster %target %number %fxNum
@@ -2899,7 +2984,7 @@ Includes
 	end
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ([%target]Status=$[%caster]MoveFxPower[%fxNum]) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]Status = 0
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Status = [[%target]Status]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Status = [[%target]Status]
 		do getname with tag:[%target]
 		log foi curado de sua condição!
 		log <#3366ff>-----------------------------------</#>
@@ -2911,7 +2996,7 @@ Includes
 		[%target]SpAttackStage = max((-6),([%target]SpAttackStage-$[%caster]MoveFxPower[%fxNum]))
 		[%target]SpDefenseStage = max((-6),([%target]SpDefenseStage-$[%caster]MoveFxPower[%fxNum]))
 		[%target]SpeedStage = max((-6),([%target]SpeedStage-$[%caster]MoveFxPower[%fxNum]))
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]AttackStage  = [[%target]AttackStage]; [%target]DefenseStage = [[%target]DefenseStage]; [%target]SpAttackStage = [[%target]SpAttackStage]; [%target]SpDefenseStage = [[%target]SpDefenseStage]; [%target]SpeedStage = [[%target]SpeedStage]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]AttackStage  = [[%target]AttackStage]; [%target]DefenseStage = [[%target]DefenseStage]; [%target]SpAttackStage = [[%target]SpAttackStage]; [%target]SpDefenseStage = [[%target]SpDefenseStage]; [%target]SpeedStage = [[%target]SpeedStage]
 		do getname with tag:[%target]
 		log teve todos os seus atributos reduzidos em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
@@ -2923,7 +3008,7 @@ Includes
 		[%target]SpAttackStage = min(6,([%target]SpAttackStage+$[%caster]MoveFxPower[%fxNum]))
 		[%target]SpDefenseStage = min(6,([%target]SpDefenseStage+$[%caster]MoveFxPower[%fxNum]))
 		[%target]SpeedStage = min(6,([%target]SpeedStage+$[%caster]MoveFxPower[%fxNum]))
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]AttackStage  = [[%target]AttackStage]; [%target]DefenseStage = [[%target]DefenseStage]; [%target]SpAttackStage = [[%target]SpAttackStage]; [%target]SpDefenseStage = [[%target]SpDefenseStage]; [%target]SpeedStage = [[%target]SpeedStage]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]AttackStage  = [[%target]AttackStage]; [%target]DefenseStage = [[%target]DefenseStage]; [%target]SpAttackStage = [[%target]SpAttackStage]; [%target]SpDefenseStage = [[%target]SpDefenseStage]; [%target]SpeedStage = [[%target]SpeedStage]
 		do getname with tag:[%target]
 		log teve todos os seus atributos aumentados em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
@@ -2931,7 +3016,7 @@ Includes
 *include moveDebuffEffect %caster %target %number %statusKey %statusName %gender %gender2 %fxNum
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target][%statusKey]Stage = max((-6),([%target][%statusKey]Stage-$[%caster]MoveFxPower[%fxNum]))
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target][%statusKey]Stage = [[%target][%statusKey]Stage]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target][%statusKey]Stage = [[%target][%statusKey]Stage]
 		do getname with tag:[%target]
 		log teve [%gender2] [%statusName] reduzid[%gender] em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
@@ -2939,7 +3024,7 @@ Includes
 *include moveBuffEffect %caster %target %number %statusKey %amount %statusName %gender %gender2 %fxNum
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target][%statusKey]Stage = min(6,([%target][%statusKey]Stage+$[%caster]MoveFxPower[%fxNum]))
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target][%statusKey]Stage = [[%target][%statusKey]Stage]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target][%statusKey]Stage = [[%target][%statusKey]Stage]
 		do getname with tag:[%target]
 		log teve [%gender2] [%statusName] aumentad[%gender] em [$[%caster]MoveFxPower[%fxNum]] estágio[?($[%caster]MoveFxPower[%fxNum]>1)|s|]!
 		log <#3366ff>-----------------------------------</#>
@@ -2978,7 +3063,7 @@ Includes
 		[%target]AccuracyStage = [%target]AccuracyStage*(1-$acuReset)
 		[%target]EvasionStage = [%target]EvasionStage*(1-$evsReset)
 		[%target]CriticalStage = [%target]CriticalStage*(1-$crtReset)
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]AttackStage = [[%target]AttackStage]; [%target]DefenseStage = [[%target]DefenseStage]; [%target]SpAttackStage = [[%target]SpAttackStage]; [%target]SpDefenseStage = [[%target]SpDefenseStage]; [%target]SpeedStage = [[%target]SpeedStage]; [%target]AccuracyStage = [[%target]AccuracyStage]; [%target]EvasionStage = [[%target]EvasionStage]; [%target]CriticalStage = [[%target]CriticalStage]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]AttackStage = [[%target]AttackStage]; [%target]DefenseStage = [[%target]DefenseStage]; [%target]SpAttackStage = [[%target]SpAttackStage]; [%target]SpDefenseStage = [[%target]SpDefenseStage]; [%target]SpeedStage = [[%target]SpeedStage]; [%target]AccuracyStage = [[%target]AccuracyStage]; [%target]EvasionStage = [[%target]EvasionStage]; [%target]CriticalStage = [[%target]CriticalStage]
 		do getname with tag:[%target]
 		log teve o modificador de [?($[%caster]MovePower[%fxNum]=0)|todos os atributos|][?($[%caster]MovePower[%fxNum]=1)|Ataque|][?($[%caster]MovePower[%fxNum]=2)|Defesa|][?($[%caster]MovePower[%fxNum]=3)|Ataque Especial|][?($[%caster]MovePower[%fxNum]=4)|Defesa Especial|][?($[%caster]MovePower[%fxNum]=5)|Velocidade|][?($[%caster]MovePower[%fxNum]=6)|Precisão|][?($[%caster]MovePower[%fxNum]=7)|Evasão|][?($[%caster]MovePower[%fxNum]=8)|Chance de Crítico|] zerado! 
 		log <#3366ff>-----------------------------------</#>
@@ -2986,7 +3071,7 @@ Includes
 *include moveDirectDamageEffect %caster %target %number %fxNum
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		$[%caster]EffectiveFxDamage = round(min([%target]CurHP,$[%caster]MoveFxPower[%fxNum]))
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️, condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️ and $[%caster]Aim hit ✔️. Attribute Update >> [%target]CurHP = [[%target]CurHP] ([$[%caster]MoveFxPower[%fxNum]] direct damage, capped at [[%target]CurHP], the [%target]CurHP)
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️, condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️ and $[%caster]Aim hit ✔️. Attribute Update >> [%target]CurHP = [[%target]CurHP] ([$[%caster]MoveFxPower[%fxNum]] direct damage, capped at [[%target]CurHP], the [%target]CurHP)
 		lose $[%caster]EffectiveFxDamage [%target]CurHP
 		do getname with tag:[%target]
 		log tomou [$[%caster]EffectiveFxDamage] dano!
@@ -3013,7 +3098,7 @@ Includes
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]Ptype = $[%caster]MoveFxPower[%fxNum]
 		[%target]Stype = $[%caster]MoveFxPower[%fxNum]
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Ptype = [[%target]Ptype]; [%target]Stype = [[%target]Stype]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Ptype = [[%target]Ptype]; [%target]Stype = [[%target]Stype]
 		do getname with tag:[%target]
 		log mudou de tipo, agora ele é [?[%target]Ptype=0|Normal|][?[%target]Ptype=1|Lutador|][?[%target]Ptype=2|Voador|][?[%target]Ptype=3|Venenoso|][?[%target]Ptype=4|Terrestre|][?[%target]Ptype=5|de Pedra|][?[%target]Ptype=6|Inseto|][?[%target]Ptype=7|Fantasma|][?[%target]Ptype=8|Metálico|][?[%target]Ptype=9|de Fogo|][?[%target]Ptype=10|Aquático|][?[%target]Ptype=11|Planta|][?[%target]Ptype=12|Elétrico|][?[%target]Ptype=13|Psíquico|][?[%target]Ptype=14|de Gelo|][?[%target]Ptype=15|Dragão|][?[%target]Ptype=16|Noturno|][?[%target]Ptype=17|Fada|]
 		log <#3366ff>-----------------------------------</#>
@@ -3027,7 +3112,7 @@ Includes
 	end
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]Ability = $[%caster]MoveFxPower[%fxNum]
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Ability = [[%target]Ability]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Ability = [[%target]Ability]
 		do getname with tag:[%target]
 		log mudou de habilidade, agora ele tem [?[%target]Ability=0|Nenhuma|][?[%target]Ability=1|Frutífero|][?[%target]Ability=2|Levar na Esportiva|][?[%target]Ability=3|Tagarela|][?[%target]Ability=4|Insômnia|][?[%target]Ability=5|Vetor de Doenças|]!
 		log <#3366ff>-----------------------------------</#>
@@ -3041,7 +3126,7 @@ Includes
 	end
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]Stance = $[%caster]MoveFxPower[%fxNum]
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Stance = [[%target]Stance]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Stance = [[%target]Stance]
 		do getname with tag:[%target]
 		log mudou de postura, agora ele está [?[%target]Stance=0|sem postura|][?[%target]Stance=1|em postura corporal|][?[%target]Stance=2|em postura de atirador|][?[%target]Stance=3|em postura de chicoteador|][?[%target]Stance=4|em postura de boxeador|][?[%target]Stance=5|em postura de mordedor|][?[%target]Stance=6|em postura de arranhador|][?[%target]Stance=7|em postura de lançador de rajadas|][?[%target]Stance=8|em postura rotatória|][?[%target]Stance=9|em postura para chutar|][?[%target]Stance=10|em postura sonora|][?[%target]Stance=11|em postura de cabeceador|][?[%target]Stance=12|em postura de perfurador|][?[%target]Stance=13|em postura esparsa|][?[%target]Stance=14|em postura de concentração|][?[%target]Stance=15|em postura ativa|]!
 		log <#3366ff>-----------------------------------</#>
@@ -3055,7 +3140,7 @@ Includes
 	end
 	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]Aim = 1) and ($[%caster]FxCondSuccess[%fxNum]=1))
 		[%target]Position = $[%caster]MoveFxPower[%fxNum]
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Position = [[%target]Position]
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️. Attribute Update >> [%target]Position = [[%target]Position]
 		do getname with tag:[%target]
 		log mudou de posição, agora ele está [?[%target]Position=0|no campo de batalha|][?[%target]Position=1|voando no céu|][?[%target]Position=2|cavando debaixo da terra|][?[%target]Position=3|nadando debaixo d'água|]!
 		log <#3366ff>-----------------------------------</#>
@@ -3068,8 +3153,8 @@ Includes
 		$[%caster]MoveEffect[%fxNum] = $[%caster]MoveEffect[%fxNum] + random(1,8)
 	end
 *include moveFxIf %caster %number %fxNum
-	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]FxCondSuccess[%fxNum]=1))
-		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MovePower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️.
+	if (($[%caster]MoveEffect[%fxNum]=[%number]) and (chance($[%caster]MoveFxChance[%fxNum])) and ($[%caster]FxCondSuccess[%fxNum]=1) and ($[%caster]Aim=1))
+		echo Triggering $[%caster]MoveEffect[%fxNum] (#[%number]) with [$[%caster]MoveFxPower[%fxNum]] power, ([$[%caster]MoveFxChance[%fxNum]]% chance)✔️ and condition #[$[%caster]MoveFxCondID[%fxNum]] satisfied ✔️.
 *include moveCoreCopy %caster %target
 		$[%caster]MoveID = $[%target]MoveID
 		$[%caster]MoveType = $[%target]MoveType
@@ -3105,21 +3190,48 @@ Includes
 	if (($[%caster]MoveFxCondID[%number] = 4) and ($[%target]MoveShape=$[%caster]MoveFxCondNum[%number]))
 		$[%caster]FxCondSuccess[%number] = 1
 	end
+	if (($[%caster]MoveFxCondID[%number] = 5) and !([%caster]LastMoveID=$[%caster]MoveFxCondNum[%number]))
+		$[%caster]FxCondSuccess[%number] = 1
+	end
 	echo [%caster] Move Effect [%number] Condition (#[$[%caster]MoveFxCondID[%number]]) was [?$[%caster]FxCondSuccess[%number]=0|❌ not|✔️] satisfied.
 *include onMove %caster %target
 	$[%caster]STAB = 1
 	$[%caster]Crit = 1
 	$[%caster]StatusMod = 1
 	$[%caster]ShapeMod = 1
+	if (!([%target]Position=0) and !([%target]Position=$[%caster]Reach))
+		$[%caster]FxCondSuccess0=0
+		echo Variable Update >> $[%caster]FxCondSuccess0 ❌. [%target]Position ([[%target]Position]) != 0 nor $[%caster]Reach ([$[%caster]Reach])
+		do getname with tag:[%target]
+		log não pode ser alcançado!
+	end
+	if (([%caster]Status=4) and ($[%caster]MoveClass<0))
+		$[%caster]FxCondSuccess0=0
+		echo Variable Update >> $[%caster]FxCondSuccess0 ❌. [%caster]Status = [[%caster]Status] and $[%caster]MoveClass = [$[%caster]MoveClass] (<0)
+		do getname with tag:[%caster]
+		log não pode usar golpes de estado enquanto está sob provocação!
+	end
 	if ($[%caster]FxCondSuccess0=1)
 		$[%caster]Aim = chance($[%caster]MoveFxChance0*[%caster]AccuracyMod*[%target]EvasionMod)
 		echo Variable Update >> $[%caster]Aim [?$[%caster]Aim|✔️|❌]. [$[%caster]MoveFxChance0*[%caster]AccuracyMod*[%target]EvasionMod]% chance, from $[%caster]MoveFxChance0 ([$[%caster]MoveFxChance0]) * [%caster]AccuracyMod ([[%caster]AccuracyMod*100]) * [%target]EvasionMod ([[%target]EvasionMod*100]])
 	end
-	if ($protection=1)
+	if (($protection=1) and ($[%caster]MoveClass>=0))
 		$[%caster]Aim = 0
 		echo Variable Update >> $[%caster]Aim ❌. Enemy has Protection.
 		do getname with tag:[%target]
 		log está protegido!
+	end
+	if (($protection=1) and ($[%caster]MoveEffect1>0))
+		$[%caster]MoveFxChance1 = 0
+		echo Variable Update >> $[%caster]MoveFxChance1 ❌. Enemy has Protection.
+	end
+	if (($protection=1) and ($[%caster]MoveEffect2>0))
+		$[%caster]MoveFxChance2 = 0
+		echo Variable Update >> $[%caster]MoveFxChance2 ❌. Enemy has Protection.
+	end
+	if (($protection=1) and ($[%caster]MoveEffect3>0))
+		$[%caster]MoveFxChance3 = 0
+		echo Variable Update >> $[%caster]MoveFxChance3 ❌. Enemy has Protection.
 	end
 	if ($[%caster]MoveClass>=2)
 		do getname with tag:[%caster]
@@ -3154,15 +3266,15 @@ Includes
 		echo Variable Update >> $[%caster]MovePower = [$[%caster]MovePower]. Consecutive move empowerment.
 		log ... com um poder acumulado de [[%caster]MovesInARow] golpes seguidos ...
 	end
-	echo Type Checking: [%caster]Ptype = [[%caster]Ptype]; [%caster]Stype = [[%caster]Stype]; $[%caster]Movetype = [$[%caster]Movetype]
-	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClass=(-3))) and ([%caster]Ptype=$[%caster]Movetype) and ($[%caster]Aim = 1))
+	echo Type Checking: [%caster]Ptype = [[%caster]Ptype]; [%caster]Stype = [[%caster]Stype]; $[%caster]Movetype = [$[%caster]MoveType]
+	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClass=(-3))) and ([%caster]Ptype=$[%caster]MoveType) and ($[%caster]Aim = 1))
 		$[%caster]STAB = $[%caster]STAB + 0.5
-		echo Variable Update >> $[%caster]STAB = [$[%caster]STAB]. Move type equal to the user's primary type ✔️.
+		echo Variable Update >> $[%caster]STAB = [$[%caster]STAB*100]%. Move type equal to the user's primary type ✔️.
 		log ... o golpe foi fortalecido pelo seu tipo principal ...
 	end
-	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClass=(-3))) and ([%caster]Stype=$[%caster]Movetype) and ($[%caster]Aim = 1))
+	if ((($[%caster]MoveClass>=0) or ($[%caster]MoveClass=(-3))) and ([%caster]Stype=$[%caster]MoveType) and ($[%caster]Aim = 1))
 		$[%caster]STAB = $[%caster]STAB + 0.5
-		echo Variable Update >> $[%caster]STAB = [$[%caster]STAB]. Move type equal to the user's secondary type ✔️.
+		echo Variable Update >> $[%caster]STAB = [$[%caster]STAB*100]%. Move type equal to the user's secondary type ✔️.
 		log ... o golpe foi fortalecido pelo seu tipo secundário ...
 	end
 	echo Stance-Shape Checking: [%caster]Stance = [[%caster]Stance]; $[%caster]MoveShape = [$[%caster]MoveShape].
@@ -3179,6 +3291,7 @@ Includes
 	if (($[%caster]MoveClass=(-3)) and ($[%caster]Aim = 1))
 		$[%caster]Heal = round(min(([%caster]MaxHP-[%caster]CurHP),(([%caster]MaxHP/100)*$[%caster]MovePower*$[%caster]STAB)))
 		gain $[%caster]Heal [%caster]CurHP
+		echo Attribute Update >> [%caster]CurHP = [[%caster]CurHP]. It was healed by the move, in [(([%caster]MaxHP/100)*$[%caster]MovePower*$[%caster]STAB)], 1% of the [%caster]MaxHP ([[%caster]MaxHP]) * $[%caster]MovePower ([$[%caster]MovePower]) * $[%caster]STAB ([$[%caster]STAB]). Capped at [%caster]MaxHP-[%caster]CurHP ([[%caster]MaxHP-[%caster]CurHP])
 		log se curou em [$[%caster]Heal] pontos de vida!
 	end
 	if (($[%caster]MoveClass>=0) and (chance($[%caster]MoveCrit*pow(2,[%caster]CriticalStage))) and ($[%caster]Aim = 1))
@@ -3258,6 +3371,7 @@ Includes
 		log consumiu uma <#e65c00><b>[%name]</b></#> ...
 		if (activeStatus=([%status]))
 			activeStatus=0
+			echo Attribute Update >> activeStatus = [activeStatus]. It was healed by the berry [%name].
 			log [%log]
 			log <#3366ff>-----------------------------------</#>
 		end
@@ -3268,6 +3382,7 @@ Includes
 		log mordeu a <#e65c00><b>[%name]</b></#> do adversário ...
 		if (activeStatus=([%status]))
 			activeStatus=0
+			echo Attribute Update >> activeStatus = [activeStatus]. It was healed by the berry [%name].
 			log [%log]
 			log <#3366ff>-----------------------------------</#>
 		end
@@ -3278,6 +3393,7 @@ Includes
 		log consumiu uma <#e65c00><b>[%name]</b></#> ...
 		if (enemyStatus=([%status]))
 			enemyStatus=0
+			echo Attribute Update >> enemyStatus = [enemyStatus]. It was healed by the berry [%name].
 			log [%log]
 			log <#3366ff>-----------------------------------</#>
 		end
@@ -3288,6 +3404,7 @@ Includes
 		log mordeu a <#e65c00><b>[%name]</b></#> do adversário ...
 		if (enemyStatus=([%status]))
 			enemyStatus=0
+			echo Attribute Update >> enemyStatus = [enemyStatus]. It was healed by the berry [%name].
 			log [%log]
 			log <#3366ff>-----------------------------------</#>
 		end
@@ -3299,6 +3416,7 @@ Includes
 		log consumiu uma <#e65c00>[%name]</#> ...
 		$heal = min(round((activeMaxHP/100)*[%heal]),(activeMaxHP-activeCurHP))
 		gain $heal activeCurHP
+		echo Attribute Update >> activeCurHP = [activeCurHP]. It was healed by the berry [%name], in [((activeMaxHP/100)*$heal)], 1% of the activeMaxHP ([activeMaxHP]) * $heal ([$heal]). Capped at activeMaxHP-activeCurHP ([activeMaxHP-activeCurHP])
 		log se curou em [$heal] pontos de vida!
 		log <#3366ff>-----------------------------------</#>
 		activeBerry = 0
@@ -3308,6 +3426,7 @@ Includes
 		log mordeu a <#e65c00>[%name]</#> do adversário ...
 		$heal = min(round((activeMaxHP/100)*[%heal]),(activeMaxHP-activeCurHP))
 		gain $heal activeCurHP
+		echo Attribute Update >> activeCurHP = [activeCurHP]. It was healed by the berry [%name], in [((activeMaxHP/100)*$heal)], 1% of the activeMaxHP ([activeMaxHP]) * $heal ([$heal]). Capped at activeMaxHP-activeCurHP ([activeMaxHP-activeCurHP])
 		log se curou em [$heal] pontos de vida!
 		log <#3366ff>-----------------------------------</#>
 		enemyBerry = 0
@@ -3317,6 +3436,7 @@ Includes
 		log consumiu uma <#e65c00>[%name]</#> ...
 		$heal = min(round((enemyMaxHP/100)*[%heal]),(enemyMaxHP-enemyCurHP))
 		gain $heal enemyCurHP
+		echo Attribute Update >> enemyCurHP = [enemyCurHP]. It was healed by the berry [%name], in [((enemyMaxHP/100)*$heal)], 1% of the enemyMaxHP ([enemyMaxHP]) * $heal ([$heal]). Capped at enemyMaxHP-enemyCurHP ([enemyMaxHP-enemyCurHP])
 		log se curou em [$heal] pontos de vida!
 		log <#3366ff>-----------------------------------</#>
 		enemyBerry = 0
@@ -3326,6 +3446,7 @@ Includes
 		log mordeu a <#e65c00>[%name]</#> do adversário ...
 		$heal = min(round((enemyMaxHP/100)*[%heal]),(enemyMaxHP-enemyCurHP))
 		gain $heal enemyCurHP
+		echo Attribute Update >> enemyCurHP = [enemyCurHP]. It was healed by the berry [%name], in [((enemyMaxHP/100)*$heal)], 1% of the enemyMaxHP ([enemyMaxHP]) * $heal ([$heal]). Capped at enemyMaxHP-enemyCurHP ([enemyMaxHP-enemyCurHP])
 		log se curou em [$heal] pontos de vida!
 		log <#3366ff>-----------------------------------</#>
 		activeBerry = 0
